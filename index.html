@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Reto del Diccionario</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -39,7 +39,6 @@
         
         .super-value-text {
             color: #ef4444; /* Rojo intenso */
-            font-weight: bold;
         }
         #startupScreen, .modal-bg {
             background-color: rgba(255, 255, 255, 0.8);
@@ -237,7 +236,7 @@
 
     <!-- Barra de estado y botones del juego -->
     <div id="gameControls" class="fixed bottom-0 left-0 right-0 w-full flex flex-wrap justify-center items-center gap-2 p-3 bg-white border-t-2 border-gray-200 z-10">
-        <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
+        <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
             <span id="lifeCounter">3/3</span>
         </div>
         <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
@@ -252,10 +251,10 @@
         <div id="superValueTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
             <span class="super-value-text">0s</span>
         </div>
-        <button id="shopButton" class="bg-purple-600 hover:bg-purple-700 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-white font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
+        <button id="shopButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             Tienda
         </button>
-        <button id="homeButton" class="bg-gray-600 hover:bg-gray-700 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-white font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
+        <button id="homeButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             Inicio
         </button>
     </div>
@@ -381,13 +380,6 @@
 
 
     <script type="module">
-        // --- Firebase (Offline Mode) ---
-        const appId = 'github-pages-app';
-        let db = null;
-        let auth = null;
-        let userId;
-        let offlineMode = true;
-
         // --- Game State Variables ---
         let playerMoney = 100;
         let playerWords = {};
@@ -426,7 +418,7 @@
         const PRICE_PER_LETTER = 15;
         const SUPER_VALUE_MULTIPLIER = 2;
         const INFLATION_FACTOR = 100;
-        const SHIELD_PRICE_UNIVERSAL = 800000;
+        const SHIELD_PRICE_UNIVERSAL = 1000000;
         const LIFE_PRICE = 2000000;
         const CHALLENGE_REWARDS = { "Agudas": 10000, "Llanas": 20000, "Esdrújulas": 40000 };
         
@@ -465,63 +457,9 @@
 
         let WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
 
-        const categoryColors = { "Monosílabos": "text-gray-800", "Agudas": "text-green-800", "Llanas": "text-yellow-800", "Esdrújulas": "text-blue-800", "Sobreesdrújulas": "text-purple-800" };
+        const categoryColors = { "Monosílabos": "text-gray-700", "Agudas": "text-green-700", "Llanas": "text-yellow-700", "Esdrújulas": "text-blue-700", "Sobreesdrújulas": "text-purple-700" };
         const categoryBackgrounds = { "Monosílabos": "bg-gray-200 hover:bg-gray-300", "Agudas": "bg-green-200 hover:bg-green-300", "Llanas": "bg-yellow-200 hover:bg-yellow-300", "Esdrújulas": "bg-blue-200 hover:bg-blue-300", "Sobreesdrújulas": "bg-purple-200 hover:bg-purple-300" };
         const superValueColor = "super-value-text";
-        
-        let audioCtx;
-        function playBellSound() {
-            if (!audioCtx) return;
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(987.77, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
-            oscillator.start(audioCtx.currentTime);
-            oscillator.stop(audioCtx.currentTime + 0.5);
-        }
-
-        function playWinSound() {
-            if (!audioCtx) return;
-            const now = audioCtx.currentTime;
-            const gainNode = audioCtx.createGain();
-            gainNode.connect(audioCtx.destination);
-            gainNode.gain.setValueAtTime(0.3, now);
-
-            const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-            freqs.forEach((freq, i) => {
-                const osc = audioCtx.createOscillator();
-                osc.connect(gainNode);
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, now + i * 0.1);
-                osc.start(now + i * 0.1);
-                osc.stop(now + i * 0.1 + 0.1);
-            });
-            gainNode.gain.exponentialRampToValueAtTime(0.00001, now + 0.8);
-        }
-
-        function playGameOverSound() {
-            if (!audioCtx) return;
-            const now = audioCtx.currentTime;
-            const gainNode = audioCtx.createGain();
-            gainNode.connect(audioCtx.destination);
-            gainNode.gain.setValueAtTime(0.4, now);
-
-            const freqs = [110.00, 103.83, 98.00, 92.50]; // A2, G#2, G2, F#2
-             freqs.forEach((freq, i) => {
-                const osc = audioCtx.createOscillator();
-                osc.connect(gainNode);
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(freq, now + i * 0.15);
-                osc.start(now + i * 0.15);
-                osc.stop(now + i * 0.15 + 0.15);
-            });
-            gainNode.gain.exponentialRampToValueAtTime(0.00001, now + 1.2);
-        }
-
 
         function applyScalingToWordDatabase(multiplier) {
             WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
@@ -649,14 +587,12 @@
 
         function updateShopUI() {
             const isLimboActive = Date.now() < limboGramaticalEndTime;
-            const discount = isLimboActive ? 0.79 : 1;
+            const discount = isLimboActive ? 0.79 : 1; // 21% discount
 
-             // Shop Button itself
             const shopButton = document.getElementById('shopButton');
             shopButton.disabled = false;
             shopButton.classList.remove('opacity-50', 'cursor-not-allowed');
 
-            // Universal Shield
             const shieldPrice = SHIELD_PRICE_UNIVERSAL * discount;
             document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('es')}`;
             const buyUniversalShieldBtn = document.getElementById('buyUniversalShield');
@@ -666,7 +602,6 @@
             buyUniversalShieldBtn.classList.toggle('cursor-not-allowed', !canAffordShield);
             document.getElementById('universalCount').textContent = shields.universal;
 
-            // Buy Life
             const lifePrice = LIFE_PRICE * discount;
             document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('es')}`;
             const buyLifeBtn = document.getElementById('buyLifeButton');
@@ -743,73 +678,57 @@
             if (forceNew) clearTimeout(wordDisplayTimeout);
             
             const isLimboActive = Date.now() < limboGramaticalEndTime;
-            let christopherChance = 0.03; // Base chance
+            
+            // 1. Calculate Christopher Chance
+            let christopherChance = 0.03; 
             if (isLimboActive && christopherBonusCountDuringLimbo < 3) {
-                christopherChance += 0.21; // Increased chance during Limbo
+                christopherChance += 0.21; 
             }
 
-            let wordTypeChance = Math.random();
-            
-            // Bonus CHRISTOPHER
-            if (wordTypeChance < christopherChance) {
+            // 2. Roll for Christopher FIRST
+            if (Math.random() < christopherChance) {
                 if (isLimboActive) {
                     christopherBonusCountDuringLimbo++;
                 }
                 currentWord = { word: "CHRISTOPHER", category: "Bonus", value: 0, isBonus: true, startTime: Date.now() };
-                playBellSound();
                 updateUI();
-                startWordDisplayTimer(1000); // 1 segundo
+                startWordDisplayTimer(1000);
                 return;
             }
 
-            // Palabra Normal
+            // 3. Generate a normal word (it will be converted to Super Value if Limbo is active)
             let categories = Object.keys(WORD_DATABASE);
             const nonFinalCategories = categories.filter(c => c !== "Sobreesdrújulas");
-            
             const allCategoriesCompleted = nonFinalCategories.every(cat => playerWords[cat] && playerWords[cat].count >= WORD_DATABASE[cat].limit);
-            
             let randomCategory = allCategoriesCompleted ? "Sobreesdrújulas" : nonFinalCategories[Math.floor(Math.random() * nonFinalCategories.length)];
-            
             let ownedWords = playerWords[randomCategory]?.list || [];
             let availableWords = WORD_DATABASE[randomCategory].words.filter(word => !ownedWords.includes(word));
             
-            if (availableWords.length === 0 && !allCategoriesCompleted) { 
+            if (availableWords.length === 0) { 
                 setTimeout(() => generateNewWord(true), 50); 
                 return;
-            } else if (availableWords.length === 0 && allCategoriesCompleted){
-                 randomCategory = "Sobreesdrújulas";
-                 availableWords = WORD_DATABASE[randomCategory].words.filter(word => !ownedWords.includes(word));
             }
             
             let randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
-            let isSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).includes(randomWord);
-
-            if (isLimboActive && !isSuperValue && (WORD_DATABASE[randomCategory].superValueWords || []).length > 0 && Math.random() < (0.05 + 0.21)) {
-                const availableSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).filter(svw => !ownedWords.includes(svw));
-                if (availableSuperValue.length > 0) {
-                    randomWord = availableSuperValue[Math.floor(Math.random() * availableSuperValue.length)];
-                    isSuperValue = true;
-                }
-            }
+            
+            // 4. ALL words become Super Value during Limbo Gramatical
+            let isSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).includes(randomWord) || isLimboActive;
             
             let dynamicValue = WORD_DATABASE[randomCategory].value;
             if (randomCategory !== "Sobreesdrújulas") {
                 const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR);
                 dynamicValue = (WORD_DATABASE[randomCategory].value + (randomWord.length * PRICE_PER_LETTER)) * inflationMultiplier;
-                if (isSuperValue) dynamicValue *= SUPER_VALUE_MULTIPLIER;
-            }
-
-            if (isLimboActive) {
-                dynamicValue *= 0.79;
+                if (isSuperValue) {
+                    dynamicValue *= SUPER_VALUE_MULTIPLIER;
+                }
             }
 
             currentWord = { word: randomWord, category: randomCategory, value: dynamicValue, isSuperValue, startTime: Date.now() };
             updateUI();
-            startWordDisplayTimer(3000); // 3 segundos
+            startWordDisplayTimer(3000);
         }
 
         function updateUI() {
-            // Player Money and Passive Income
             document.getElementById('playerMoney').textContent = playerMoney.toLocaleString('es');
             recalculatePassiveIncome();
             let finalPassiveIncome = passiveIncome;
@@ -817,31 +736,25 @@
             if (Date.now() < limboGramaticalEndTime) finalPassiveIncome *= 1.21;
             document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('es', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-            // Current Word
             if (currentWord.word) {
-                let wordClass = categoryColors[currentWord.category] || "text-gray-500";
-                let displayWord = currentWord.word;
-                let displayCategory = currentWord.category;
-                
+                let wordClass = "";
                 if (currentWord.isBonus) {
                     wordClass = "rainbow-text";
-                    displayCategory = "Bonus";
                 } else if (currentWord.isSuperValue) {
-                    wordClass = superValueColor;
+                    wordClass = "super-value-text";
+                } else {
+                    wordClass = categoryColors[currentWord.category] || "text-gray-800";
                 }
                 
-                document.getElementById('currentWord').innerHTML = `<span class="${wordClass}">${displayWord}</span>`;
-                document.getElementById('wordCategory').textContent = displayCategory;
+                document.getElementById('currentWord').innerHTML = `<span class="${wordClass}">${currentWord.word}</span>`;
+                document.getElementById('wordCategory').textContent = currentWord.category;
                 
                 const buyButton = document.getElementById('buyButton');
                 const canAfford = playerMoney >= currentWord.value;
                 let isOwned = false;
                 let isCategoryComplete = false;
 
-                if (currentWord.isBonus) {
-                    isOwned = false;
-                    isCategoryComplete = false;
-                } else if (currentWord.category && playerWords[currentWord.category]) {
+                if (!currentWord.isBonus && currentWord.category && playerWords[currentWord.category]) {
                     const categoryData = playerWords[currentWord.category];
                     const limit = WORD_DATABASE[currentWord.category]?.limit;
                     isCategoryComplete = categoryData && limit && categoryData.count >= limit;
@@ -859,8 +772,7 @@
                 }
             }
 
-            // Game Controls Bar
-            updateShopUI(); // Updates shop button state
+            updateShopUI();
             const remainingLives = Math.max(0, 3 - consecutiveFailures);
             const lifeCounter = document.getElementById('lifeCounter');
             lifeCounter.textContent = `${remainingLives}/3`;
@@ -871,48 +783,28 @@
             
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
-            // Timers
             const limboTimer = document.getElementById('limboGramaticalTimerDisplay');
             const chrisTimer = document.getElementById('christopherTimerDisplay');
             const svTimer = document.getElementById('superValueTimerDisplay');
             const now = Date.now();
 
             Object.keys(superValueBoosts).forEach(cat => {
-                if (now >= superValueBoosts[cat]) {
-                    delete superValueBoosts[cat];
-                }
+                if (now >= superValueBoosts[cat]) delete superValueBoosts[cat];
             });
 
             const limboTimeLeft = Math.ceil(Math.max(0, limboGramaticalEndTime - now) / 1000);
-            if (limboTimeLeft > 0) {
-                limboTimer.classList.remove('hidden');
-                const span = limboTimer.querySelector('span');
-                span.textContent = `${limboTimeLeft}s`;
-                span.dataset.text = `${limboTimeLeft}s`;
-            } else {
-                limboTimer.classList.add('hidden');
-            }
-            
+            limboTimer.style.display = limboTimeLeft > 0 ? 'block' : 'none';
+            if(limboTimeLeft > 0) limboTimer.querySelector('span').dataset.text = `${limboTimeLeft}s`;
+
             const chrisTimeLeft = Math.ceil(Math.max(0, christopherBoostEndTime - now) / 1000);
-            if (chrisTimeLeft > 0) {
-                chrisTimer.classList.remove('hidden');
-                chrisTimer.querySelector('span').textContent = `${chrisTimeLeft}s`;
-            } else {
-                chrisTimer.classList.add('hidden');
-            }
+            chrisTimer.style.display = chrisTimeLeft > 0 ? 'block' : 'none';
+            if(chrisTimeLeft > 0) chrisTimer.querySelector('span').textContent = `${chrisTimeLeft}s`;
 
             const maxSuperValueEndTime = Object.values(superValueBoosts).length > 0 ? Math.max(...Object.values(superValueBoosts)) : 0;
             const svTimeLeft = Math.ceil(Math.max(0, maxSuperValueEndTime - now) / 1000);
-             if (svTimeLeft > 0) {
-                svTimer.classList.remove('hidden');
-                const timerSpan = svTimer.querySelector('span');
-                timerSpan.textContent = `${svTimeLeft}s`;
-            } else {
-                svTimer.classList.add('hidden');
-            }
+            svTimer.style.display = svTimeLeft > 0 ? 'block' : 'none';
+            if(svTimeLeft > 0) svTimer.querySelector('span').textContent = `${svTimeLeft}s`;
 
-
-            // Inventory
             const inventoryContainer = document.getElementById('inventoryContainer');
             inventoryContainer.innerHTML = '';
             Object.keys(WORD_DATABASE).forEach(category => {
@@ -921,7 +813,7 @@
                 const isCompleted = data.count >= limit;
 
                 const categoryDiv = document.createElement('div');
-                categoryDiv.className = `relative flex-1 flex-shrink-0 text-center flex flex-col items-center justify-between p-2 cursor-pointer transition duration-300 rounded-lg shadow-md ${isCompleted ? "bg-gray-300 text-gray-500" : categoryBackgrounds[category]} ${categoryColors[category] || 'text-gray-800'}`;
+                categoryDiv.className = `relative flex-1 flex-shrink-0 text-center flex flex-col items-center justify-between p-2 cursor-pointer transition duration-300 rounded-lg shadow-md ${isCompleted ? "bg-gray-300 text-gray-500" : categoryBackgrounds[category]}`;
                 categoryDiv.onclick = () => {
                     const wordsModal = document.getElementById('wordsModal');
                     document.getElementById('wordsModalTitle').textContent = `Palabras ${category}`;
@@ -949,14 +841,14 @@
                     boostIconsHTML += `<span class="rainbow-text font-bold text-xs">x2</span>`;
                 }
                 if (isSuperValueActiveForThisCategory) {
-                    boostIconsHTML += `<span class="${superValueColor} font-bold text-xs">x2</span>`;
+                    boostIconsHTML += `<span class="super-value-text font-bold text-xs">x2</span>`;
                 }
                 boostIconsHTML += '</div>';
 
                 categoryDiv.innerHTML = `
                     ${boostIconsHTML}
-                    <p class="text-sm font-bold">${category}</p>
-                    <p class="text-2xl font-extrabold">${data.count}/${limit}</p>
+                    <p class="font-bold ${categoryColors[category] || 'text-gray-800'}">${category}</p>
+                    <p class="text-2xl font-extrabold ${categoryColors[category] || 'text-gray-800'}">${data.count}/${limit}</p>
                 `;
                 inventoryContainer.appendChild(categoryDiv);
             });
@@ -999,11 +891,10 @@
                 const winMessage = document.getElementById('winMessage');
                 winMessage.textContent = `¡VICTORIA! Has conseguido una palabra sobreesdrújula. Multiplicador actual: ${gameMultiplier}x.`;
                 document.getElementById('nextMultiplier').textContent = gameMultiplier + 1;
-                playWinSound();
-                changeView('win');
                 stopGameLoops();
                 stopRulesRotator();
                 savePlayerData();
+                changeView('win');
                 return;
             }
 
@@ -1109,10 +1000,9 @@
             consecutiveFailures++;
             if (consecutiveFailures >= 3) {
                 document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. Razón final: ${reason}`;
-                playGameOverSound();
-                changeView('gameOver');
                 stopGameLoops();
                 stopRulesRotator();
+                changeView('gameOver');
             } else {
                 resetProgressButKeepLives();
                 showModal(`¡Fallo! ${reason}. Has perdido todo. Te quedan ${3 - consecutiveFailures} intentos.`);
@@ -1172,30 +1062,22 @@
             const deltaTime = timestamp - lastUpdateTime;
             lastUpdateTime = timestamp;
             
-            // Update passive income roughly every second
             timeSinceLastIncomeUpdate += deltaTime;
             if (timeSinceLastIncomeUpdate >= 1000) {
                 let incomeThisSecond = passiveIncome;
-                if (Date.now() < christopherBoostEndTime) {
-                    incomeThisSecond *= 2;
-                }
-                if(Date.now() < limboGramaticalEndTime) {
-                    incomeThisSecond *= 1.21;
-                }
+                if (Date.now() < christopherBoostEndTime) incomeThisSecond *= 2;
+                if(Date.now() < limboGramaticalEndTime) incomeThisSecond *= 1.21;
                 playerMoney += incomeThisSecond;
                 timeSinceLastIncomeUpdate = 0;
+                updateUI(); // Update UI less frequently for performance
             }
             
-            updateUI(); // Update UI on every frame
             updateTimerBarUI();
-
             animationFrameId = requestAnimationFrame(mainGameLoop);
         }
         
         function updateTimerBarUI() {
-            if (!gameStarted || currentView !== 'game' || !currentWord.startTime) {
-                return;
-            }
+            if (!gameStarted || currentView !== 'game' || !currentWord.startTime) return;
             const bar = document.getElementById('wordTimerBar');
             if (!bar) return;
 
@@ -1281,13 +1163,11 @@
             if (shouldLoad) {
                 loadPlayerData();
             }
-            // Limbo Gramatical is now triggered inside generateNewWord
             startGameLoops();
             generateNewWord(true);
             setInterval(savePlayerData, 30000);
         }
         
-        // Definitive Syllabification Engine - Improved for accuracy
         function syllabify(word) {
             const originalWord = word;
             word = word.toLowerCase();
@@ -1299,17 +1179,14 @@
             let syllables = word.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[^aeiouáéíóúü](?![aeiouáéíóúü]))?/gi);
 
             if (syllables) {
-                // Adjust for common incorrect splits like 'a-e-ro' instead of 'a-é-re-o'
                 const restored = syllables.join('');
                 if (restored !== word) {
-                     // Fallback for complex words if regex fails
                     syllables = word.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[bcdfghjklmnpqrstvwxyz](?![lr]))?/gi);
                 }
             }
             
-            if (!syllables) return [originalWord]; // Failsafe
+            if (!syllables) return [originalWord];
 
-            // Re-apply original casing
             let restoredSyllables = [];
             let originalIndex = 0;
             for (const syll of syllables) {
@@ -1410,14 +1287,8 @@
         }
 
         function setupEventListeners() {
-            const initAudio = () => {
-                if (!audioCtx) {
-                    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-                    catch(e) { console.error("Could not create AudioContext", e); }
-                }
-            };
-            document.getElementById('newGameButton').addEventListener('click', () => { initAudio(); startNewGame(); });
-            document.getElementById('continueGameButton').addEventListener('click', () => { initAudio(); continueGame(); });
+            document.getElementById('newGameButton').addEventListener('click', startNewGame);
+            document.getElementById('continueGameButton').addEventListener('click', continueGame);
             document.getElementById('tutorialButton').addEventListener('click', () => changeView('tutorial'));
             document.getElementById('buyButton').addEventListener('click', buyWord);
             document.getElementById('shopButton').addEventListener('click', () => changeView('shop'));
@@ -1462,6 +1333,7 @@
                 modal.classList.remove('flex');
 
                 limboGramaticalEndTime = Date.now() + 60000;
+                updateUI(); // Force immediate UI update to show timer
                 startGameLoops(); 
                 generateNewWord(true);
             });
@@ -1477,4 +1349,3 @@
     </script>
 </body>
 </html>
-
