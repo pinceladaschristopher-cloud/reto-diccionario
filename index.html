@@ -9,12 +9,12 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a1a1a; /* Fondo oscuro para el tema Halloween */
-            color: #e0e0e0;
+            background-color: #f3f4f6; /* Fondo gris claro */
+            color: #1f2937;
         }
         .card {
-            background-color: #2c2c2c;
-            border-color: #444;
+            background-color: #ffffff;
+            border-color: #e5e7eb;
         }
         .hide-scrollbar {
             -ms-overflow-style: none;
@@ -36,43 +36,17 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .halloween-text {
-            color: #ff8c00;
-            text-shadow:
-                -0.5px -0.5px 0 #000,  
-                 0.5px -0.5px 0 #000,
-                -0.5px  0.5px 0 #000,
-                 0.5px  0.5px 0 #000,
-                 0 0 2px #ff4500, 0 0 5px #ff4500, 0 0 8px #ffA500, 0 0 10px #ffA500;
-            animation: flicker 1.5s infinite alternate;
-        }
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow:
-                -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000,
-                0 0 2px #ff4500,
-                0 0 5px #ff4500,
-                0 0 10px #ffA500,
-                0 0 20px #ffA500,
-                0 0 40px #ffA500;
-                color: #ffA500;
-            }
-            20%, 24%, 55% {
-                text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;
-                color: #4a2d0c;
-            }
-        }
+        
         .super-value-text {
-            color: #ff5555; /* Rojo claro y brillante */
+            color: #ef4444; /* Rojo intenso */
             font-weight: bold;
-            text-shadow: 0 0 5px #ff5555, 0 0 10px #ff2222, 0 0 15px #ff0000; /* Efecto de resplandor rojo */
         }
         #startupScreen, .modal-bg {
-            background-color: rgba(10, 10, 10, 0.8);
+            background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(4px);
         }
         
-        #limboLexicalBox {
+        #limboGramaticalBox {
             border: 4px solid;
             border-image-slice: 1;
             border-image-source: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
@@ -94,7 +68,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #1a1a1a; /* Match card background */
+            background: #ffffff; 
             overflow: hidden;
             clip-path: inset(50% 50% 50% 50%);
         }
@@ -146,103 +120,71 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        
-        #lightning {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0);
-            z-index: -1; /* Detrás de todo */
-            animation: lightning-flash 7s infinite ease-out;
-        }
-
-        @keyframes lightning-flash {
-            0% { background: rgba(255, 255, 255, 0); }
-            90% { background: rgba(255, 255, 255, 0); }
-            90.1% { background: rgba(255, 255, 255, 0.8); }
-            90.3% { background: rgba(255, 255, 255, 0); }
-            93% { background: rgba(255, 255, 255, 0); }
-            93.1% { background: rgba(255, 255, 255, 0.6); }
-            93.4% { background: rgba(255, 255, 255, 0); }
-            100% { background: rgba(255, 255, 255, 0); }
-        }
 
     </style>
 </head>
-<body class="bg-black font-sans leading-normal tracking-normal min-h-screen">
-    <div id="lightning"></div>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen">
     <!-- Pantalla de Inicio -->
     <div id="startupScreen" class="fixed inset-0 modal-bg flex flex-col items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="text-center w-full max-w-4xl mx-auto">
-            <h1 class="text-4xl sm:text-6xl font-black halloween-text mb-2">EL RETO DEL DICCIONARIO</h1>
-            <h2 class="text-xl sm:text-2xl font-bold halloween-text mb-8">TEMPORADA DE HALLOWEEN</h2>
+            <h1 class="text-4xl sm:text-6xl font-black text-blue-900 mb-8">EL RETO DEL DICCIONARIO</h1>
             <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4">
-                <button id="newGameButton" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                <button id="newGameButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
                     NUEVA PARTIDA
                 </button>
-                <button id="continueGameButton" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform text-lg sm:text-xl">
+                <button id="continueGameButton" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform text-lg sm:text-xl">
                     SEGUIR JUGANDO
                 </button>
-                 <button id="tutorialButton" class="flex-1 bg-gray-800 hover:bg-black text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                 <button id="tutorialButton" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
                     Tutorial
                 </button>
             </div>
-            <p class="text-xs text-gray-400 mt-8 text-center">El Reto del Diccionario - Un juego creado por el Tío Christopher | By Didac-Click Group.</p>
+            <p class="text-xs text-gray-400 mt-8 text-center">© 2025 El Reto del Diccionario | Desarrollado por Didac-Click Group.</p>
         </div>
     </div>
     
     <!-- Tutorial Modal -->
     <div id="tutorialScreen" class="fixed inset-0 modal-bg hidden flex items-center justify-center p-4 z-[100]">
-        <div class="w-full max-w-3xl bg-[#1a1a1a] p-6 rounded-xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-orange-500">
-            <div id="integratedTutorial" class="text-left">
-                <h2 class="text-2xl font-extrabold text-orange-400 mb-3 text-center">¿Cómo se juega?</h2>
-                <p class="text-md text-gray-300 mb-4 leading-relaxed text-center">
-                    El objetivo es acumular <span class="font-bold text-orange-400">palabras</span> y <span class="font-bold text-green-400">dinero</span> para dominar la acentuación.<br>
-                    <span class="text-sky-400 font-semibold">Ganas al conseguir la palabra <span class="underline decoration-sky-400">Sobreesdrújula</span>.</span>
+        <div class="w-full max-w-3xl bg-white p-6 rounded-xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-blue-300">
+            <div id="integratedTutorial" class="text-left text-gray-800">
+                <h2 class="text-2xl font-extrabold text-blue-800 mb-3 text-center">¿Cómo se juega?</h2>
+                <p class="text-md text-gray-700 mb-4 leading-relaxed text-center">
+                    El objetivo es acumular <span class="font-bold text-blue-700">palabras</span> y <span class="font-bold text-green-700">dinero</span> para dominar la acentuación.<br>
+                    <span class="text-sky-600 font-semibold">Ganas al conseguir la palabra <span class="underline decoration-sky-400">Sobreesdrújula</span>.</span>
                 </p>
-                <ol class="list-decimal pl-5 space-y-4 text-sm text-gray-300">
+                <ol class="list-decimal pl-5 space-y-4 text-sm text-gray-600">
                     <li>
-                        <span class="font-bold text-green-400">Jugar y Ganar:</span> Compra palabras para tu colección y gana dinero automáticamente. A más riqueza, mayor <span class="font-bold text-yellow-400">inflación</span>. Para ganar, necesitas <span class="font-bold">30 palabras</span> de cada una de las categorías principales y <span class="font-bold text-purple-400">mucho dinero</span> para la palabra final.
+                        <span class="font-bold text-green-700">Jugar y Ganar:</span> Compra palabras para tu colección y gana dinero automáticamente. A más riqueza, mayor <span class="font-bold text-yellow-700">inflación</span>. Para ganar, necesitas <span class="font-bold">30 palabras</span> de cada una de las categorías principales y <span class="font-bold text-purple-700">mucho dinero</span> para la palabra final.
                     </li>
                     <li>
-                        <span class="font-bold text-rose-400">El Desafío:</span> ¡Cuidado! El Diccionario te examinará. Escribe una palabra de una categoría específica en <span class="font-bold">30 segundos</span>. La palabra debe ser perfecta (mayúscula inicial, tildes) y no usada antes en retos. Si fallas, pierdes todo. Si aciertas, ganas dinero. ¡Tras <span class="font-bold">3 fallos seguidos</span>, pierdes todo tu progreso!
+                        <span class="font-bold text-rose-700">El Desafío:</span> Periódicamente, deberás escribir una palabra de una categoría específica en 30 segundos. ¡Si fallas 3 veces, pierdes todo tu progreso!
                     </li>
-                    <li>
-                        <span class="font-bold text-sky-400">Protege tu Riqueza:</span> Usa la Tienda para comprar el <span class="font-bold text-blue-400">Escudo Universal</span> y <span class="font-bold text-green-400">Vidas</span>. Los precios de la tienda <span class="font-bold">NUNCA</span> cambian. <span class="font-bold text-red-500">Importante:</span> La tienda está deshabilitada en tu primera partida (Multiplicador x1).
-                    </li>
-                    <li>
-                        <span class="font-bold text-fuchsia-400">Palabras Especiales y Bonus:</span>
+                     <li>
+                        <span class="font-bold text-fuchsia-700">Potenciadores y Eventos:</span>
                         <ul class="list-disc pl-5 mt-2 space-y-2">
                             <li>
-                                <strong class="super-value-text">Super Value:</strong> Palabras en <span class="super-value-text">rojo</span>. Cuestan el doble pero activan un <span class="font-bold">potenciador x2</span> por 10s en su categoría.
+                                <strong class="super-value-text">Super Value:</strong> Palabras en rojo que duplican las ganancias de su categoría por 10s.
                             </li>
                             <li>
-                                <strong class="font-extrabold">Bonus <span class="rainbow-text">CHRISTOPHER</span>:</strong> Gratis y con 3% de probabilidad. Activa un <span class="font-bold">Potenciador Global x2</span> por 60s en todo (excepto Sobreesdrújulas). ¡Es acumulable!
+                                <strong>Bonus <span class="rainbow-text">CHRISTOPHER</span>:</strong> Duplica todas las ganancias por 60s.
                             </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <span class="font-bold text-gray-200">Eventos especiales:</span>
-                        <ul class="list-disc pl-5 mt-2 space-y-2">
                              <li>
                                 <span class="glitch-wrapper">
                                     <strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramátical: ???">Limbo Gramátical: ???</strong>
                                 </span>
                             </li>
-                            <li>
-                                <strong class="text-gray-200">Eventos de temporada (temporada actual):</strong> <span class="halloween-text font-bold">Halloween</span> (finaliza el 31 de Octubre).
-                            </li>
                         </ul>
                     </li>
                     <li>
-                        <span class="font-bold text-purple-400">Formatear el Juego:</span> Al ganar, puedes "<span class="font-bold">formatear</span>". Reinicias con un multiplicador permanente que aumenta tu dinero inicial y el valor de las palabras, ¡haciendo el juego más intenso!
+                        <span class="font-bold text-sky-700">Tienda:</span> Compra <span class="font-bold text-green-600">Vidas</span> para reintentar desafíos o un <span class="font-bold text-blue-600">Escudo Universal</span> para ignorarlos.
+                    </li>
+                    <li>
+                        <span class="font-bold text-purple-700">Formatear:</span> Al ganar, puedes reiniciar con un multiplicador de ganancias permanente, ¡haciendo cada nueva partida más rápida e intensa!
                     </li>
                 </ol>
             </div>
              <div class="text-center w-full">
-                <button id="backToGameFromTutorial" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 mt-6">
+                <button id="backToGameFromTutorial" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 mt-6">
                     Cerrar
                 </button>
             </div>
@@ -256,22 +198,22 @@
             <div class="flex flex-col lg:flex-row justify-center items-stretch w-full gap-4">
                 
                 <div class="flex flex-col items-center justify-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
-                    <h2 class="text-xl font-bold text-green-400">Tu Riqueza</h2>
-                    <p id="playerMoney" class="text-2xl sm:text-3xl font-extrabold text-green-300 mt-2">0</p>
-                    <p class="text-sm text-gray-400 mt-1">Ingreso Pasivo: <span id="passiveIncome" class="font-bold">0.0</span>/seg</p>
+                    <h2 class="text-xl font-bold text-green-700">Tu Riqueza</h2>
+                    <p id="playerMoney" class="text-2xl sm:text-3xl font-extrabold text-green-800 mt-2">0</p>
+                    <p class="text-sm text-gray-500 mt-1">Ingreso Pasivo: <span id="passiveIncome" class="font-bold">0.0</span>/seg</p>
                 </div>
 
                 <div class="flex flex-col items-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
                     <h3 class="text-xl font-bold mb-2">Palabra Actual</h3>
                     <p id="currentWord" class="text-3xl sm:text-5xl font-black mb-1">Cargando...</p>
-                    <p id="wordCategory" class="text-md font-semibold text-gray-400 mb-1"></p>
-                    <p id="wordValue" class="text-md font-extrabold text-blue-400"></p>
+                    <p id="wordCategory" class="text-md font-semibold text-gray-500 mb-1"></p>
+                    <p id="wordValue" class="text-md font-extrabold text-blue-700"></p>
                     <div class="flex justify-center space-x-2 mt-2">
-                        <button id="buyButton" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 text-sm">
+                        <button id="buyButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 text-sm">
                             Comprar
                         </button>
                     </div>
-                    <div id="wordTimerBarContainer" class="w-full bg-gray-700 rounded-full h-2.5 mt-2">
+                    <div id="wordTimerBarContainer" class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div id="wordTimerBar" class="h-2.5 rounded-full" style="width: 100%; transition: width 0.05s linear, background-color 0.5s ease;"></div>
                     </div>
                 </div>
@@ -279,7 +221,7 @@
 
             <div class="flex flex-wrap lg:flex-nowrap w-full gap-4 mt-4 text-center border p-4 rounded-xl shadow-lg card">
                 <div class="w-full">
-                    <h2 class="text-xl font-bold text-gray-200 mb-4 text-center">Tu Colección de Palabras</h2>
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">Tu Colección de Palabras</h2>
                     <div id="inventoryContainer" class="flex flex-row overflow-x-auto whitespace-nowrap space-x-2 p-2">
                     </div>
                 </div>
@@ -294,72 +236,61 @@
     </div>
 
     <!-- Barra de estado y botones del juego -->
-    <div id="gameControls" class="fixed bottom-0 left-0 right-0 w-full flex flex-wrap justify-center items-center gap-2 p-3 bg-black border-t-2 border-gray-700 z-10">
-        <div class="bg-gray-800 p-2 px-4 rounded-full shadow-lg border-2 text-white font-extrabold text-lg flex-shrink-0 w-24 text-center">
+    <div id="gameControls" class="fixed bottom-0 left-0 right-0 w-full flex flex-wrap justify-center items-center gap-2 p-3 bg-white border-t-2 border-gray-200 z-10">
+        <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
             <span id="lifeCounter">3/3</span>
         </div>
-        <div class="bg-gray-800 p-2 px-4 rounded-full shadow-lg border-2 border-gray-700 text-white font-extrabold text-lg flex-shrink-0 w-24 text-center">
+        <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
             <span id="currentMultiplier">1x</span>
         </div>
-        <div id="limboGramaticalTimerDisplay" class="bg-gray-800 p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center glitch-wrapper">
+        <div id="limboGramaticalTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center glitch-wrapper">
             <span class="rainbow-text glitch-text" data-text="0s">0s</span>
         </div>
-        <div id="christopherTimerDisplay" class="bg-gray-800 p-2 px-4 rounded-full shadow-lg border-2 border-gray-700 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
+        <div id="christopherTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
             <span class="rainbow-text">0s</span>
         </div>
-        <div id="superValueTimerDisplay" class="bg-gray-800 p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
+        <div id="superValueTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
             <span class="super-value-text">0s</span>
         </div>
-        <button id="shopButton" class="bg-purple-700 hover:bg-purple-800 p-2 px-4 rounded-full shadow-lg border-2 border-gray-700 text-white font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
+        <button id="shopButton" class="bg-purple-600 hover:bg-purple-700 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-white font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             Tienda
         </button>
-        <button id="homeButton" class="bg-gray-800 hover:bg-black p-2 px-4 rounded-full shadow-lg border-2 border-gray-700 text-white font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
+        <button id="homeButton" class="bg-gray-600 hover:bg-gray-700 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-white font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             Inicio
         </button>
     </div>
 
     <!-- Modal for Shop -->
     <div id="shopScreen" class="fixed inset-0 modal-bg hidden items-center justify-center p-4 z-[100]">
-        <div class="w-full max-w-4xl bg-[#1a1a1a] p-4 sm:p-8 rounded-xl shadow-lg max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-purple-500">
-            <h2 class="text-2xl font-bold text-gray-200 mb-6 text-center">Tienda</h2>
+        <div class="w-full max-w-4xl bg-white p-4 sm:p-8 rounded-xl shadow-lg max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-purple-300">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Tienda</h2>
             <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-                 <!-- Agua Bendita -->
-                <div class="flex-1 bg-yellow-900/50 border-2 border-yellow-700 rounded-xl p-4">
-                    <h3 class="text-lg font-bold text-yellow-300 mb-2">Agua Bendita</h3>
-                    <p class="text-sm text-yellow-400 mb-3">Elimina una maldición de Halloween de una categoría al azar.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-yellow-200" id="aguaBenditaPrice">100,000 💰</span>
-                        <button id="buyAguaBenditaButton" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
-                            Comprar
-                        </button>
-                    </div>
-                </div>
                 <!-- Comprar Vida -->
-                <div class="flex-1 bg-red-900/50 border-2 border-red-700 rounded-xl p-4">
-                    <h3 class="text-lg font-bold text-red-300 mb-2">Comprar Vida</h3>
-                    <p class="text-sm text-red-400 mb-3">Recupera una vida perdida. ¡Solo en emergencias!</p>
+                <div class="flex-1 bg-red-100 border-2 border-red-300 rounded-xl p-4">
+                    <h3 class="text-lg font-bold text-red-800 mb-2">Comprar Vida</h3>
+                    <p class="text-sm text-red-700 mb-3">Recupera una vida perdida. ¡Solo en emergencias!</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-red-200" id="lifePrice">2,000,000 💰</span>
+                        <span class="text-lg font-bold text-red-900" id="lifePrice"></span>
                         <button id="buyLifeButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
                             Comprar
                         </button>
                     </div>
                 </div>
                 <!-- Escudo Universal -->
-                <div class="flex-1 bg-purple-900/50 border-2 border-purple-700 rounded-xl p-4">
-                    <h3 class="text-lg font-bold text-purple-300 mb-2">Escudo Universal</h3>
-                    <p class="text-sm text-purple-400 mb-3">Protege contra TODOS los retos por 60 segundos</p>
+                <div class="flex-1 bg-purple-100 border-2 border-purple-300 rounded-xl p-4">
+                    <h3 class="text-lg font-bold text-purple-800 mb-2">Escudo Universal</h3>
+                    <p class="text-sm text-purple-700 mb-3">Protege contra TODOS los retos por 60 segundos</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-purple-200" id="universalPrice">800,000 💰</span>
+                        <span class="text-lg font-bold text-purple-900" id="universalPrice"></span>
                         <button id="buyUniversalShield" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
                             Comprar
                         </button>
                     </div>
-                    <p class="text-xs text-purple-400 mt-2">Cantidad: <span id="universalCount">0</span></p>
+                    <p class="text-xs text-purple-600 mt-2">Cantidad: <span id="universalCount">0</span></p>
                 </div>
             </div>
             <div class="text-center mt-6">
-                <button id="backToGameFromShop" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
+                <button id="backToGameFromShop" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
                     Cerrar Tienda
                 </button>
             </div>
@@ -368,41 +299,41 @@
 
     <!-- Modal for Messages -->
     <div id="messageModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4">
-        <div class="bg-[#1a1a1a] p-6 max-w-sm w-full text-center rounded-xl shadow-lg border border-orange-500">
-            <p id="modalMessage" class="text-lg font-semibold text-gray-200 mb-4"></p>
-            <button id="modalCloseButton" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-full">Cerrar</button>
+        <div class="bg-white p-6 max-w-sm w-full text-center rounded-xl shadow-lg border border-blue-300">
+            <p id="modalMessage" class="text-lg font-semibold text-gray-800 mb-4"></p>
+            <button id="modalCloseButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Cerrar</button>
         </div>
     </div>
     
     <!-- Modal for Word List -->
-    <div id="wordsModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4">
-        <div class="bg-[#1a1a1a] p-6 max-w-sm w-full text-center rounded-xl shadow-lg border border-gray-700">
-            <h3 id="wordsModalTitle" class="text-xl font-bold text-gray-200 mb-4"></h3>
+    <div id="wordsModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4 z-[200]">
+        <div class="bg-white p-6 max-w-sm w-full text-center rounded-xl shadow-lg border border-gray-300">
+            <h3 id="wordsModalTitle" class="text-xl font-bold text-gray-800 mb-4"></h3>
             <ul id="wordsList" class="max-h-64 overflow-y-auto text-left mb-4 px-2">
             </ul>
-            <button id="wordsModalCloseButton" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-full">Cerrar</button>
+            <button id="wordsModalCloseButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Cerrar</button>
         </div>
     </div>
 
     <!-- Modal for Dictionary Challenge -->
     <div id="dictionaryModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4">
-        <div class="bg-[#1a1a1a] p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-4 border-red-500">
-            <h3 class="text-3xl font-extrabold text-red-500 mb-2">¡EL DICCIONARIO!</h3>
-            <p class="text-md text-gray-300 mb-4">Escribe una palabra de la categoría:</p>
+        <div class="bg-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-4 border-red-500">
+            <h3 class="text-3xl font-extrabold text-red-700 mb-2">¡EL DICCIONARIO!</h3>
+            <p class="text-md text-gray-600 mb-4">Escribe una palabra de la categoría:</p>
             <p id="challengeCategory" class="text-4xl font-black mb-4"></p>
-            <p class="text-sm font-bold text-gray-400">Tiempo restante: <span id="timer" class="text-red-500">30</span>s</p>
-            <input id="challengeInput" type="text" class="w-full mt-4 p-3 text-center text-lg font-semibold border-2 border-gray-600 rounded-lg focus:outline-none focus:border-red-500 bg-gray-800 text-white">
+            <p class="text-sm font-bold text-gray-500">Tiempo restante: <span id="timer" class="text-red-500">30</span>s</p>
+            <input id="challengeInput" type="text" class="w-full mt-4 p-3 text-center text-lg font-semibold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-gray-800">
         </div>
     </div>
 
     <!-- Modal for Loading -->
     <div id="loadingModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4">
-        <div class="bg-[#1a1a1a] p-6 max-w-sm w-full text-center rounded-xl shadow-lg flex flex-col items-center">
-            <svg class="animate-spin -ml-1 mr-3 h-10 w-10 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <div class="bg-white p-6 max-w-sm w-full text-center rounded-xl shadow-lg flex flex-col items-center">
+            <svg class="animate-spin -ml-1 mr-3 h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p class="text-lg font-semibold text-gray-200 mt-4">Verificando palabra...</p>
+            <p class="text-lg font-semibold text-gray-800 mt-4">Verificando palabra...</p>
         </div>
     </div>
 
@@ -432,27 +363,14 @@
             </div>
         </div>
     </div>
-    
-    <!-- Modal for Halloween Notice -->
-    <div id="halloweenNoticeScreen" class="fixed inset-0 modal-bg hidden flex-col items-center justify-center p-8 z-[101]">
-        <div class="w-full max-w-md bg-[#1a1a1a] p-8 rounded-xl shadow-2xl border-4 border-orange-500 text-center">
-            <h2 class="text-3xl font-extrabold halloween-text mb-4">¡Evento de Temporada!</h2>
-            <p class="text-md text-gray-300 mb-6">
-                Ha llegado la <strong class="halloween-text">Maldición de Halloween</strong>. Ten cuidado con las palabras embrujadas que aparecen, ¡podrían afectar tus ganancias!
-            </p>
-            <button id="closeHalloweenNotice" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
-                Entendido
-            </button>
-        </div>
-    </div>
 
     <!-- Modal for Limbo Gramatical -->
     <div id="limboGramaticalScreen" class="fixed inset-0 modal-bg hidden flex-col items-center justify-center p-8 z-[102]">
-        <div class="w-full max-w-md bg-[#1a1a1a] p-8 rounded-xl shadow-2xl text-center relative z-[102] border-4 border-purple-500">
+        <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl text-center relative z-[102] border-4 border-purple-500">
             <div class="glitch-wrapper">
                 <h2 class="text-3xl font-extrabold rainbow-text glitch-text mb-4" data-text="¡Limbo Gramátical!">¡Limbo Gramátical!</h2>
             </div>
-            <p class="text-md text-gray-300 mb-6">
+            <p class="text-md text-gray-600 mb-6">
                  El Tío Christopher tiene un regalo para ti. Aprovéchalo.
             </p>
             <button id="startLimboGramatical" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
@@ -482,8 +400,9 @@
         let shields = { universal: 0 };
         
         // --- Timers and Intervals ---
-        let gameLoopInterval = null;
-        let uiUpdateInterval;
+        let animationFrameId = null;
+        let lastUpdateTime = 0;
+        let timeSinceLastIncomeUpdate = 0;
         let wordDisplayTimeout;
         let challengeInterval = null;
         let challengeTimerInterval;
@@ -502,7 +421,6 @@
         let gameStarted = false;
         let hasBoughtFirstWord = false;
         let gamePausedForFeedback = false;
-        let actionAfterNotice = null;
         
         // --- Game Constants ---
         const PRICE_PER_LETTER = 15;
@@ -510,7 +428,6 @@
         const INFLATION_FACTOR = 100;
         const SHIELD_PRICE_UNIVERSAL = 800000;
         const LIFE_PRICE = 2000000;
-        const AGUA_BENDITA_BASE_PRICE = 100000;
         const CHALLENGE_REWARDS = { "Agudas": 10000, "Llanas": 20000, "Esdrújulas": 40000 };
         
         const BASE_WORD_DATABASE = {
@@ -518,43 +435,38 @@
                 value: 10,
                 words: ["Sol", "Mar", "Luz", "Voz", "Pan", "Sal", "Miel", "Tren", "Flor", "Rey", "Son", "Paz", "Bien", "Mal", "Gas", "No", "Sí", "Yo", "Él", "Tú", "Ve", "Da", "Sé", "Vi", "Di", "Pie", "Fe", "Ley", "Don", "Fin", "Mes", "Mil", "Res", "Ron", "Set", "Sur", "Tal", "Tez", "Zas", "Dar"],
                 superValueWords: ["Flor", "Voz", "Rey", "Paz"],
-                halloweenWords: ["¡Bu!", "¡Uuuuu!", "¡Miau!"],
                 limit: 30
             },
             "Agudas": {
                 value: 100,
                 words: ["Acción", "Adicción", "Además", "Andén", "Balón", "Bebé", "Café", "Camión", "Canción", "Colibrí", "Corazón", "Después", "Emoción", "Interés", "Jabalí", "Jamás", "Jardín", "Jazmín", "Menú", "País", "París", "Pasión", "Perfección", "Portugués", "Revolución", "Sofá", "Solución", "También", "Visión", "Volcán", "Comió", "Estudió", "Habló", "Vivió", "Ganará"],
                 superValueWords: ["Colibrí", "Jazmín", "Pasión", "Revolución"],
-                halloweenWords: ["Ataúd", "Terror", "Común"],
                 limit: 30
             },
             "Llanas": {
                 value: 250,
                 words: ["Árbol", "Ángel", "Azúcar", "Cáncer", "Cárcel", "Carácter", "Césped", "Clímax", "Cráter", "Día", "Difícil", "Dólar", "Éter", "Fácil", "Fósil", "Fútbol", "Huésped", "Lápiz", "Líder", "Mártir", "Móvil", "Nácar", "Poesía", "Póker", "Río", "Tórax", "Trébol", "Túnel", "Geografía", "Biología", "Filosofía", "Tecnología", "Psicología", "Economía", "Anatomía", "Sandía", "Policía"],
                 superValueWords: ["Carácter", "Cráter", "Poesía", "Geografía"],
-                halloweenWords: ["Bruja", "Máscara", "Momia"],
                 limit: 30
             },
             "Esdrújulas": {
                 value: 500,
                 words: ["Análisis", "Antártida", "Atmósfera", "Bolígrafo", "Brújula", "Cálculo", "Catástrofe", "Círculo", "Clínica", "Cómpralo", "Déficit", "Esdrújula", "Estómago", "Éxito", "Fábrica", "Fósforo", "Gramática", "Hígado", "Héroe", "Hipócrita", "Índice", "Lágrima", "Lógico", "Mágico", "Máquina", "Matemáticas", "Médico", "Miércoles", "Murciélago", "Músculo", "Música", "Número", "Oxígeno", "Página", "Pájaro", "Plátano", "Público", "Química", "Rápido", "Sábado", "Semáforo", "Sílaba", "Teléfono", "Término", "Tráfico", "Último", "Vértebra", "Víctima", "Aéreo", "Célula"],
                 superValueWords: ["Atmósfera", "Murciélago", "Científico", "Matemáticas"],
-                halloweenWords: ["Cráneo", "Murciélago", "Mágico"],
                 limit: 30
             },
             "Sobreesdrújulas": {
                 value: 1000000,
                 words: ["Agradéceselo", "Apréndetelo", "Averíguamelo", "Búscaselo", "Comprándomelo", "Dígamelo", "Díceselo", "Enciéndemelo", "Entrégaselo", "Explícaselo", "Guárdaselo", "Hágaselo", "Júraselo", "Llévaselo", "Pídemelo", "Pásaselo", "Repíteselo", "Tráigaselo", "Véndeselo", "Dedicándoselo", "Estudiándotelo", "Explicándoselo", "Repitiéndoselo", "Comiéndoselo", "Escribiéndotelo", "Mirándoselo", "Preparándomelo", "Comprándoselo", "Llamándoselo", "Encontrándoselo", "Recibiéndoselo", "Entregándoselo", "Aceptándoselo", "Aconsejándoselo", "Acompañándotelo", "Aprendiéndotelo", "Bendiciéndotelo", "Buscándoselo", "Celebrándoselo", "Comentándoselo"],
                 superValueWords: [],
-                halloweenWords: [],
                 limit: 1
             }
         };
 
         let WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
 
-        const categoryColors = { "Monosílabos": "text-gray-400", "Agudas": "text-green-400", "Llanas": "text-yellow-400", "Esdrújulas": "text-blue-400", "Sobreesdrújulas": "text-purple-400" };
-        const categoryBackgrounds = { "Monosílabos": "bg-gray-700/50 hover:bg-gray-600/50", "Agudas": "bg-green-800/50 hover:bg-green-700/50", "Llanas": "bg-yellow-800/50 hover:bg-yellow-700/50", "Esdrújulas": "bg-blue-800/50 hover:bg-blue-700/50", "Sobreesdrújulas": "bg-purple-800/50 hover:bg-purple-700/50" };
+        const categoryColors = { "Monosílabos": "text-gray-800", "Agudas": "text-green-800", "Llanas": "text-yellow-800", "Esdrújulas": "text-blue-800", "Sobreesdrújulas": "text-purple-800" };
+        const categoryBackgrounds = { "Monosílabos": "bg-gray-200 hover:bg-gray-300", "Agudas": "bg-green-200 hover:bg-green-300", "Llanas": "bg-yellow-200 hover:bg-yellow-300", "Esdrújulas": "bg-blue-200 hover:bg-blue-300", "Sobreesdrújulas": "bg-purple-200 hover:bg-purple-300" };
         const superValueColor = "super-value-text";
         
         let audioCtx;
@@ -570,24 +482,6 @@
             gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
             oscillator.start(audioCtx.currentTime);
             oscillator.stop(audioCtx.currentTime + 0.5);
-        }
-
-        function playHalloweenSound() {
-            if (!audioCtx) return;
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            oscillator.type = 'sawtooth';
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-
-            oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.7);
-            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.7);
-
-            oscillator.start(audioCtx.currentTime);
-            oscillator.stop(audioCtx.currentTime + 0.7);
         }
 
         function playWinSound() {
@@ -643,11 +537,9 @@
                 if (playerWords[category] && WORD_DATABASE[category] && category !== "Sobreesdrújulas") {
                     const count = playerWords[category].count || 0;
                     const baseValue = WORD_DATABASE[category].value;
-                    const halloweenDebuff = playerWords[category].halloweenDebuff || 1;
                     
-                    let categoryIncome = count * baseValue * halloweenDebuff;
+                    let categoryIncome = count * baseValue;
 
-                    // Comprueba si hay un potenciador Super Value activo para ESTA categoría
                     if (superValueBoosts[category] && now < superValueBoosts[category]) {
                         categoryIncome *= SUPER_VALUE_MULTIPLIER;
                     }
@@ -671,7 +563,7 @@
             christopherBonusCountDuringLimbo = 0;
 
             Object.keys(WORD_DATABASE).forEach(category => {
-                playerWords[category] = { count: 0, list: [], halloweenDebuff: 1, halloweenWordsCollected: 0, halloweenList: [] };
+                playerWords[category] = { count: 0, list: [] };
             });
         }
         
@@ -682,7 +574,6 @@
                 if (playerWords[category]) {
                     playerWords[category].count = 0;
                     playerWords[category].list = [];
-                    // Al no tocar halloweenDebuff o halloweenWordsCollected, la maldición persiste.
                 }
             });
         }
@@ -735,15 +626,11 @@
         }
         
         async function startNewGame() {
-            actionAfterNotice = proceedWithNewGame;
-            document.getElementById('halloweenNoticeScreen').classList.remove('hidden');
-            document.getElementById('halloweenNoticeScreen').classList.add('flex');
+            proceedWithNewGame();
         }
 
         async function continueGame() {
-            actionAfterNotice = proceedWithContinueGame;
-            document.getElementById('halloweenNoticeScreen').classList.remove('hidden');
-            document.getElementById('halloweenNoticeScreen').classList.add('flex');
+            proceedWithContinueGame();
         }
         
         async function proceedWithNewGame() {
@@ -766,24 +653,12 @@
 
              // Shop Button itself
             const shopButton = document.getElementById('shopButton');
-            const isShopDisabled = gameMultiplier === 1;
-            shopButton.disabled = isShopDisabled;
-            shopButton.classList.toggle('opacity-50', isShopDisabled);
-            shopButton.classList.toggle('cursor-not-allowed', isShopDisabled);
+            shopButton.disabled = false;
+            shopButton.classList.remove('opacity-50', 'cursor-not-allowed');
 
-            // Agua Bendita
-            const aguaBenditaPrice = (AGUA_BENDITA_BASE_PRICE * gameMultiplier) * discount;
-            document.getElementById('aguaBenditaPrice').textContent = `${aguaBenditaPrice.toLocaleString('es')} 💰`;
-            const buyAguaBenditaBtn = document.getElementById('buyAguaBenditaButton');
-            const hasCurses = Object.values(playerWords).some(cat => cat.halloweenDebuff < 1);
-            const canAffordAgua = playerMoney >= aguaBenditaPrice;
-            buyAguaBenditaBtn.disabled = !hasCurses || !canAffordAgua;
-            buyAguaBenditaBtn.classList.toggle('opacity-50', !hasCurses || !canAffordAgua);
-            buyAguaBenditaBtn.classList.toggle('cursor-not-allowed', !hasCurses || !canAffordAgua);
-            
             // Universal Shield
             const shieldPrice = SHIELD_PRICE_UNIVERSAL * discount;
-            document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('es')} 💰`;
+            document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('es')}`;
             const buyUniversalShieldBtn = document.getElementById('buyUniversalShield');
             const canAffordShield = playerMoney >= shieldPrice;
             buyUniversalShieldBtn.disabled = !canAffordShield;
@@ -793,7 +668,7 @@
 
             // Buy Life
             const lifePrice = LIFE_PRICE * discount;
-            document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('es')} 💰`;
+            document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('es')}`;
             const buyLifeBtn = document.getElementById('buyLifeButton');
             const canAffordLife = playerMoney >= lifePrice;
             const needsLife = consecutiveFailures > 0;
@@ -835,30 +710,6 @@
             }
         }
 
-        function buyAguaBendita() {
-            const isLimboActive = Date.now() < limboGramaticalEndTime;
-            const price = (AGUA_BENDITA_BASE_PRICE * gameMultiplier) * (isLimboActive ? 0.79 : 1);
-            const cursedCategories = Object.keys(playerWords).filter(cat => playerWords[cat].halloweenDebuff < 1);
-
-            if (cursedCategories.length > 0 && playerMoney >= price) {
-                playerMoney -= price;
-                const randomCursedCategory = cursedCategories[Math.floor(Math.random() * cursedCategories.length)];
-                const categoryData = playerWords[randomCursedCategory];
-                
-                if (categoryData.halloweenWordsCollected > 0) {
-                    categoryData.halloweenWordsCollected--;
-                    categoryData.halloweenDebuff = Math.pow(0.985, categoryData.halloweenWordsCollected);
-                }
-
-                updateUI();
-                updateShopUI();
-                savePlayerData();
-                showModal(`¡Una maldición ha sido eliminada de la categoría ${randomCursedCategory}!`);
-            } else {
-                showModal('¡No tienes suficiente dinero o no hay maldiciones que eliminar!');
-            }
-        }
-        
         function startWordDisplayTimer(duration) {
             clearTimeout(wordDisplayTimeout);
             wordDisplayTimeout = setTimeout(() => {
@@ -882,8 +733,8 @@
         async function generateNewWord(forceNew = false) {
             if (isChallengeActive) return;
             
-            // Trigger for Limbo Gramatical event (1.5% chance, once per game)
-            if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && Math.random() < 0.015) {
+            // Trigger for Limbo Gramatical event (0.1% chance, once per game)
+            if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && Math.random() < 0.001) {
                 limboGramaticalTriggeredThisPartida = true;
                 triggerLimboGramatical();
                 return; // Stop function to show the modal
@@ -910,20 +761,6 @@
                 startWordDisplayTimer(1000); // 1 segundo
                 return;
             }
-            // Adjust the chance for Halloween words based on Christopher's chance
-            if (wordTypeChance < christopherChance + 0.30) {
-                const availableCategories = Object.keys(WORD_DATABASE).filter(c => c !== "Sobreesdrújulas" && (playerWords[c]?.halloweenWordsCollected || 0) < 2);
-                if (availableCategories.length > 0) {
-                    const category = availableCategories[Math.floor(Math.random() * availableCategories.length)];
-                    const halloweenWords = WORD_DATABASE[category].halloweenWords;
-                    if (halloweenWords.length > 0) {
-                        currentWord = { word: halloweenWords[Math.floor(Math.random() * halloweenWords.length)], category: category, value: 0, isHalloween: true, startTime: Date.now() };
-                        updateUI();
-                        startWordDisplayTimer(3000);
-                        return;
-                    }
-                }
-            }
 
             // Palabra Normal
             let categories = Object.keys(WORD_DATABASE);
@@ -936,7 +773,7 @@
             let ownedWords = playerWords[randomCategory]?.list || [];
             let availableWords = WORD_DATABASE[randomCategory].words.filter(word => !ownedWords.includes(word));
             
-            if (availableWords.length === 0 && !allCategoriesCompleted) { // Retry if a category runs out of words but not all are complete
+            if (availableWords.length === 0 && !allCategoriesCompleted) { 
                 setTimeout(() => generateNewWord(true), 50); 
                 return;
             } else if (availableWords.length === 0 && allCategoriesCompleted){
@@ -989,9 +826,6 @@
                 if (currentWord.isBonus) {
                     wordClass = "rainbow-text";
                     displayCategory = "Bonus";
-                } else if (currentWord.isHalloween) {
-                    wordClass = "halloween-text";
-                    displayCategory = "Maldición Halloween";
                 } else if (currentWord.isSuperValue) {
                     wordClass = superValueColor;
                 }
@@ -1005,30 +839,20 @@
                 let isCategoryComplete = false;
 
                 if (currentWord.isBonus) {
-                    // Bonus words can always be bought and don't belong to a completable category.
                     isOwned = false;
                     isCategoryComplete = false;
                 } else if (currentWord.category && playerWords[currentWord.category]) {
-                    // For regular and seasonal words
                     const categoryData = playerWords[currentWord.category];
                     const limit = WORD_DATABASE[currentWord.category]?.limit;
-
                     isCategoryComplete = categoryData && limit && categoryData.count >= limit;
-
-                    if (currentWord.isHalloween) {
-                        isOwned = (categoryData.halloweenList || []).includes(currentWord.word);
-                    } else {
-                        isOwned = (categoryData.list || []).includes(currentWord.word);
-                    }
+                    isOwned = (categoryData.list || []).includes(currentWord.word);
                 }
 
-                // Button should be disabled if you can't afford, already own it, or the category is full (unless it's a halloween word)
-                const disableForCompletion = isCategoryComplete && !currentWord.isHalloween;
-                buyButton.disabled = !canAfford || isOwned || disableForCompletion;
+                buyButton.disabled = !canAfford || isOwned || isCategoryComplete;
                 buyButton.classList.toggle('opacity-50', buyButton.disabled);
                 buyButton.classList.toggle('cursor-not-allowed', buyButton.disabled);
 
-                if (isCategoryComplete && !currentWord.isHalloween) {
+                if (isCategoryComplete) {
                     document.getElementById('wordValue').textContent = 'Categoría Completa';
                 } else {
                     document.getElementById('wordValue').textContent = `Costo: ${currentWord.value.toLocaleString('es')}`;
@@ -1053,7 +877,6 @@
             const svTimer = document.getElementById('superValueTimerDisplay');
             const now = Date.now();
 
-            // Limpia los potenciadores expirados
             Object.keys(superValueBoosts).forEach(cat => {
                 if (now >= superValueBoosts[cat]) {
                     delete superValueBoosts[cat];
@@ -1078,7 +901,6 @@
                 chrisTimer.classList.add('hidden');
             }
 
-            // El temporizador global de Super Value muestra el tiempo del que más tarde expira
             const maxSuperValueEndTime = Object.values(superValueBoosts).length > 0 ? Math.max(...Object.values(superValueBoosts)) : 0;
             const svTimeLeft = Math.ceil(Math.max(0, maxSuperValueEndTime - now) / 1000);
              if (svTimeLeft > 0) {
@@ -1094,12 +916,12 @@
             const inventoryContainer = document.getElementById('inventoryContainer');
             inventoryContainer.innerHTML = '';
             Object.keys(WORD_DATABASE).forEach(category => {
-                const data = playerWords[category] || { count: 0, list: [], halloweenDebuff: 1 };
+                const data = playerWords[category] || { count: 0, list: [] };
                 const limit = WORD_DATABASE[category].limit;
                 const isCompleted = data.count >= limit;
 
                 const categoryDiv = document.createElement('div');
-                categoryDiv.className = `relative flex-1 flex-shrink-0 text-center flex flex-col items-center justify-between p-2 cursor-pointer transition duration-300 rounded-lg shadow-md ${isCompleted ? "bg-gray-600 text-gray-400" : categoryBackgrounds[category]} ${categoryColors[category] || 'text-gray-200'}`;
+                categoryDiv.className = `relative flex-1 flex-shrink-0 text-center flex flex-col items-center justify-between p-2 cursor-pointer transition duration-300 rounded-lg shadow-md ${isCompleted ? "bg-gray-300 text-gray-500" : categoryBackgrounds[category]} ${categoryColors[category] || 'text-gray-800'}`;
                 categoryDiv.onclick = () => {
                     const wordsModal = document.getElementById('wordsModal');
                     document.getElementById('wordsModalTitle').textContent = `Palabras ${category}`;
@@ -1109,7 +931,7 @@
                         data.list.forEach((word, index) => {
                             const li = document.createElement('li');
                             li.textContent = `${index + 1}. ${word}`;
-                            li.className = "p-1 border-b border-gray-700";
+                            li.className = "p-1 border-b border-gray-200";
                             wordsList.appendChild(li);
                         });
                     } else {
@@ -1119,12 +941,6 @@
                     wordsModal.classList.add('flex');
                 };
 
-                let debuffText = '';
-                if (data.halloweenDebuff < 1) {
-                    const percentage = ((1 - data.halloweenDebuff) * 100).toFixed(1);
-                    debuffText = `<span class="font-bold halloween-text ml-2">-${percentage}%</span>`;
-                }
-                
                 const isChrisActive = Date.now() < christopherBoostEndTime;
                 const isSuperValueActiveForThisCategory = superValueBoosts[category] && Date.now() < superValueBoosts[category];
 
@@ -1139,7 +955,7 @@
 
                 categoryDiv.innerHTML = `
                     ${boostIconsHTML}
-                    <p class="text-sm font-bold">${category}${debuffText}</p>
+                    <p class="text-sm font-bold">${category}</p>
                     <p class="text-2xl font-extrabold">${data.count}/${limit}</p>
                 `;
                 inventoryContainer.appendChild(categoryDiv);
@@ -1168,15 +984,6 @@
                     const category = currentWord.category;
                     const remainingTime = (superValueBoosts[category] > now) ? (superValueBoosts[category] - now) : 0;
                     superValueBoosts[category] = now + remainingTime + 10000;
-                }
-            } else if (currentWord.isHalloween) {
-                playHalloweenSound();
-                const categoryData = playerWords[currentWord.category];
-                if(categoryData.halloweenWordsCollected < 2 && !categoryData.halloweenList.includes(currentWord.word)) {
-                    categoryData.halloweenWordsCollected++;
-                    categoryData.halloweenList.push(currentWord.word);
-                    categoryData.halloweenDebuff *= 0.985; // Apply 1.5% reduction
-                    wordBought = true;
                 }
             } else { // Normal Word
                 const categoryData = playerWords[currentWord.category];
@@ -1292,7 +1099,7 @@
                 
                 const reward = CHALLENGE_REWARDS[category];
                 playerMoney += reward;
-                showModal(`¡Correcto! ${reason} Ganas ${reward.toLocaleString('es')} 💰`);
+                showModal(`¡Correcto! ${reason} Ganas ${reward.toLocaleString('es')}.`);
             } else {
                 handleChallengeFailure(reason);
             }
@@ -1349,9 +1156,7 @@
                 let totalWords = 0;
                 Object.keys(WORD_DATABASE).forEach(category => {
                     if (!playerWords[category]) {
-                        playerWords[category] = { count: 0, list: [], halloweenDebuff: 1, halloweenWordsCollected: 0, halloweenList: [] };
-                    } else if (!playerWords[category].halloweenList) {
-                        playerWords[category].halloweenList = []; // Compatibilidad con guardados antiguos
+                        playerWords[category] = { count: 0, list: [] };
                     }
                     totalWords += playerWords[category].count || 0;
                 });
@@ -1360,17 +1165,31 @@
             } catch (e) { console.error('Error loading data:', e); }
         }
         
-        function gameLoop() {
-            let incomeThisSecond = passiveIncome;
-            if (Date.now() < christopherBoostEndTime) {
-                incomeThisSecond *= 2;
+        function mainGameLoop(timestamp) {
+            if (!lastUpdateTime) {
+                lastUpdateTime = timestamp;
             }
-            if(Date.now() < limboGramaticalEndTime) {
-                incomeThisSecond *= 1.21;
+            const deltaTime = timestamp - lastUpdateTime;
+            lastUpdateTime = timestamp;
+            
+            // Update passive income roughly every second
+            timeSinceLastIncomeUpdate += deltaTime;
+            if (timeSinceLastIncomeUpdate >= 1000) {
+                let incomeThisSecond = passiveIncome;
+                if (Date.now() < christopherBoostEndTime) {
+                    incomeThisSecond *= 2;
+                }
+                if(Date.now() < limboGramaticalEndTime) {
+                    incomeThisSecond *= 1.21;
+                }
+                playerMoney += incomeThisSecond;
+                timeSinceLastIncomeUpdate = 0;
             }
+            
+            updateUI(); // Update UI on every frame
+            updateTimerBarUI();
 
-            playerMoney += incomeThisSecond;
-            updateUI();
+            animationFrameId = requestAnimationFrame(mainGameLoop);
         }
         
         function updateTimerBarUI() {
@@ -1394,11 +1213,11 @@
         }
 
         const accentuationRules = [
-            { title: "Monosílabos", text: "Por regla general, no llevan tilde, salvo en casos de tilde diacrítica.", color: categoryColors.Monosílabos},
-            { title: "Palabras Agudas", text: "Llevan tilde cuando terminan en 'n', 's' o vocal. La sílaba tónica es la última.", color: categoryColors.Agudas },
-            { title: "Palabras Llanas (o Graves)", text: "Llevan tilde cuando NO terminan en 'n', 's' o vocal. La sílaba tónica es la penúltima.", color: categoryColors.Llanas },
-            { title: "Palabras Esdrújulas", text: "Siempre llevan tilde. La sílaba tónica es la antepenúltima.", color: categoryColors.Esdrújulas },
-            { title: "Palabras Sobreesdrújulas", text: "Siempre llevan tilde. La sílaba tónica es anterior a la antepenúltima.", color: categoryColors.Sobreesdrújulas }
+            { title: "Monosílabos", text: "Por regla general, no llevan tilde, salvo en casos de tilde diacrítica.", color: "text-gray-800"},
+            { title: "Palabras Agudas", text: "Llevan tilde cuando terminan en 'n', 's' o vocal. La sílaba tónica es la última.", color: "text-green-700" },
+            { title: "Palabras Llanas (o Graves)", text: "Llevan tilde cuando NO terminan en 'n', 's' o vocal. La sílaba tónica es la penúltima.", color: "text-yellow-700" },
+            { title: "Palabras Esdrújulas", text: "Siempre llevan tilde. La sílaba tónica es la antepenúltima.", color: "text-blue-700" },
+            { title: "Palabras Sobreesdrújulas", text: "Siempre llevan tilde. La sílaba tónica es anterior a la antepenúltima.", color: "text-purple-700" }
         ];
         let currentRuleIndex = 0;
         let rulesInterval = null;
@@ -1415,7 +1234,7 @@
                 rulesDisplay.style.opacity = 0;
                 setTimeout(() => {
                     const rule = accentuationRules[currentRuleIndex];
-                    rulesDisplay.innerHTML = `<h3 class="text-lg font-bold ${rule.color}">${rule.title}</h3><p class="text-gray-300">${rule.text}</p>`;
+                    rulesDisplay.innerHTML = `<h3 class="text-lg font-bold ${rule.color}">${rule.title}</h3><p class="text-gray-700">${rule.text}</p>`;
                     rulesDisplay.style.opacity = 1;
                     currentRuleIndex = (currentRuleIndex + 1) % accentuationRules.length;
                 }, 500); 
@@ -1435,11 +1254,11 @@
         }
 
         function startGameLoops() {
-            if (gameLoopInterval) return; // Prevent multiple loops
+            if (animationFrameId) return; // Prevent multiple loops
             stopGameLoops();
             startRulesRotator();
-            gameLoopInterval = setInterval(gameLoop, 1000);
-            uiUpdateInterval = setInterval(updateTimerBarUI, 50);
+            animationFrameId = requestAnimationFrame(mainGameLoop);
+
             challengeInterval = setInterval(() => {
                 if (hasBoughtFirstWord && Math.random() < 0.15 && !isChallengeActive && gameStarted) {
                     startDictionaryChallenge();
@@ -1448,13 +1267,14 @@
         }
 
         function stopGameLoops() {
-            clearInterval(gameLoopInterval);
-            clearInterval(uiUpdateInterval);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
             clearInterval(challengeInterval);
             clearTimeout(wordDisplayTimeout);
-            gameLoopInterval = null;
-            uiUpdateInterval = null;
             challengeInterval = null;
+            lastUpdateTime = 0;
         }
         
         async function startGameCommon(shouldLoad = true) {
@@ -1467,45 +1287,38 @@
             setInterval(savePlayerData, 30000);
         }
         
-        // Definitive Syllabification Engine
+        // Definitive Syllabification Engine - Improved for accuracy
         function syllabify(word) {
-            let cleanedWord = word.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            
-            const patterns = [
-                // Four consonants
-                { regex: /([bcdfghjklmnpqrstvwxyz])([bcdfghjklmnpqrstvwxyz])(l|r)([^aeiouáéíóúü]|$)/, split: 2 }, 
-                // Three consonants
-                { regex: /([bcdfghjklmnpqrstvwxyz])(p|t|c|b|d|g|f)(l|r)/, split: 1 }, 
-                // Two consonants
-                { regex: /[aeiouáéíóúü]([bcdfghjklmnpqrstvwxyz])\1[aeiouáéíóúü]/, split: 1 }, 
-                { regex: /[aeiouáéíóúü]([bcdfghjklmnpqrstvwxyz][^aeiouáéíóúülr])[aeiouáéíóúü]/, split: 1 }, 
-                 // Hiatus
-                { regex: /([aeoáéó])([aeoáéó])/, split: 1 },
-                { regex: /([aeiouáéíóúü])([íú])/, split: 1 },
-                { regex: /([íú])([aeiouáéíóúü])/, split: 1 },
-            ];
+            const originalWord = word;
+            word = word.toLowerCase();
 
-            let str = cleanedWord;
-            patterns.forEach(pattern => {
-                let match = str.match(pattern.regex);
-                if (match) {
-                    let index = match.index + pattern.split;
-                    str = str.slice(0, index) + '-' + str.slice(index);
+            if (word.length <= 3) {
+                return [originalWord];
+            }
+
+            let syllables = word.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[^aeiouáéíóúü](?![aeiouáéíóúü]))?/gi);
+
+            if (syllables) {
+                // Adjust for common incorrect splits like 'a-e-ro' instead of 'a-é-re-o'
+                const restored = syllables.join('');
+                if (restored !== word) {
+                     // Fallback for complex words if regex fails
+                    syllables = word.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[bcdfghjklmnpqrstvwxyz](?![lr]))?/gi);
                 }
-            });
-
-            // Final split by vowel groups
-            let syllables = str.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[^aeiouáéíóúü](?![aeiouáéíóúülr]))?/gi);
-
-            if (!syllables) return [word];
+            }
+            
+            if (!syllables) return [originalWord]; // Failsafe
 
             // Re-apply original casing
+            let restoredSyllables = [];
             let originalIndex = 0;
-            return syllables.map(syll => {
-                const originalPart = word.substring(originalIndex, originalIndex + syll.length);
-                originalIndex += syll.length;
-                return originalPart;
-            });
+            for (const syll of syllables) {
+                if(syll) {
+                    restoredSyllables.push(originalWord.substr(originalIndex, syll.length));
+                    originalIndex += syll.length;
+                }
+            }
+            return restoredSyllables;
         }
 
 
@@ -1516,7 +1329,7 @@
             const numSyllables = syllables.length;
 
             if (numSyllables <= 1) {
-                return { category: "Monosílabos", reason: `La palabra '${originalWord}' es un monosílabo.` };
+                return { category: "Agudas", reason: `La palabra '${originalWord}' es un monosílabo. Gramaticalmente, los monosílabos se consideran palabras agudas ya que la fuerza de voz recae en su única (y última) sílaba.` };
             }
 
             let stressedSyllableIndex = -1;
@@ -1585,7 +1398,7 @@
                 const hasProgress = Object.values(data.words).some(cat => cat.count > 0);
                 if (hasProgress) {
                     continueBtn.disabled = false;
-                    continueBtn.classList.add('hover:bg-green-700', 'hover:bg-purple-800');
+                    continueBtn.classList.add('hover:bg-green-700');
                     continueBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                     return;
                 }
@@ -1593,7 +1406,7 @@
             
             continueBtn.disabled = true;
             continueBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            continueBtn.classList.remove('hover:bg-green-700', 'hover:bg-purple-800');
+            continueBtn.classList.remove('hover:bg-green-700');
         }
 
         function setupEventListeners() {
@@ -1619,7 +1432,6 @@
             document.getElementById('backToGameFromShop').addEventListener('click', () => changeView('game'));
             document.getElementById('buyUniversalShield').addEventListener('click', () => buyShield('universal'));
             document.getElementById('buyLifeButton').addEventListener('click', buyLife);
-            document.getElementById('buyAguaBenditaButton').addEventListener('click', buyAguaBendita);
             document.getElementById('modalCloseButton').addEventListener('click', () => {
                 document.getElementById('messageModal').classList.add('hidden');
                 if (gamePausedForFeedback) {
@@ -1643,13 +1455,7 @@
                 changeView('game');
                 startGameCommon();
             });
-            document.getElementById('closeHalloweenNotice').addEventListener('click', () => {
-                document.getElementById('halloweenNoticeScreen').classList.add('hidden');
-                if (typeof actionAfterNotice === 'function') {
-                    actionAfterNotice();
-                    actionAfterNotice = null; // Reset for next time
-                }
-            });
+
             document.getElementById('startLimboGramatical').addEventListener('click', () => {
                 const modal = document.getElementById('limboGramaticalScreen');
                 modal.classList.add('hidden');
@@ -1671,5 +1477,4 @@
     </script>
 </body>
 </html>
-
 
