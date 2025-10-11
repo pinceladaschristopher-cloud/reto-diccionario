@@ -39,6 +39,7 @@
         
         .super-value-text {
             color: #ef4444; /* Rojo intenso */
+            font-weight: bold;
         }
         #startupScreen, .modal-bg {
             background-color: rgba(255, 255, 255, 0.8);
@@ -73,42 +74,28 @@
         }
 
         .glitch-text::before {
-            left: -5px;
-            text-shadow: 5px 0 magenta;
-            animation: glitch-anim-2 0.5s infinite linear alternate-reverse;
+            left: -2px;
+            text-shadow: 2px 0 blue;
+            animation: glitch-anim-2 1.5s infinite linear alternate-reverse;
         }
 
         .glitch-text::after {
-            left: 5px;
-            text-shadow: -5px 0 cyan;
-            animation: glitch-anim-1 0.75s infinite linear alternate-reverse;
+            left: 2px;
+            text-shadow: -2px 0 red;
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
         }
 
         @keyframes glitch-anim-1 {
-            0% { clip-path: inset(42% 0 55% 0); }
-            10% { clip-path: inset(17% 0 75% 0); }
-            20% { clip-path: inset(83% 0 1% 0); }
-            30% { clip-path: inset(52% 0 40% 0); }
-            40% { clip-path: inset(8% 0 85% 0); }
-            50% { clip-path: inset(65% 0 25% 0); }
-            60% { clip-path: inset(45% 0 50% 0); }
-            70% { clip-path: inset(15% 0 80% 0); }
-            80% { clip-path: inset(90% 0 2% 0); }
-            90% { clip-path: inset(35% 0 58% 0); }
-            100% { clip-path: inset(1% 0 95% 0); }
+            0%, 100% { clip-path: inset(40% 0 61% 0); }
+            25% { clip-path: inset(15% 0 75% 0); }
+            50% { clip-path: inset(50% 0 45% 0); }
+            75% { clip-path: inset(5% 0 85% 0); }
         }
         @keyframes glitch-anim-2 {
-            0% { clip-path: inset(95% 0 2% 0); }
-            10% { clip-path: inset(25% 0 70% 0); }
-            20% { clip-path: inset(5% 0 88% 0); }
-            30% { clip-path: inset(68% 0 22% 0); }
-            40% { clip-path: inset(88% 0 8% 0); }
-            50% { clip-path: inset(48% 0 48% 0); }
-            60% { clip-path: inset(18% 0 78% 0); }
-            70% { clip-path: inset(82% 0 12% 0); }
-            80% { clip-path: inset(22% 0 72% 0); }
-            90% { clip-path: inset(62% 0 32% 0); }
-            100% { clip-path: inset(92% 0 4% 0); }
+            0%, 100% { clip-path: inset(65% 0 30% 0); }
+            25% { clip-path: inset(80% 0 15% 0); }
+            50% { clip-path: inset(40% 0 50% 0); }
+            75% { clip-path: inset(90% 0 5% 0); }
         }
 
         .flicker-anim {
@@ -151,34 +138,18 @@
                     El objetivo es acumular <span class="font-bold text-blue-700">palabras</span> y <span class="font-bold text-green-700">dinero</span> para dominar la acentuación.<br>
                     <span class="text-sky-600 font-semibold">Ganas al conseguir la palabra <span class="underline decoration-sky-400">Sobreesdrújula</span>.</span>
                 </p>
-                <ol class="list-decimal pl-5 space-y-4 text-sm text-gray-600">
+                <ol class="list-decimal pl-5 space-y-3 text-sm text-gray-600">
                     <li>
-                        <span class="font-bold text-green-700">Jugar y Ganar:</span> Compra palabras para tu colección y gana dinero automáticamente. A más riqueza, mayor <span class="font-bold text-yellow-700">inflación</span>. Para ganar, necesitas <span class="font-bold">30 palabras</span> de cada una de las categorías principales y <span class="font-bold text-purple-700">mucho dinero</span> para la palabra final.
+                        <span class="font-bold">Objetivo:</span> Compra palabras para ganar dinero pasivo. Reúne 30 de cada categoría para desbloquear y comprar la palabra <span class="font-bold text-purple-700">Sobreesdrújula</span> y ganar.
                     </li>
                     <li>
-                        <span class="font-bold text-rose-700">El Desafío:</span> Periódicamente, deberás escribir una palabra de una categoría específica en 30 segundos. ¡Si fallas 3 veces, pierdes todo tu progreso!
+                        <span class="font-bold">El Desafío:</span> Ocasionalmente, se te pedirá escribir una palabra de una categoría en 30s. ¡Cuidado! 3 fallos reinician tu progreso.
                     </li>
                      <li>
-                        <span class="font-bold text-fuchsia-700">Potenciadores y Eventos:</span>
-                        <ul class="list-disc pl-5 mt-2 space-y-2">
-                            <li>
-                                <strong class="super-value-text">Super Value:</strong> Palabras en rojo que duplican las ganancias de su categoría por 10s.
-                            </li>
-                            <li>
-                                <strong>Bonus <span class="rainbow-text">CHRISTOPHER</span>:</strong> Duplica todas las ganancias por 60s.
-                            </li>
-                             <li>
-                                <span class="glitch-wrapper">
-                                    <strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramátical: ???">Limbo Gramátical: ???</strong>
-                                </span>
-                            </li>
-                        </ul>
+                        <span class="font-bold">Bonus y Eventos:</span> Busca palabras <strong class="super-value-text">Super Value</strong> (rojas) para potenciar una categoría, o el <strong>Bonus <span class="rainbow-text">CHRISTOPHER</span></strong> para potenciar todo. ¡Mantente alerta a eventos raros como el <span class="glitch-wrapper"><strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramátical: ???">Limbo Gramátical: ???</strong></span>!
                     </li>
                     <li>
-                        <span class="font-bold text-sky-700">Tienda:</span> Compra <span class="font-bold text-green-600">Vidas</span> para reintentar desafíos o un <span class="font-bold text-blue-600">Escudo Universal</span> para ignorarlos.
-                    </li>
-                    <li>
-                        <span class="font-bold text-purple-700">Formatear:</span> Al ganar, puedes reiniciar con un multiplicador de ganancias permanente, ¡haciendo cada nueva partida más rápida e intensa!
+                        <span class="font-bold">Tienda y Prestigio:</span> Usa la <span class="font-bold">Tienda</span> para comprar Vidas y Escudos. Al ganar y <span class="font-bold text-purple-700">Formatear</span>, obtienes un multiplicador permanente y <span class="font-bold text-yellow-700">Puntos de Prestigio</span>, que puedes usar para mejoras haciendo clic en el botón del multiplicador.
                     </li>
                 </ol>
             </div>
@@ -239,9 +210,9 @@
         <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
             <span id="lifeCounter">3/3</span>
         </div>
-        <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
+        <button id="prestigeButton" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             <span id="currentMultiplier">1x</span>
-        </div>
+        </button>
         <div id="limboGramaticalTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center glitch-wrapper">
             <span class="rainbow-text glitch-text" data-text="0s">0s</span>
         </div>
@@ -250,6 +221,9 @@
         </div>
         <div id="superValueTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
             <span class="super-value-text">0s</span>
+        </div>
+        <div id="shieldTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-indigo-300 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
+            <span class="text-indigo-600">0s</span>
         </div>
         <button id="shopButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             Tienda
@@ -261,35 +235,61 @@
 
     <!-- Modal for Shop -->
     <div id="shopScreen" class="fixed inset-0 modal-bg hidden items-center justify-center p-4 z-[100]">
-        <div class="w-full max-w-4xl bg-white p-4 sm:p-8 rounded-xl shadow-lg max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-purple-300">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Tienda</h2>
-            <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-                <!-- Comprar Vida -->
-                <div class="flex-1 bg-red-100 border-2 border-red-300 rounded-xl p-4">
-                    <h3 class="text-lg font-bold text-red-800 mb-2">Comprar Vida</h3>
-                    <p class="text-sm text-red-700 mb-3">Recupera una vida perdida. ¡Solo en emergencias!</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-red-900" id="lifePrice"></span>
-                        <button id="buyLifeButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
-                            Comprar
-                        </button>
+        <div class="w-full max-w-lg bg-white p-6 rounded-2xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-indigo-300">
+            <div class="flex items-center justify-center mb-6">
+                <svg class="w-8 h-8 text-indigo-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h2 class="text-3xl font-black text-indigo-800">Tienda</h2>
+            </div>
+            <div class="grid grid-cols-1 gap-4">
+                <!-- Item: Comprar Vida -->
+                <div class="bg-rose-50 border-2 border-rose-200 rounded-xl p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-rose-200 p-2 rounded-full">
+                                <svg class="w-6 h-6 text-rose-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-rose-800">Comprar Vida</h3>
+                                <p class="text-xs text-rose-700">Recupera una vida perdida.</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-md font-bold text-rose-900 mb-1" id="lifePrice"></span>
+                            <button id="buyLifeButton" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Comprar
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <!-- Escudo Universal -->
-                <div class="flex-1 bg-purple-100 border-2 border-purple-300 rounded-xl p-4">
-                    <h3 class="text-lg font-bold text-purple-800 mb-2">Escudo Universal</h3>
-                    <p class="text-sm text-purple-700 mb-3">Protege contra TODOS los retos por 60 segundos</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-purple-900" id="universalPrice"></span>
-                        <button id="buyUniversalShield" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
-                            Comprar
-                        </button>
+                <!-- Item: Escudo Universal -->
+                <div class="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-4">
+                     <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                             <div class="bg-indigo-200 p-2 rounded-full">
+                                 <svg class="w-6 h-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.417l5.69-5.69a.5.5 0 01.707 0l3.792 3.792a.5.5 0 00.707 0l5.69-5.69A12.02 12.02 0 0021 8.984a11.955 11.955 0 01-2.382-3.028z" />
+                                 </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-indigo-800">Escudo Universal</h3>
+                                <p class="text-xs text-indigo-700">Protege de retos por 60s. (<span id="universalCount">0</span>)</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-md font-bold text-indigo-900 mb-1" id="universalPrice"></span>
+                            <button id="buyUniversalShield" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Comprar
+                            </button>
+                        </div>
                     </div>
-                    <p class="text-xs text-purple-600 mt-2">Cantidad: <span id="universalCount">0</span></p>
                 </div>
             </div>
             <div class="text-center mt-6">
-                <button id="backToGameFromShop" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
+                <button id="backToGameFromShop" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
                     Cerrar Tienda
                 </button>
             </div>
@@ -377,6 +377,27 @@
             </button>
         </div>
     </div>
+    
+    <!-- Modal for Prestige Upgrades -->
+    <div id="prestigeScreen" class="fixed inset-0 modal-bg hidden items-center justify-center p-4 z-[100]">
+        <div class="w-full max-w-4xl bg-white p-6 rounded-2xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-yellow-400">
+            <div class="flex items-center justify-center mb-4">
+                 <svg class="w-8 h-8 text-yellow-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" />
+                 </svg>
+                <h2 class="text-3xl font-black text-yellow-800">Mejoras de Prestigio</h2>
+            </div>
+            <p class="text-center text-gray-600 mb-4">Puntos de Prestigio disponibles: <span id="prestigePointsDisplay" class="font-bold text-yellow-600">0</span></p>
+            <div id="prestigeUpgradesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Upgrades will be injected here by JS -->
+            </div>
+            <div class="text-center mt-6">
+                <button id="backToGameFromPrestige" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
 
 
     <script type="module">
@@ -390,6 +411,15 @@
         let initialCredits = 100;
         let consecutiveFailures = 0;
         let shields = { universal: 0 };
+        let prestigePoints = 0;
+        let prestigeUpgrades = {
+            riquezaInicial: 0,
+            reduccionInflacion: 0,
+            recompensasDesafio: 0,
+            duracionPotenciadores: 0,
+            suerteAumentada: 0,
+            descuentoTienda: 0
+        };
         
         // --- Timers and Intervals ---
         let animationFrameId = null;
@@ -457,9 +487,8 @@
 
         let WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
 
-        const categoryColors = { "Monosílabos": "text-gray-700", "Agudas": "text-green-700", "Llanas": "text-yellow-700", "Esdrújulas": "text-blue-700", "Sobreesdrújulas": "text-purple-700" };
+        const categoryColors = { "Monosílabos": "text-gray-800", "Agudas": "text-green-800", "Llanas": "text-yellow-800", "Esdrújulas": "text-blue-800", "Sobreesdrújulas": "text-purple-800" };
         const categoryBackgrounds = { "Monosílabos": "bg-gray-200 hover:bg-gray-300", "Agudas": "bg-green-200 hover:bg-green-300", "Llanas": "bg-yellow-200 hover:bg-yellow-300", "Esdrújulas": "bg-blue-200 hover:bg-blue-300", "Sobreesdrújulas": "bg-purple-200 hover:bg-purple-300" };
-        const superValueColor = "super-value-text";
 
         function applyScalingToWordDatabase(multiplier) {
             WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
@@ -487,6 +516,12 @@
         }
         
         function resetGameData() {
+            let baseCredits = 100;
+            for(let i = 1; i < gameMultiplier; i++) {
+                baseCredits *= 2;
+            }
+            initialCredits = baseCredits + (prestigeUpgrades.riquezaInicial * 500);
+
             playerMoney = initialCredits;
             passiveIncome = 0;
             consecutiveFailures = 0;
@@ -506,7 +541,6 @@
         }
         
         function resetProgressButKeepLives() {
-            playerMoney = 0;
             passiveIncome = 0;
             Object.keys(playerWords).forEach(category => {
                 if (playerWords[category]) {
@@ -518,23 +552,22 @@
 
         function formatearJuego() {
             gameMultiplier++;
-            initialCredits *= 2;
+            prestigePoints++;
             applyScalingToWordDatabase(gameMultiplier);
-            resetGameData();
-            playerMoney = initialCredits;
-            savePlayerData(); // Guardar el estado reseteado inmediatamente
+            resetGameData(); // This now correctly uses prestige upgrades
+            savePlayerData(); 
             updateUI();
             changeView('game');
-            startGameCommon(false); // Iniciar loops sin recargar los datos guardados
-            showModal(`¡Juego formateado! Multiplicador: ${gameMultiplier}x. Créditos iniciales: ${initialCredits}`);
+            startGameCommon(false);
+            showModal(`¡Juego formateado! Multiplicador: ${gameMultiplier}x. Has ganado 1 Punto de Prestigio.`);
         }
         
         function reiniciarJuegoCompleto() {
             gameMultiplier = 1;
-            initialCredits = 100;
+            prestigePoints = 0;
+            Object.keys(prestigeUpgrades).forEach(key => prestigeUpgrades[key] = 0);
             applyScalingToWordDatabase(1);
             resetGameData();
-            playerMoney = initialCredits;
             savePlayerData();
         }
 
@@ -546,7 +579,7 @@
 
         function changeView(view) {
             currentView = view;
-            ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'limboGramaticalScreen'].forEach(id => {
+            ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'limboGramaticalScreen', 'prestigeScreen'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
@@ -557,9 +590,10 @@
             if (view === 'game') {
                 const controls = document.getElementById('gameControls');
                 if (controls) controls.classList.remove('hidden');
-            } else if (view === 'shop') {
-                if (screen) screen.classList.add('flex'); // Ensure shop is flex for centering
-                updateShopUI();
+            } else if (view === 'shop' || view === 'prestige') {
+                if (screen) screen.classList.add('flex');
+                if (view === 'prestige') updatePrestigeUI();
+                else updateShopUI();
             }
         }
         
@@ -587,13 +621,10 @@
 
         function updateShopUI() {
             const isLimboActive = Date.now() < limboGramaticalEndTime;
-            const discount = isLimboActive ? 0.79 : 1; // 21% discount
+            const limboDiscount = isLimboActive ? 0.79 : 1; // 21% discount
+            const prestigeDiscount = 1 - (prestigeUpgrades.descuentoTienda * 0.0025);
 
-            const shopButton = document.getElementById('shopButton');
-            shopButton.disabled = false;
-            shopButton.classList.remove('opacity-50', 'cursor-not-allowed');
-
-            const shieldPrice = SHIELD_PRICE_UNIVERSAL * discount;
+            const shieldPrice = SHIELD_PRICE_UNIVERSAL * limboDiscount * prestigeDiscount;
             document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('es')}`;
             const buyUniversalShieldBtn = document.getElementById('buyUniversalShield');
             const canAffordShield = playerMoney >= shieldPrice;
@@ -602,7 +633,7 @@
             buyUniversalShieldBtn.classList.toggle('cursor-not-allowed', !canAffordShield);
             document.getElementById('universalCount').textContent = shields.universal;
 
-            const lifePrice = LIFE_PRICE * discount;
+            const lifePrice = LIFE_PRICE * limboDiscount * prestigeDiscount;
             document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('es')}`;
             const buyLifeBtn = document.getElementById('buyLifeButton');
             const canAffordLife = playerMoney >= lifePrice;
@@ -615,7 +646,7 @@
 
         function buyShield() {
             const isLimboActive = Date.now() < limboGramaticalEndTime;
-            const price = SHIELD_PRICE_UNIVERSAL * (isLimboActive ? 0.79 : 1);
+            const price = SHIELD_PRICE_UNIVERSAL * (isLimboActive ? 0.79 : 1) * (1 - (prestigeUpgrades.descuentoTienda * 0.0025));
             if (playerMoney >= price) {
                 playerMoney -= price;
                 shields.universal++;
@@ -630,7 +661,7 @@
         
         function buyLife() {
             const isLimboActive = Date.now() < limboGramaticalEndTime;
-            const price = LIFE_PRICE * (isLimboActive ? 0.79 : 1);
+            const price = LIFE_PRICE * (isLimboActive ? 0.79 : 1) * (1 - (prestigeUpgrades.descuentoTienda * 0.0025));
             if (consecutiveFailures > 0 && playerMoney >= price) {
                 playerMoney -= price;
                 consecutiveFailures--;
@@ -653,7 +684,7 @@
         }
 
         function triggerLimboGramatical() {
-            christopherBonusCountDuringLimbo = 0; // Reset counter when event starts
+            christopherBonusCountDuringLimbo = 0;
             savePlayerData(); 
             stopGameLoops();
             stopRulesRotator();
@@ -668,35 +699,52 @@
         async function generateNewWord(forceNew = false) {
             if (isChallengeActive) return;
             
-            // Trigger for Limbo Gramatical event (0.1% chance, once per game)
-            if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && Math.random() < 0.001) {
+            if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && Math.random() < (0.001 + prestigeUpgrades.suerteAumentada * 0.0005)) {
                 limboGramaticalTriggeredThisPartida = true;
                 triggerLimboGramatical();
-                return; // Stop function to show the modal
+                return;
             }
             
             if (forceNew) clearTimeout(wordDisplayTimeout);
             
             const isLimboActive = Date.now() < limboGramaticalEndTime;
             
-            // 1. Calculate Christopher Chance
-            let christopherChance = 0.03; 
+            let christopherChance = 0.03 + (prestigeUpgrades.suerteAumentada * 0.0005);
             if (isLimboActive && christopherBonusCountDuringLimbo < 3) {
                 christopherChance += 0.21; 
             }
 
-            // 2. Roll for Christopher FIRST
             if (Math.random() < christopherChance) {
-                if (isLimboActive) {
-                    christopherBonusCountDuringLimbo++;
-                }
+                if (isLimboActive) christopherBonusCountDuringLimbo++;
                 currentWord = { word: "CHRISTOPHER", category: "Bonus", value: 0, isBonus: true, startTime: Date.now() };
                 updateUI();
-                startWordDisplayTimer(1000);
+                startWordDisplayTimer(1000 + (prestigeUpgrades.duracionPotenciadores * 500));
                 return;
             }
 
-            // 3. Generate a normal word (it will be converted to Super Value if Limbo is active)
+            if (isLimboActive) {
+                const allSuperValueWords = [];
+                Object.keys(WORD_DATABASE).forEach(category => {
+                    if (WORD_DATABASE[category].superValueWords && WORD_DATABASE[category].superValueWords.length > 0) {
+                        const ownedWords = playerWords[category]?.list || [];
+                        WORD_DATABASE[category].superValueWords.forEach(svWord => {
+                            if (!ownedWords.includes(svWord)) {
+                                allSuperValueWords.push({ word: svWord, category: category });
+                            }
+                        });
+                    }
+                });
+
+                if (allSuperValueWords.length > 0) {
+                    const randomSV = allSuperValueWords[Math.floor(Math.random() * allSuperValueWords.length)];
+                    let dynamicValue = (WORD_DATABASE[randomSV.category].value + (randomSV.word.length * PRICE_PER_LETTER)) * SUPER_VALUE_MULTIPLIER * 0.79;
+                    currentWord = { word: randomSV.word, category: randomSV.category, value: dynamicValue, isSuperValue: true, startTime: Date.now() };
+                    updateUI();
+                    startWordDisplayTimer(3000);
+                    return;
+                }
+            }
+            
             let categories = Object.keys(WORD_DATABASE);
             const nonFinalCategories = categories.filter(c => c !== "Sobreesdrújulas");
             const allCategoriesCompleted = nonFinalCategories.every(cat => playerWords[cat] && playerWords[cat].count >= WORD_DATABASE[cat].limit);
@@ -710,17 +758,14 @@
             }
             
             let randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
-            
-            // 4. ALL words become Super Value during Limbo Gramatical
-            let isSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).includes(randomWord) || isLimboActive;
+            let isSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).includes(randomWord);
             
             let dynamicValue = WORD_DATABASE[randomCategory].value;
             if (randomCategory !== "Sobreesdrújulas") {
-                const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR);
+                const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
+                const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR) * inflationReduction;
                 dynamicValue = (WORD_DATABASE[randomCategory].value + (randomWord.length * PRICE_PER_LETTER)) * inflationMultiplier;
-                if (isSuperValue) {
-                    dynamicValue *= SUPER_VALUE_MULTIPLIER;
-                }
+                if (isSuperValue) dynamicValue *= SUPER_VALUE_MULTIPLIER;
             }
 
             currentWord = { word: randomWord, category: randomCategory, value: dynamicValue, isSuperValue, startTime: Date.now() };
@@ -739,11 +784,11 @@
             if (currentWord.word) {
                 let wordClass = "";
                 if (currentWord.isBonus) {
-                    wordClass = "rainbow-text";
+                    wordClass = "rainbow-text font-black";
                 } else if (currentWord.isSuperValue) {
-                    wordClass = "super-value-text";
+                    wordClass = "super-value-text font-black";
                 } else {
-                    wordClass = categoryColors[currentWord.category] || "text-gray-800";
+                    wordClass = `${categoryColors[currentWord.category] || "text-gray-800"} font-black`;
                 }
                 
                 document.getElementById('currentWord').innerHTML = `<span class="${wordClass}">${currentWord.word}</span>`;
@@ -768,7 +813,7 @@
                 if (isCategoryComplete) {
                     document.getElementById('wordValue').textContent = 'Categoría Completa';
                 } else {
-                    document.getElementById('wordValue').textContent = `Costo: ${currentWord.value.toLocaleString('es')}`;
+                    document.getElementById('wordValue').textContent = `${currentWord.value.toLocaleString('es')}`;
                 }
             }
 
@@ -781,11 +826,22 @@
             else if (remainingLives === 2) lifeCounter.parentElement.classList.add('border-yellow-400');
             else lifeCounter.parentElement.classList.add('border-red-500');
             
+            const prestigeButton = document.getElementById('prestigeButton');
+            prestigeButton.disabled = false;
+            prestigeButton.classList.add('cursor-pointer');
+            prestigeButton.classList.remove('cursor-default');
+             if (gameMultiplier > 1) {
+                prestigeButton.classList.add('hover:bg-yellow-200', 'border-yellow-400');
+            } else {
+                prestigeButton.classList.remove('hover:bg-yellow-200', 'border-yellow-400');
+            }
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
+            // Timers
             const limboTimer = document.getElementById('limboGramaticalTimerDisplay');
             const chrisTimer = document.getElementById('christopherTimerDisplay');
             const svTimer = document.getElementById('superValueTimerDisplay');
+            const shieldTimer = document.getElementById('shieldTimerDisplay');
             const now = Date.now();
 
             Object.keys(superValueBoosts).forEach(cat => {
@@ -794,9 +850,12 @@
 
             const limboTimeLeft = Math.ceil(Math.max(0, limboGramaticalEndTime - now) / 1000);
             limboTimer.style.display = limboTimeLeft > 0 ? 'block' : 'none';
-            if(limboTimeLeft > 0) limboTimer.querySelector('span').dataset.text = `${limboTimeLeft}s`;
+            if(limboTimeLeft > 0) {
+                limboTimer.querySelector('span').textContent = `${limboTimeLeft}s`;
+                limboTimer.querySelector('span').dataset.text = `${limboTimeLeft}s`;
+            }
 
-            const chrisTimeLeft = Math.ceil(Math.max(0, christopherBoostEndTime - now) / 1000);
+            const chrisTimeLeft = Math.ceil(Math.max(0, (christopherBoostEndTime - now)) / 1000);
             chrisTimer.style.display = chrisTimeLeft > 0 ? 'block' : 'none';
             if(chrisTimeLeft > 0) chrisTimer.querySelector('span').textContent = `${chrisTimeLeft}s`;
 
@@ -804,7 +863,15 @@
             const svTimeLeft = Math.ceil(Math.max(0, maxSuperValueEndTime - now) / 1000);
             svTimer.style.display = svTimeLeft > 0 ? 'block' : 'none';
             if(svTimeLeft > 0) svTimer.querySelector('span').textContent = `${svTimeLeft}s`;
+            
+            const shieldTimeLeft = Math.ceil(Math.max(0, universalShieldEndTime - now) / 1000);
+            shieldTimer.style.display = shieldTimeLeft > 0 ? 'block' : 'none';
+            if (shieldTimeLeft > 0) {
+                shieldTimer.querySelector('span').textContent = `${shieldTimeLeft}s`;
+            }
 
+
+            // Inventory
             const inventoryContainer = document.getElementById('inventoryContainer');
             inventoryContainer.innerHTML = '';
             Object.keys(WORD_DATABASE).forEach(category => {
@@ -861,8 +928,10 @@
 
             if (currentWord.isBonus) {
                 const now = Date.now();
+                const baseDuration = 60000;
+                const bonusDuration = prestigeUpgrades.duracionPotenciadores * 500;
                 const remainingTime = (christopherBoostEndTime > now) ? (christopherBoostEndTime - now) : 0;
-                christopherBoostEndTime = now + remainingTime + 60000;
+                christopherBoostEndTime = now + remainingTime + baseDuration + bonusDuration;
                 wordBought = true;
             } else if (currentWord.isSuperValue) {
                 const categoryData = playerWords[currentWord.category];
@@ -874,8 +943,10 @@
                     
                     const now = Date.now();
                     const category = currentWord.category;
+                    const baseDuration = 10000;
+                    const bonusDuration = prestigeUpgrades.duracionPotenciadores * 500;
                     const remainingTime = (superValueBoosts[category] > now) ? (superValueBoosts[category] - now) : 0;
-                    superValueBoosts[category] = now + remainingTime + 10000;
+                    superValueBoosts[category] = now + remainingTime + baseDuration + bonusDuration;
                 }
             } else { // Normal Word
                 const categoryData = playerWords[currentWord.category];
@@ -900,10 +971,7 @@
 
 
             if (wordBought) {
-                if (!hasBoughtFirstWord) {
-                    hasBoughtFirstWord = true;
-                }
-                                
+                if (!hasBoughtFirstWord) hasBoughtFirstWord = true;
                 document.getElementById('buyButton').disabled = true;
                 savePlayerData();
                 
@@ -926,6 +994,7 @@
                 showModal(`¡Protegido por el Escudo Universal! Reto evitado.`);
                 startGameLoops();
                 isChallengeActive = false;
+                generateNewWord(true);
                 return;
             }
             if (shields.universal > 0) {
@@ -935,6 +1004,7 @@
                 showModal("¡Escudo Universal activado por 60 segundos! Reto evitado.");
                 startGameLoops();
                 isChallengeActive = false;
+                generateNewWord(true);
                 return;
             }
 
@@ -988,7 +1058,8 @@
                 if (!usedChallengeWords[category]) usedChallengeWords[category] = [];
                 usedChallengeWords[category].push(word.toLowerCase());
                 
-                const reward = CHALLENGE_REWARDS[category];
+                const rewardBonus = 1 + (prestigeUpgrades.recompensasDesafio * 0.02);
+                const reward = CHALLENGE_REWARDS[category] * rewardBonus;
                 playerMoney += reward;
                 showModal(`¡Correcto! ${reason} Ganas ${reward.toLocaleString('es')}.`);
             } else {
@@ -1017,7 +1088,9 @@
                     credits: initialCredits, shields: shields, shieldEnd: universalShieldEndTime,
                     chrisEnd: christopherBoostEndTime, svBoosts: superValueBoosts,
                     limboTriggered: limboGramaticalTriggeredThisPartida,
-                    chrisBonusCount: christopherBonusCountDuringLimbo
+                    chrisBonusCount: christopherBonusCountDuringLimbo,
+                    prestigePoints: prestigePoints,
+                    prestigeUpgrades: prestigeUpgrades
                 };
                 localStorage.setItem('dl_player_data', JSON.stringify(data));
             } catch (e) { console.error('Error saving data:', e); }
@@ -1040,6 +1113,8 @@
                 superValueBoosts = data.svBoosts || {};
                 limboGramaticalTriggeredThisPartida = data.limboTriggered || false;
                 christopherBonusCountDuringLimbo = data.chrisBonusCount || 0;
+                prestigePoints = data.prestigePoints || 0;
+                prestigeUpgrades = data.prestigeUpgrades || { riquezaInicial: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
 
                 if (gameMultiplier > 1) applyScalingToWordDatabase(gameMultiplier);
                 
@@ -1056,9 +1131,7 @@
         }
         
         function mainGameLoop(timestamp) {
-            if (!lastUpdateTime) {
-                lastUpdateTime = timestamp;
-            }
+            if (!lastUpdateTime) lastUpdateTime = timestamp;
             const deltaTime = timestamp - lastUpdateTime;
             lastUpdateTime = timestamp;
             
@@ -1069,7 +1142,7 @@
                 if(Date.now() < limboGramaticalEndTime) incomeThisSecond *= 1.21;
                 playerMoney += incomeThisSecond;
                 timeSinceLastIncomeUpdate = 0;
-                updateUI(); // Update UI less frequently for performance
+                updateUI();
             }
             
             updateTimerBarUI();
@@ -1172,9 +1245,7 @@
             const originalWord = word;
             word = word.toLowerCase();
 
-            if (word.length <= 3) {
-                return [originalWord];
-            }
+            if (word.length <= 3) return [originalWord];
 
             let syllables = word.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[^aeiouáéíóúü](?![aeiouáéíóúü]))?/gi);
 
@@ -1221,13 +1292,13 @@
 
             let category = "Desconocida";
             
-            if (stressedSyllableIndex !== -1) { // Rule for words WITH tilde
+            if (stressedSyllableIndex !== -1) {
                 const positionFromEnd = numSyllables - 1 - stressedSyllableIndex;
                 if (positionFromEnd === 0) category = "Agudas";
                 else if (positionFromEnd === 1) category = "Llanas";
                 else if (positionFromEnd === 2) category = "Esdrújulas";
                 else if (positionFromEnd >= 3) category = "Sobreesdrújulas";
-            } else { // Rule for words WITHOUT tilde
+            } else {
                 const lastChar = cleanedWord.slice(-1);
                 if ('ns'.includes(lastChar) || 'aeiou'.includes(lastChar)) {
                     stressedSyllableIndex = numSyllables - 2;
@@ -1244,18 +1315,12 @@
             
             switch (category) {
                 case "Agudas":
-                    if (cleanedWord.split('').some(char => accentedVowels.includes(char))) {
-                        reason += "Lleva tilde porque las palabras agudas la llevan cuando terminan en 'n', 's' o vocal.";
-                    } else {
-                        reason += `No lleva tilde porque las palabras agudas solo la llevan si terminan en 'n', 's' o vocal.`;
-                    }
+                    if (cleanedWord.split('').some(char => accentedVowels.includes(char))) reason += "Lleva tilde porque las palabras agudas la llevan cuando terminan en 'n', 's' o vocal.";
+                    else reason += `No lleva tilde porque las palabras agudas solo la llevan si terminan en 'n', 's' o vocal.`;
                     break;
                 case "Llanas":
-                     if (cleanedWord.split('').some(char => accentedVowels.includes(char))) {
-                        reason += `Lleva tilde porque las palabras llanas la llevan cuando NO terminan en 'n', 's' o vocal.`;
-                    } else {
-                        reason += `No lleva tilde porque las palabras llanas solo la llevan si NO terminan en 'n', 's' o vocal.`;
-                    }
+                     if (cleanedWord.split('').some(char => accentedVowels.includes(char))) reason += `Lleva tilde porque las palabras llanas la llevan cuando NO terminan en 'n', 's' o vocal.`;
+                     else reason += `No lleva tilde porque las palabras llanas solo la llevan si NO terminan en 'n', 's' o vocal.`;
                     break;
                 case "Esdrújulas":
                 case "Sobreesdrújulas":
@@ -1285,6 +1350,64 @@
             continueBtn.classList.add('opacity-50', 'cursor-not-allowed');
             continueBtn.classList.remove('hover:bg-green-700');
         }
+        
+        const prestigeUpgradeInfo = {
+            riquezaInicial: { title: "Riqueza Inicial", desc: "Comienza cada partida con dinero extra.", effect: level => `+${(level * 500).toLocaleString('es')}`, icon: `<svg class="w-8 h-8 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
+            reduccionInflacion: { title: "Reducción de Inflación", desc: "Reduce el efecto de la inflación en el costo de las palabras.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-8 h-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
+            recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
+            duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-8 h-8 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
+            suerteAumentada: { title: "Suerte Aumentada", desc: "Aumenta la probabilidad de eventos especiales.", effect: level => `+${(level * 0.05)}%`, icon: `<svg class="w-8 h-8 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-12v4m-2-2h4m5 6v4m-2-2h4M12 3v1m0 16v1m-6.364-2.364l.707.707M17.657 6.343l.707.707m-12.02 10.607l.707-.707M18.364 5.636l.707-.707" /></svg>`, colors: "bg-yellow-50 border-yellow-200 text-yellow-800" },
+            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-8 h-8 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" },
+            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-6 h-6 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" },
+        };
+
+        function updatePrestigeUI() {
+            document.getElementById('prestigePointsDisplay').textContent = prestigePoints;
+            const container = document.getElementById('prestigeUpgradesContainer');
+            container.innerHTML = '';
+
+            Object.keys(prestigeUpgrades).forEach(key => {
+                const info = prestigeUpgradeInfo[key];
+                const level = prestigeUpgrades[key];
+                
+                const upgradeCard = document.createElement('div');
+                upgradeCard.className = `border-2 rounded-xl p-3 flex items-center justify-between space-x-2 ${info.colors}`;
+                
+                upgradeCard.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 rounded-full ${info.colors.split(' ')[0].replace('-50', '-200')}">
+                             ${info.icon}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800" title="${info.desc}">${info.title}</h3>
+                            <p class="text-sm font-semibold text-blue-600">Nivel ${level} | ${info.effect(level)}</p>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <button id="upgrade-${key}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Mejorar
+                        </button>
+                    </div>
+                `;
+                container.appendChild(upgradeCard);
+            });
+            
+            Object.keys(prestigeUpgrades).forEach(key => {
+                const button = document.getElementById(`upgrade-${key}`);
+                button.disabled = prestigePoints < 1;
+                button.onclick = () => upgradePrestige(key);
+            });
+        }
+        
+        function upgradePrestige(key) {
+            if (prestigePoints > 0) {
+                prestigePoints--;
+                prestigeUpgrades[key]++;
+                updatePrestigeUI();
+                savePlayerData();
+            }
+        }
+
 
         function setupEventListeners() {
             document.getElementById('newGameButton').addEventListener('click', startNewGame);
@@ -1292,6 +1415,7 @@
             document.getElementById('tutorialButton').addEventListener('click', () => changeView('tutorial'));
             document.getElementById('buyButton').addEventListener('click', buyWord);
             document.getElementById('shopButton').addEventListener('click', () => changeView('shop'));
+            document.getElementById('prestigeButton').addEventListener('click', () => changeView('prestige'));
             document.getElementById('homeButton').addEventListener('click', () => {
                 stopGameLoops();
                 stopRulesRotator();
@@ -1301,6 +1425,7 @@
             });
             document.getElementById('backToGameFromTutorial').addEventListener('click', () => changeView('startup'));
             document.getElementById('backToGameFromShop').addEventListener('click', () => changeView('game'));
+            document.getElementById('backToGameFromPrestige').addEventListener('click', () => changeView('game'));
             document.getElementById('buyUniversalShield').addEventListener('click', () => buyShield('universal'));
             document.getElementById('buyLifeButton').addEventListener('click', buyLife);
             document.getElementById('modalCloseButton').addEventListener('click', () => {
@@ -1333,7 +1458,6 @@
                 modal.classList.remove('flex');
 
                 limboGramaticalEndTime = Date.now() + 60000;
-                updateUI(); // Force immediate UI update to show timer
                 startGameLoops(); 
                 generateNewWord(true);
             });
