@@ -107,6 +107,21 @@
             50% { opacity: 0.5; }
         }
 
+        .prestige-glow {
+            box-shadow: 0 0 8px 2px rgba(251, 191, 36, 0.7); /* Amarillo-dorado para el brillo */
+        }
+        
+        .luck-glow {
+             box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.6); /* Verde para la suerte */
+             animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.6); }
+            50% { box-shadow: 0 0 14px 5px rgba(34, 197, 94, 0.8); }
+            100% { box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.6); }
+        }
+
     </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen">
@@ -170,7 +185,10 @@
                 <div class="flex flex-col items-center justify-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
                     <h2 class="text-xl font-bold text-green-700">Tu Riqueza</h2>
                     <p id="playerMoney" class="text-2xl sm:text-3xl font-extrabold text-green-800 mt-2">0</p>
-                    <p class="text-sm text-gray-500 mt-1">Ingreso Pasivo: <span id="passiveIncome" class="font-bold">0.0</span>/seg</p>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Ingreso Pasivo: <span id="passiveIncome" class="font-bold">0.0</span>/seg
+                        <span id="prestigeIncomeBonus" class="hidden text-yellow-500 font-bold text-xs ml-1"></span>
+                    </p>
                 </div>
 
                 <div class="flex flex-col items-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
@@ -413,7 +431,7 @@
         let shields = { universal: 0 };
         let prestigePoints = 0;
         let prestigeUpgrades = {
-            riquezaInicial: 0,
+            aumentoGeneracionRiqueza: 0,
             reduccionInflacion: 0,
             recompensasDesafio: 0,
             duracionPotenciadores: 0,
@@ -513,6 +531,11 @@
                     passiveIncome += categoryIncome;
                 }
             });
+            
+            // Aplicar bonus de prestigio de generación de riqueza
+            if (prestigeUpgrades.aumentoGeneracionRiqueza > 0) {
+                passiveIncome *= (1 + prestigeUpgrades.aumentoGeneracionRiqueza * 0.01);
+            }
         }
         
         function resetGameData() {
@@ -520,7 +543,7 @@
             for(let i = 1; i < gameMultiplier; i++) {
                 baseCredits *= 2;
             }
-            initialCredits = baseCredits + (prestigeUpgrades.riquezaInicial * 500);
+            initialCredits = baseCredits; // Riqueza inicial ya no se modifica aquí
 
             playerMoney = initialCredits;
             passiveIncome = 0;
@@ -564,7 +587,7 @@
         
         function reiniciarJuegoCompleto() {
             gameMultiplier = 1;
-            prestigePoints = 0;
+            prestigePoints = 1; // Empiezas con 1 punto de prestigio de regalo
             Object.keys(prestigeUpgrades).forEach(key => prestigeUpgrades[key] = 0);
             applyScalingToWordDatabase(1);
             resetGameData();
@@ -625,7 +648,7 @@
             const prestigeDiscount = 1 - (prestigeUpgrades.descuentoTienda * 0.0025);
 
             const shieldPrice = SHIELD_PRICE_UNIVERSAL * limboDiscount * prestigeDiscount;
-            document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('es')}`;
+            document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('en-US')}`;
             const buyUniversalShieldBtn = document.getElementById('buyUniversalShield');
             const canAffordShield = playerMoney >= shieldPrice;
             buyUniversalShieldBtn.disabled = !canAffordShield;
@@ -634,7 +657,7 @@
             document.getElementById('universalCount').textContent = shields.universal;
 
             const lifePrice = LIFE_PRICE * limboDiscount * prestigeDiscount;
-            document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('es')}`;
+            document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('en-US')}`;
             const buyLifeBtn = document.getElementById('buyLifeButton');
             const canAffordLife = playerMoney >= lifePrice;
             const needsLife = consecutiveFailures > 0;
@@ -642,6 +665,15 @@
             buyLifeBtn.disabled = !canBuyLife;
             buyLifeBtn.classList.toggle('opacity-50', !canBuyLife);
             buyLifeBtn.classList.toggle('cursor-not-allowed', !canBuyLife);
+
+            // Visual indicator for store discount
+            const discountSpan = document.createElement('span');
+            discountSpan.className = 'text-xs text-green-600 ml-2';
+            if (prestigeUpgrades.descuentoTienda > 0) {
+                const discountValue = (prestigeUpgrades.descuentoTienda * 0.25).toFixed(2);
+                document.getElementById('universalPrice').innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
+                document.getElementById('lifePrice').innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
+            }
         }
 
         function buyShield() {
@@ -774,12 +806,21 @@
         }
 
         function updateUI() {
-            document.getElementById('playerMoney').textContent = playerMoney.toLocaleString('es');
+            document.getElementById('playerMoney').textContent = playerMoney.toLocaleString('en-US');
             recalculatePassiveIncome();
             let finalPassiveIncome = passiveIncome;
             if (Date.now() < christopherBoostEndTime) finalPassiveIncome *= 2;
             if (Date.now() < limboGramaticalEndTime) finalPassiveIncome *= 1.21;
-            document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('es', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+            // Indicador visual para bonus de Prestigio de riqueza
+            const incomeBonusSpan = document.getElementById('prestigeIncomeBonus');
+            if (prestigeUpgrades.aumentoGeneracionRiqueza > 0) {
+                incomeBonusSpan.textContent = `(+${prestigeUpgrades.aumentoGeneracionRiqueza}%)`;
+                incomeBonusSpan.classList.remove('hidden');
+            } else {
+                incomeBonusSpan.classList.add('hidden');
+            }
 
             if (currentWord.word) {
                 let wordClass = "";
@@ -813,7 +854,12 @@
                 if (isCategoryComplete) {
                     document.getElementById('wordValue').textContent = 'Categoría Completa';
                 } else {
-                    document.getElementById('wordValue').textContent = `${currentWord.value.toLocaleString('es')}`;
+                    let valueHTML = `${currentWord.value.toLocaleString('en-US')}`;
+                    if (prestigeUpgrades.reduccionInflacion > 0) {
+                        const reductionValue = (prestigeUpgrades.reduccionInflacion * 0.5).toFixed(2);
+                        valueHTML += ` <span class="text-xs text-green-600">(-${reductionValue}%)</span>`;
+                    }
+                    document.getElementById('wordValue').innerHTML = valueHTML;
                 }
             }
 
@@ -835,6 +881,7 @@
             } else {
                 prestigeButton.classList.remove('hover:bg-yellow-200', 'border-yellow-400');
             }
+            prestigeButton.classList.toggle('luck-glow', prestigeUpgrades.suerteAumentada > 0);
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
             // Timers
@@ -857,12 +904,18 @@
 
             const chrisTimeLeft = Math.ceil(Math.max(0, (christopherBoostEndTime - now)) / 1000);
             chrisTimer.style.display = chrisTimeLeft > 0 ? 'block' : 'none';
-            if(chrisTimeLeft > 0) chrisTimer.querySelector('span').textContent = `${chrisTimeLeft}s`;
+            if(chrisTimeLeft > 0) {
+                chrisTimer.querySelector('span').textContent = `${chrisTimeLeft}s`;
+                chrisTimer.classList.toggle('prestige-glow', prestigeUpgrades.duracionPotenciadores > 0);
+            }
 
             const maxSuperValueEndTime = Object.values(superValueBoosts).length > 0 ? Math.max(...Object.values(superValueBoosts)) : 0;
             const svTimeLeft = Math.ceil(Math.max(0, maxSuperValueEndTime - now) / 1000);
             svTimer.style.display = svTimeLeft > 0 ? 'block' : 'none';
-            if(svTimeLeft > 0) svTimer.querySelector('span').textContent = `${svTimeLeft}s`;
+            if(svTimeLeft > 0) {
+                svTimer.querySelector('span').textContent = `${svTimeLeft}s`;
+                svTimer.classList.toggle('prestige-glow', prestigeUpgrades.duracionPotenciadores > 0);
+            }
             
             const shieldTimeLeft = Math.ceil(Math.max(0, universalShieldEndTime - now) / 1000);
             shieldTimer.style.display = shieldTimeLeft > 0 ? 'block' : 'none';
@@ -1061,7 +1114,11 @@
                 const rewardBonus = 1 + (prestigeUpgrades.recompensasDesafio * 0.02);
                 const reward = CHALLENGE_REWARDS[category] * rewardBonus;
                 playerMoney += reward;
-                showModal(`¡Correcto! ${reason} Ganas ${reward.toLocaleString('es')}.`);
+                let successMessage = `¡Correcto! ${reason} Ganas ${reward.toLocaleString('en-US')}.`;
+                if (prestigeUpgrades.recompensasDesafio > 0) {
+                    successMessage += ` (+${prestigeUpgrades.recompensasDesafio * 2}%)`;
+                }
+                showModal(successMessage);
             } else {
                 handleChallengeFailure(reason);
             }
@@ -1076,7 +1133,7 @@
                 changeView('gameOver');
             } else {
                 resetProgressButKeepLives();
-                showModal(`¡Fallo! ${reason}. Has perdido todo. Te quedan ${3 - consecutiveFailures} intentos.`);
+                showModal(`¡Fallo! ${reason}. Has perdido tus palabras. Te quedan ${3 - consecutiveFailures} intentos.`);
             }
         }
         
@@ -1106,7 +1163,7 @@
                 usedChallengeWords = data.used || {};
                 consecutiveFailures = data.failures || 0;
                 gameMultiplier = data.multiplier || 1;
-                initialCredits = data.credits || 100;
+                
                 shields = data.shields || { universal: 0 };
                 universalShieldEndTime = data.shieldEnd || 0;
                 christopherBoostEndTime = data.chrisEnd || 0;
@@ -1114,7 +1171,15 @@
                 limboGramaticalTriggeredThisPartida = data.limboTriggered || false;
                 christopherBonusCountDuringLimbo = data.chrisBonusCount || 0;
                 prestigePoints = data.prestigePoints || 0;
-                prestigeUpgrades = data.prestigeUpgrades || { riquezaInicial: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
+                prestigeUpgrades = data.prestigeUpgrades || { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
+
+                // Recalculate initialCredits based on loaded prestige data
+                let baseCredits = 100;
+                for(let i = 1; i < gameMultiplier; i++) {
+                    baseCredits *= 2;
+                }
+                initialCredits = baseCredits;
+                // Note: We don't reset playerMoney here, just recalculate what the base should be.
 
                 if (gameMultiplier > 1) applyScalingToWordDatabase(gameMultiplier);
                 
@@ -1330,14 +1395,14 @@
 
             return { category, reason };
         }
-
+        
         function updateContinueButtonState() {
             const continueBtn = document.getElementById('continueGameButton');
             const hasSaveData = localStorage.getItem('dl_player_data');
 
             if (hasSaveData) {
                 const data = JSON.parse(hasSaveData);
-                const hasProgress = Object.values(data.words).some(cat => cat.count > 0);
+                const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
                 if (hasProgress) {
                     continueBtn.disabled = false;
                     continueBtn.classList.add('hover:bg-green-700');
@@ -1352,13 +1417,12 @@
         }
         
         const prestigeUpgradeInfo = {
-            riquezaInicial: { title: "Riqueza Inicial", desc: "Comienza cada partida con dinero extra.", effect: level => `+${(level * 500).toLocaleString('es')}`, icon: `<svg class="w-8 h-8 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
-            reduccionInflacion: { title: "Reducción de Inflación", desc: "Reduce el efecto de la inflación en el costo de las palabras.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-8 h-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
-            recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
-            duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-8 h-8 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
-            suerteAumentada: { title: "Suerte Aumentada", desc: "Aumenta la probabilidad de eventos especiales.", effect: level => `+${(level * 0.05)}%`, icon: `<svg class="w-8 h-8 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-12v4m-2-2h4m5 6v4m-2-2h4M12 3v1m0 16v1m-6.364-2.364l.707.707M17.657 6.343l.707.707m-12.02 10.607l.707-.707M18.364 5.636l.707-.707" /></svg>`, colors: "bg-yellow-50 border-yellow-200 text-yellow-800" },
-            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-8 h-8 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" },
-            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-6 h-6 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" },
+            aumentoGeneracionRiqueza: { title: "Aumento de Riqueza", desc: "Aumenta la generación de riqueza pasiva.", effect: level => `+${level}%`, icon: `<svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
+            reduccionInflacion: { title: "Reducción de Inflación", desc: "Reduce el efecto de la inflación.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
+            recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
+            duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
+            suerteAumentada: { title: "Suerte Aumentada", desc: "Aumenta la probabilidad de eventos especiales.", effect: level => `+${(level * 0.05)}%`, icon: `<svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`, colors: "bg-yellow-50 border-yellow-200 text-yellow-800" },
+            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-6 h-6 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" }
         };
 
         function updatePrestigeUI() {
@@ -1407,7 +1471,6 @@
                 savePlayerData();
             }
         }
-
 
         function setupEventListeners() {
             document.getElementById('newGameButton').addEventListener('click', startNewGame);
@@ -1473,3 +1536,5 @@
     </script>
 </body>
 </html>
+
+
