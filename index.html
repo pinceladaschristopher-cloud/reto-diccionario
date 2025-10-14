@@ -140,8 +140,8 @@
                     Tutorial
                 </button>
             </div>
-            <p class="text-xs text-gray-400 mt-8 text-center">© 2025 El Reto del Diccionario | Desarrollado por Didac-Click Group.</p>
         </div>
+        <p class="absolute bottom-4 text-xs text-gray-400 text-center">© 2025 El Reto del Diccionario | Desarrollado por Didac-Click Group.</p>
     </div>
     
     <!-- Tutorial Modal -->
@@ -461,6 +461,8 @@
         let gameStarted = false;
         let hasBoughtFirstWord = false;
         let gamePausedForFeedback = false;
+        let activeChallengeOnLoad = false;
+        let visibilityChangeHandler = null;
         
         // --- Game Constants ---
         const PRICE_PER_LETTER = 15;
@@ -507,6 +509,15 @@
 
         const categoryColors = { "Monosílabos": "text-gray-800", "Agudas": "text-green-800", "Llanas": "text-yellow-800", "Esdrújulas": "text-blue-800", "Sobreesdrújulas": "text-purple-800" };
         const categoryBackgrounds = { "Monosílabos": "bg-gray-200 hover:bg-gray-300", "Agudas": "bg-green-200 hover:bg-green-300", "Llanas": "bg-yellow-200 hover:bg-yellow-300", "Esdrújulas": "bg-blue-200 hover:bg-blue-300", "Sobreesdrújulas": "bg-purple-200 hover:bg-purple-300" };
+        
+        const prestigeUpgradeInfo = {
+            aumentoGeneracionRiqueza: { title: "Aumento de Riqueza", desc: "Aumenta la generación de riqueza pasiva.", effect: level => `+${level}%`, icon: `<svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
+            reduccionInflacion: { title: "Reducción de Inflación", desc: "Reduce el efecto de la inflación.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
+            recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
+            duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
+            suerteAumentada: { title: "Suerte Aumentada", desc: "Aumenta la probabilidad de eventos especiales.", effect: level => `+${(level * 0.05)}%`, icon: `<svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`, colors: "bg-yellow-50 border-yellow-200 text-yellow-800" },
+            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-6 h-6 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" }
+        };
 
         function applyScalingToWordDatabase(multiplier) {
             WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
@@ -1041,7 +1052,8 @@
         function startDictionaryChallenge() {
             stopGameLoops();
             isChallengeActive = true;
-            
+            savePlayerData(); // Guardar inmediatamente que el reto está activo
+
             const universalShieldActive = Date.now() < universalShieldEndTime;
             if (universalShieldActive) {
                 showModal(`¡Protegido por el Escudo Universal! Reto evitado.`);
@@ -1060,6 +1072,13 @@
                 generateNewWord(true);
                 return;
             }
+            
+            visibilityChangeHandler = () => {
+                if (document.hidden && isChallengeActive) {
+                    endDictionaryChallenge('cheat', document.getElementById('challengeCategory').textContent);
+                }
+            };
+            document.addEventListener('visibilitychange', visibilityChangeHandler);
 
             const categories = ["Agudas", "Llanas", "Esdrújulas"];
             const challengeCategory = categories[Math.floor(Math.random() * categories.length)];
@@ -1088,11 +1107,21 @@
         }
         
         async function endDictionaryChallenge(word, category) {
+            if (visibilityChangeHandler) {
+                document.removeEventListener('visibilitychange', visibilityChangeHandler);
+                visibilityChangeHandler = null;
+            }
+    
             clearInterval(challengeTimerInterval);
             document.getElementById('dictionaryModal').classList.add('hidden');
             isChallengeActive = false;
             gamePausedForFeedback = true;
             stopGameLoops();
+
+            if (word === 'cheat') {
+                handleChallengeFailure("Reto fallido por cambiar de pestaña.");
+                return;
+            }
 
             if (!word || !/^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ¡!]+$/.test(word.trim())) {
                 handleChallengeFailure("Formato de palabra inválido. Debe empezar con mayúscula y contener solo letras.");
@@ -1147,7 +1176,8 @@
                     limboTriggered: limboGramaticalTriggeredThisPartida,
                     chrisBonusCount: christopherBonusCountDuringLimbo,
                     prestigePoints: prestigePoints,
-                    prestigeUpgrades: prestigeUpgrades
+                    prestigeUpgrades: prestigeUpgrades,
+                    isChallengeActive: isChallengeActive // Guardar el estado del reto
                 };
                 localStorage.setItem('dl_player_data', JSON.stringify(data));
             } catch (e) { console.error('Error saving data:', e); }
@@ -1172,6 +1202,10 @@
                 christopherBonusCountDuringLimbo = data.chrisBonusCount || 0;
                 prestigePoints = data.prestigePoints || 0;
                 prestigeUpgrades = data.prestigeUpgrades || { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
+
+                if (data.isChallengeActive) {
+                    activeChallengeOnLoad = true;
+                }
 
                 // Recalculate initialCredits based on loaded prestige data
                 let baseCredits = 100;
@@ -1301,9 +1335,17 @@
             if (shouldLoad) {
                 loadPlayerData();
             }
+            
+            if (activeChallengeOnLoad) {
+                handleChallengeFailure("Reto abandonado.");
+                activeChallengeOnLoad = false; // Reset the flag
+                isChallengeActive = false;
+                savePlayerData(); // Save the cleared state
+            }
+
             startGameLoops();
             generateNewWord(true);
-            setInterval(savePlayerData, 30000);
+            setInterval(savePlayerData, 5000); // Guardado automático cada 5 segundos
         }
         
         function syllabify(word) {
@@ -1333,7 +1375,6 @@
             }
             return restoredSyllables;
         }
-
 
         function getAccentCategory(word) {
             const originalWord = word;
@@ -1416,15 +1457,6 @@
             continueBtn.classList.remove('hover:bg-green-700');
         }
         
-        const prestigeUpgradeInfo = {
-            aumentoGeneracionRiqueza: { title: "Aumento de Riqueza", desc: "Aumenta la generación de riqueza pasiva.", effect: level => `+${level}%`, icon: `<svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
-            reduccionInflacion: { title: "Reducción de Inflación", desc: "Reduce el efecto de la inflación.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
-            recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
-            duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
-            suerteAumentada: { title: "Suerte Aumentada", desc: "Aumenta la probabilidad de eventos especiales.", effect: level => `+${(level * 0.05)}%`, icon: `<svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`, colors: "bg-yellow-50 border-yellow-200 text-yellow-800" },
-            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-6 h-6 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" }
-        };
-
         function updatePrestigeUI() {
             document.getElementById('prestigePointsDisplay').textContent = prestigePoints;
             const container = document.getElementById('prestigeUpgradesContainer');
@@ -1524,6 +1556,9 @@
                 startGameLoops(); 
                 generateNewWord(true);
             });
+
+            // Guardar el juego automáticamente al cerrar la pestaña/navegador
+            window.addEventListener('beforeunload', savePlayerData);
         }
 
         async function initGame() {
@@ -1536,5 +1571,3 @@
     </script>
 </body>
 </html>
-
-
