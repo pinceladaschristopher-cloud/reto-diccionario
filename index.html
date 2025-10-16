@@ -644,7 +644,7 @@
             reiniciarJuegoCompleto();
             gameStarted = true;
             changeView('game');
-            await startGameCommon(true);
+            await startGameCommon(false);
         }
         
         async function proceedWithContinueGame() {
@@ -1148,6 +1148,7 @@
                     successMessage += ` (+${prestigeUpgrades.recompensasDesafio * 2}%)`;
                 }
                 showModal(successMessage);
+                savePlayerData(); // Guardar el progreso después de un reto exitoso
             } else {
                 handleChallengeFailure(reason);
             }
@@ -1164,6 +1165,7 @@
                 resetProgressButKeepLives();
                 showModal(`¡Fallo! ${reason}. Has perdido tus palabras. Te quedan ${3 - consecutiveFailures} intentos.`);
             }
+            savePlayerData(); // Guardar el progreso después de un fallo
         }
         
         function savePlayerData() {
@@ -1562,9 +1564,24 @@
         }
 
         async function initGame() {
+            setupEventListeners();
+            const hasSaveData = localStorage.getItem('dl_player_data');
+            if (hasSaveData) {
+                try {
+                    const data = JSON.parse(hasSaveData);
+                    const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
+                    if (hasProgress) {
+                        await proceedWithContinueGame();
+                        return;
+                    }
+                } catch(e) {
+                    console.error("Error al analizar los datos guardados, empezando de nuevo.", e);
+                    localStorage.removeItem('dl_player_data');
+                }
+            }
+            // Fallback para cuando no hay datos, no hay progreso, o hay error de análisis
             updateContinueButtonState();
             changeView('startup');
-            setupEventListeners();
         }
         
         window.onload = initGame;
