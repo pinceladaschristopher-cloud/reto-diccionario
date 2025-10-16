@@ -129,16 +129,16 @@
     <div id="startupScreen" class="fixed inset-0 modal-bg flex flex-col items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="text-center w-full max-w-4xl mx-auto">
             <h1 class="text-4xl sm:text-6xl font-black text-blue-900 mb-8">EL RETO DEL DICCIONARIO</h1>
-            <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4">
-                <button id="newGameButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
-                    NUEVA PARTIDA
-                </button>
-                <button id="continueGameButton" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform text-lg sm:text-xl">
-                    SEGUIR JUGANDO
-                </button>
-                 <button id="tutorialButton" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
-                    Tutorial
-                </button>
+            <div class="flex flex-col items-center gap-4">
+                <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4 w-full">
+                    <button id="playGameButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                        JUGAR
+                    </button>
+                    <button id="tutorialButton" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                        Tutorial
+                    </button>
+                </div>
+                <button id="resetProgressButton" class="text-sm text-gray-500 hover:text-red-500 hover:underline hidden">Reiniciar progreso</button>
             </div>
         </div>
         <p class="absolute bottom-4 text-xs text-gray-400 text-center">© 2025 El Reto del Diccionario | Desarrollado por Didac-Click Group.</p>
@@ -644,7 +644,7 @@
             reiniciarJuegoCompleto();
             gameStarted = true;
             changeView('game');
-            await startGameCommon(false);
+            await startGameCommon(true); // 'true' means load, but data was just removed
         }
         
         async function proceedWithContinueGame() {
@@ -1148,7 +1148,6 @@
                     successMessage += ` (+${prestigeUpgrades.recompensasDesafio * 2}%)`;
                 }
                 showModal(successMessage);
-                savePlayerData(); // Guardar el progreso después de un reto exitoso
             } else {
                 handleChallengeFailure(reason);
             }
@@ -1165,7 +1164,6 @@
                 resetProgressButKeepLives();
                 showModal(`¡Fallo! ${reason}. Has perdido tus palabras. Te quedan ${3 - consecutiveFailures} intentos.`);
             }
-            savePlayerData(); // Guardar el progreso después de un fallo
         }
         
         function savePlayerData() {
@@ -1439,26 +1437,6 @@
             return { category, reason };
         }
         
-        function updateContinueButtonState() {
-            const continueBtn = document.getElementById('continueGameButton');
-            const hasSaveData = localStorage.getItem('dl_player_data');
-
-            if (hasSaveData) {
-                const data = JSON.parse(hasSaveData);
-                const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
-                if (hasProgress) {
-                    continueBtn.disabled = false;
-                    continueBtn.classList.add('hover:bg-green-700');
-                    continueBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    return;
-                }
-            }
-            
-            continueBtn.disabled = true;
-            continueBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            continueBtn.classList.remove('hover:bg-green-700');
-        }
-        
         function updatePrestigeUI() {
             document.getElementById('prestigePointsDisplay').textContent = prestigePoints;
             const container = document.getElementById('prestigeUpgradesContainer');
@@ -1507,8 +1485,8 @@
         }
 
         function setupEventListeners() {
-            document.getElementById('newGameButton').addEventListener('click', startNewGame);
-            document.getElementById('continueGameButton').addEventListener('click', continueGame);
+            document.getElementById('playGameButton').addEventListener('click', continueGame);
+            document.getElementById('resetProgressButton').addEventListener('click', startNewGame);
             document.getElementById('tutorialButton').addEventListener('click', () => changeView('tutorial'));
             document.getElementById('buyButton').addEventListener('click', buyWord);
             document.getElementById('shopButton').addEventListener('click', () => changeView('shop'));
@@ -1517,7 +1495,15 @@
                 stopGameLoops();
                 stopRulesRotator();
                 savePlayerData();
-                updateContinueButtonState();
+                const resetBtn = document.getElementById('resetProgressButton');
+                const hasSaveData = localStorage.getItem('dl_player_data');
+                if (hasSaveData) {
+                    const data = JSON.parse(hasSaveData);
+                    const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
+                    resetBtn.style.display = hasProgress ? 'block' : 'none';
+                } else {
+                    resetBtn.style.display = 'none';
+                }
                 changeView('startup');
             });
             document.getElementById('backToGameFromTutorial').addEventListener('click', () => changeView('startup'));
@@ -1564,24 +1550,17 @@
         }
 
         async function initGame() {
-            setupEventListeners();
+            const resetBtn = document.getElementById('resetProgressButton');
             const hasSaveData = localStorage.getItem('dl_player_data');
             if (hasSaveData) {
-                try {
-                    const data = JSON.parse(hasSaveData);
-                    const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
-                    if (hasProgress) {
-                        await proceedWithContinueGame();
-                        return;
-                    }
-                } catch(e) {
-                    console.error("Error al analizar los datos guardados, empezando de nuevo.", e);
-                    localStorage.removeItem('dl_player_data');
-                }
+                 const data = JSON.parse(hasSaveData);
+                 const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
+                 resetBtn.style.display = hasProgress ? 'block' : 'none';
+            } else {
+                resetBtn.style.display = 'none';
             }
-            // Fallback para cuando no hay datos, no hay progreso, o hay error de análisis
-            updateContinueButtonState();
             changeView('startup');
+            setupEventListeners();
         }
         
         window.onload = initGame;
