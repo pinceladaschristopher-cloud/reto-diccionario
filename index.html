@@ -68,7 +68,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #ffffff; 
+            background: #f3f4f6; 
             overflow: hidden;
             clip-path: inset(50% 50% 50% 50%);
         }
@@ -134,6 +134,14 @@
             animation: flicker-dark 2s infinite;
             text-align: center;
         }
+
+        .christopher-whisper-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #4f46e5; /* Indigo */
+            text-align: center;
+            animation: flicker-light 2.5s infinite;
+        }
         
         @keyframes flicker-dark {
             0%, 100% {
@@ -145,10 +153,35 @@
                 opacity: 1;
             }
         }
+        
+        @keyframes flicker-light {
+            0%, 100% {
+                text-shadow: 0 0 7px rgba(165, 180, 252, 0.6), 0 0 3px rgba(255,255,255,0.8);
+                opacity: 0.9;
+            }
+            50% {
+                text-shadow: 0 0 18px rgba(129, 140, 248, 0.9), 0 0 6px rgba(255,255,255,1);
+                opacity: 1;
+            }
+        }
+
 
         .corrupted-text-effect {
             animation: flicker-dark 2s infinite;
             font-weight: bold;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #f59e0b;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
     </style>
@@ -158,7 +191,37 @@
     <div id="startupScreen" class="fixed inset-0 modal-bg flex flex-col items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="text-center w-full max-w-4xl mx-auto">
             <h1 class="text-4xl sm:text-6xl font-black text-blue-900 mb-8">EL RETO DEL DICCIONARIO</h1>
-            <div class="flex flex-col items-center gap-4">
+
+            <!-- Vista para usuarios NO logueados -->
+            <div id="loginView" class="flex flex-col items-center gap-4">
+                <div id="registerSection">
+                    <div class="w-full max-w-sm">
+                        <input type="text" id="playerNameInput" placeholder="Escribe tu nombre para empezar" class="w-full text-center p-3 text-lg font-semibold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-gray-800 mb-2">
+                        <button id="loginButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                            Empezar Aventura
+                        </button>
+                    </div>
+                    <p class="mt-4 text-sm">
+                        <a href="#" id="showLoginWithId" class="text-blue-600 hover:underline">¿Ya tienes una cuenta? Inicia sesión con tu ID.</a>
+                    </p>
+                </div>
+
+                <div id="loginWithIdSection" class="hidden">
+                    <div class="w-full max-w-sm">
+                        <input type="text" id="playerIDInput" placeholder="Pega tu ID de Jugador" class="w-full text-center p-3 text-lg font-semibold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-gray-800 mb-2">
+                        <button id="loginWithIdButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                            Cargar Partida
+                        </button>
+                    </div>
+                    <p class="mt-4 text-sm">
+                        <a href="#" id="showRegister" class="text-blue-600 hover:underline">¿Eres nuevo? Crea una cuenta.</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Vista para usuarios SÍ logueados -->
+            <div id="loggedInView" class="hidden flex flex-col items-center gap-4">
+                 <p class="text-2xl font-bold text-gray-700 mb-2">Bienvenido, <span id="playerNameDisplay" class="text-blue-700"></span></p>
                 <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4 w-full max-w-2xl">
                     <button id="playGameButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
                         JUGAR
@@ -167,8 +230,20 @@
                         Tutorial
                     </button>
                 </div>
-                <button id="resetProgressButton" class="text-sm text-gray-500 hover:text-red-500 hover:underline hidden mt-4">Reiniciar progreso</button>
+                <!-- Div contenedor de botones dentro de loggedInView -->
+                <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4 w-full max-w-md">
+                    <button id="profileButton" class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg transition">Ver mi Perfil</button>
+                    <!-- Inserta este botón aquí -->
+                    <button id="rankingButton" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-lg transition">Ranking</button>
+                </div>
+                <div class="flex gap-4 mt-4">
+                    <button id="resetProgressButton" class="text-sm text-gray-500 hover:text-red-500 hover:underline">Reiniciar progreso</button>
+                    <button id="logoutButton" class="text-sm text-gray-500 hover:text-blue-500 hover:underline">Cambiar de nombre</button>
+                    <!-- Botón de Administrador para eliminar jugadores -->
+                    <button id="adminDeleteButton" class="hidden text-sm text-red-600 hover:text-red-800 hover:underline font-bold">Eliminar Jugador del Ranking</button>
+                </div>
             </div>
+
         </div>
         <p class="absolute bottom-4 text-xs text-gray-400 text-center">© 2025 El Reto del Diccionario | Desarrollado por Didac-Click Group.</p>
     </div>
@@ -187,19 +262,19 @@
                         <span class="font-bold">Objetivo:</span> Compra palabras para ganar dinero pasivo. Reúne 30 de cada categoría para desbloquear y comprar la palabra <span class="font-bold text-purple-700">Sobreesdrújula</span> y ganar.
                     </li>
                     <li>
-                        <span class="font-bold">El Desafío:</span> Ocasionalmente, se te pedirá escribir una palabra de una categoría en 30s. ¡Cuidado! 3 fallos reinician tu progreso.
+                        <span class="font-bold">El Desafío:</span> Ocasionalmente, se te pedirá escribir una palabra de una categoría en 30s. El juego verificará tu palabra en línea para asegurar total precisión. ¡Cuidado! 3 fallos reinician tu progreso.
                     </li>
                      <li>
                         <span class="font-bold">Bonus:</span> Busca palabras <strong class="super-value-text">Super Value</strong> (rojas) para potenciar una categoría, o el <strong>Bonus <span class="rainbow-text">CHRISTOPHER</span></strong> para potenciar todo.
                     </li>
                     <li>
-                        <span class="font-bold">Limbo Gramatical:</span> ¡Mantente alerta a eventos raros! El <span class="glitch-wrapper"><strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramatical: ???">Limbo Gramatical: ???</strong></span> es una fisura en la realidad que te ofrece grandes recompensas.
+                        <span class="font-bold">Limbo Gramatical:</span> ¡Mantente alerta a eventos raros! El <span class="glitch-wrapper"><strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramatical: ???">Limbo Gramatical: ???</strong></span> es una fisura en la realidad que te ofrece grandes recompensas. Durante el evento, Christopher podría intentar comunicarse contigo...
                     </li>
                     <li>
-                        <span class="font-bold">El Ladrón de Tildes:</span> ¡Ten cuidado! Cuando el Ladrón se acerca, susurra. Durante este tiempo, podría intentar engañarte con <strong class="corrupted-text-effect">palabras corruptas: ???</strong>. Comprarlas tendrá consecuencias.
+                        <span class="font-bold">El Ladrón de Tildes:</span> ¡Ten cuidado! Cuando el Ladrón se acerca, susurra. Podría intentar engañarte con <strong class="corrupted-text-effect">palabras corruptas: ???</strong>, e incluso se burlará de tus fallos en los retos.
                     </li>
                     <li>
-                        <span class="font-bold">Tienda y Prestigio:</span> Usa la <span class="font-bold">Tienda</span> para comprar Vidas y Escudos. Al ganar y <span class="font-bold text-purple-700">Formatear</span>, obtienes un multiplicador permanente y <span class="font-bold text-yellow-700">Puntos de Prestigio</span>, que puedes usar para mejoras haciendo clic en el botón del multiplicador.
+                        <span class="font-bold">Tienda y Prestigio:</span> Usa la <span class="font-bold">Tienda</span> para comprar Vidas y Escudos. Al ganar y <span class="font-bold text-purple-700">Formatear</span>, obtienes un multiplicador permanente y <span class="font-bold text-yellow-700">Puntos de Prestigio</span>, que puedes usar para mejoras permanentes, ¡incluyendo algunas para contrarrestar al Ladrón!
                     </li>
                 </ol>
             </div>
@@ -210,6 +285,80 @@
             </div>
         </div>
     </div>
+
+    <!-- Ranking Modal -->
+    <div id="rankingScreen" class="fixed inset-0 modal-bg hidden flex items-center justify-center p-4 z-[100]">
+        <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-yellow-400">
+            <h2 class="text-3xl font-extrabold text-yellow-800 mb-4 text-center">Clasificación Global Top 50</h2>
+    
+            <!-- Mensaje para usuarios no logueados -->
+            <div id="nameInputContainer" class="text-center mb-4">
+                 <p class="text-gray-700 mb-2">Debes iniciar sesión para ver el ranking y registrar tu progreso.</p>
+            </div>
+    
+            <!-- Tabla para mostrar la clasificación -->
+            <div id="rankingTableContainer" class="hidden">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-yellow-100 border-b-2 border-yellow-300">
+                            <th class="p-2 font-bold text-yellow-900">#</th>
+                            <th class="p-2 font-bold text-yellow-900">Nombre</th>
+                            <th class="p-2 font-bold text-yellow-900 text-right">Multiplicador</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingTableBody">
+                        <!-- El contenido se generará con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+    
+            <div class="text-center w-full mt-6">
+                <button id="backToHomeFromRanking" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Player Profile -->
+    <div id="profileScreen" class="fixed inset-0 modal-bg hidden items-center justify-center p-4 z-[100]">
+        <div class="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-indigo-400">
+            <div class="flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-indigo-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                <h2 class="text-3xl font-black text-indigo-800">Perfil del Jugador</h2>
+            </div>
+            
+            <div id="profileContent" class="text-center">
+                <!-- Loading state -->
+                <div id="profileLoading" class="flex justify-center items-center p-8">
+                    <div class="loading-spinner"></div>
+                </div>
+
+                <!-- Loaded state -->
+                <div id="profileData" class="hidden">
+                     <div class="bg-indigo-100 rounded-lg p-4 mb-4">
+                        <h3 id="profilePlayerName" class="text-2xl font-bold text-indigo-900"></h3>
+                        <p class="text-sm text-indigo-700">Multiplicador: <span id="profileMultiplier" class="font-bold"></span> | Ranking Global: <span id="profileRank" class="font-bold">#---</span></p>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <p class="text-sm font-bold text-gray-600">Tu ID de Jugador (para iniciar sesión en otros dispositivos):</p>
+                        <div class="flex items-center justify-center gap-2 mt-1">
+                            <input id="playerIDCopyInput" type="text" class="text-center bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded w-full" readonly>
+                            <button id="copyPlayerIDButton" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full">Copiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-6">
+                <button id="backToHomeFromProfile" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Game Container -->
     <div class="container mx-auto p-2 flex flex-col items-center min-h-screen">
@@ -276,16 +425,6 @@
         </div>
         <div id="shieldTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-indigo-300 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
             <span class="text-indigo-600">0s</span>
-        </div>
-        <!-- Contadores de Bonus de Jefe -->
-        <div id="bossBonus1TimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-red-700 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
-            <span class="whisper-text" style="font-size: 1rem;">0s</span>
-        </div>
-        <div id="bossBonus2TimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-red-700 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
-            <span class="whisper-text" style="font-size: 1rem;">0s</span>
-        </div>
-        <div id="bossBonus3TimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-red-700 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
-            <span class="whisper-text" style="font-size: 1rem;">0s</span>
         </div>
         <button id="shopButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             Tienda
@@ -359,7 +498,7 @@
     </div>
 
     <!-- Modal for Messages -->
-    <div id="messageModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4">
+    <div id="messageModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4 z-[250]">
         <div class="bg-white p-6 max-w-sm w-full text-center rounded-xl shadow-lg border border-blue-300">
             <p id="modalMessage" class="text-lg font-semibold text-gray-800 mb-4"></p>
             <button id="modalCloseButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Cerrar</button>
@@ -377,7 +516,7 @@
     </div>
 
     <!-- Modal for Dictionary Challenge -->
-    <div id="dictionaryModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4">
+    <div id="dictionaryModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4 z-[200]">
         <div class="bg-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-4 border-red-500">
             <h3 class="text-3xl font-extrabold text-red-700 mb-2">¡EL DICCIONARIO!</h3>
             <p class="text-md text-gray-600 mb-4">Escribe una palabra de la categoría:</p>
@@ -387,14 +526,14 @@
         </div>
     </div>
 
-    <!-- Modal for Loading -->
-    <div id="loadingModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4">
+    <!-- Modal for Online Verification -->
+    <div id="loadingModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4 z-[300]">
         <div class="bg-white p-6 max-w-sm w-full text-center rounded-xl shadow-lg flex flex-col items-center">
             <svg class="animate-spin -ml-1 mr-3 h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p class="text-lg font-semibold text-gray-800 mt-4">Verificando palabra...</p>
+            <p class="text-lg font-semibold text-gray-800 mt-4">Verificando en línea...</p>
         </div>
     </div>
     
@@ -414,9 +553,19 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal de Burla del Ladrón -->
+    <div id="thiefMockeryModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-500">
+        <div class="bg-gray-800 text-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-2 border-red-700">
+             <div id="thiefMockeryIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
+            <h4 class="text-xl font-bold text-red-400 mb-2">El Ladrón de Tildes se ríe...</h4>
+            <p id="thiefMockeryDialogue" class="text-gray-300 mb-4 italic"></p>
+            <button id="thiefMockeryCloseButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Continuar</button>
+        </div>
+    </div>
 
     <!-- Modal for Game Over -->
-    <div id="gameOverScreen" class="fixed inset-0 bg-red-900/80 backdrop-blur-sm hidden flex flex-col justify-center items-center p-0">
+    <div id="gameOverScreen" class="fixed inset-0 bg-red-900/80 backdrop-blur-sm hidden flex flex-col justify-center items-center p-0 z-[300]">
         <div class="bg-red-800 text-white p-8 w-full h-full text-center flex flex-col justify-center items-center">
             <h2 class="text-5xl font-extrabold mb-4">GAME OVER</h2>
             <p id="gameOverMessage" class="text-lg mb-6"></p>
@@ -427,7 +576,7 @@
     </div>
 
     <!-- Pantalla de Victoria -->
-    <div id="winScreen" class="fixed inset-0 bg-green-900/80 backdrop-blur-sm hidden flex flex-col justify-center items-center p-0">
+    <div id="winScreen" class="fixed inset-0 bg-green-900/80 backdrop-blur-sm hidden flex flex-col justify-center items-center p-0 z-[300]">
         <div class="bg-green-700 text-white p-8 w-full h-full text-center flex flex-col justify-center items-center">
             <h2 class="text-5xl font-extrabold mb-4">¡HAS GANADO!</h2>
             <p id="winMessage" class="text-lg mb-6"></p>
@@ -446,7 +595,7 @@
     <div id="limboGramaticalScreen" class="fixed inset-0 modal-bg hidden flex-col items-center justify-center p-8 z-[102]">
         <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl text-center relative z-[102] border-4 border-purple-500">
             <div class="glitch-wrapper">
-                <h2 class="text-3xl font-extrabold rainbow-text glitch-text mb-4" data-text="¡Limbo Gramátical!">¡Limbo Gramátical!</h2>
+                <h2 class="text-3xl font-extrabold rainbow-text glitch-text mb-4" data-text="¡Limbo Gramatical!">¡Limbo Gramatical!</h2>
             </div>
             <p class="text-md text-gray-600 mb-6">
                  El Tío Christopher tiene un regalo para ti. Aprovéchalo.
@@ -480,6 +629,12 @@
 
 
     <script type="module">
+        // --- API & User Variables ---
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqvInhl4qdBpQIpuHofXc2T7tEfBOy544yWJUD1axxosj_zSmF4TSPU9QNNAe9F8G0/exec';
+        let playerCredentials = null; // { playerName, playerID }
+        let rankingUpdateInterval = null;
+
+
         // --- Game State Variables ---
         let playerMoney = 100;
         let playerWords = {};
@@ -497,7 +652,15 @@
             recompensasDesafio: 0,
             duracionPotenciadores: 0,
             suerteAumentada: 0,
-            descuentoTienda: 0
+            descuentoTienda: 0,
+            presagioLadron: 0,
+            enganoLadron: 0
+        };
+        let playerStats = {
+            wordsBought: 0,
+            challengesWon: 0,
+            bossesDefeatedCount: 0,
+            gameFormats: 0,
         };
         
         // --- Timers and Intervals ---
@@ -508,30 +671,23 @@
         let challengeInterval = null;
         let challengeTimerInterval;
         let isChallengeActive = false;
+        let christopherWhisperInterval = null;
         
         // --- Bonus State ---
         let universalShieldEndTime = 0;
         let christopherBoostEndTime = 0;
-        let superValueBoosts = {}; // Objeto para manejar los potenciadores por categoría
+        let superValueBoosts = {}; 
         let limboGramaticalEndTime = 0;
         let limboGramaticalTriggeredThisPartida = false;
         let christopherBonusCountDuringLimbo = 0;
-        let bossBonus1EndTime = 0; // Descuento 10%
-        let bossBonus2EndTime = 0; // Descuento 15%
-        let bossBonus3EndTime = 0; // Super Value Aumentado
 
         // --- UI & Game Flow ---
-        let currentView = 'game';
+        let currentView = 'startup';
         let gameStarted = false;
         let hasBoughtFirstWord = false;
         let gamePausedForFeedback = false;
         let activeChallengeOnLoad = false;
         let visibilityChangeHandler = null;
-        let isAutonomousModeActive = false;
-        let autonomousModePending = false;
-        let autonomousModeInterval = null;
-        const AUTONOMOUS_CODE = "21031999";
-        let autonomousState = 'idle'; // idle, solvingChallenge, solvingBoss, buyingWord
 
         // --- Boss Variables ---
         let bossesDefeated = [], whisperInterval = null;
@@ -552,65 +708,50 @@
         const CHALLENGE_REWARDS = { "Agudas": 10000, "Llanas": 20000, "Esdrújulas": 40000 };
         
         const CORRUPTED_WORDS = [
-            { wrong: "Lapiz", right: "Lápiz", category: "Llanas" },
-            { wrong: "Arbol", right: "Árbol", category: "Llanas" },
-            { wrong: "Cafe", right: "Café", category: "Agudas" },
-            { wrong: "Sofa", right: "Sofá", category: "Agudas" },
-            { wrong: "Musica", right: "Música", category: "Esdrújulas" },
-            { wrong: "Pagina", right: "Página", category: "Esdrújulas" },
-            { wrong: "Compas", right: "Compás", category: "Agudas" },
-            { wrong: "Dificil", right: "Difícil", category: "Llanas" },
-            { wrong: "Celula", right: "Célula", category: "Esdrújulas" },
-            { wrong: "Jamas", right: "Jamás", category: "Agudas" },
-            { wrong: "Marmol", right: "Mármol", category: "Llanas" },
-            { wrong: "Bebere", right: "Beberé", category: "Agudas" },
-            { wrong: "Logico", right: "Lógico", category: "Esdrújulas" },
-            { wrong: "Angel", right: "Ángel", category: "Llanas" },
-            { wrong: "Cancion", right: "Canción", category: "Agudas" },
-            { wrong: "Boligrafo", right: "Bolígrafo", category: "Esdrújulas" },
-            { wrong: "Azucar", right: "Azúcar", category: "Llanas" },
-            { wrong: "Peru", right: "Perú", category: "Agudas" },
-            { wrong: "Oxigeno", right: "Oxígeno", category: "Esdrújulas" },
-            { wrong: "Facil", right: "Fácil", category: "Llanas" },
-            { wrong: "Ademas", right: "Además", category: "Agudas" },
-            { wrong: "Telefono", right: "Teléfono", category: "Esdrújulas" },
-            { wrong: "Mastil", right: "Mástil", category: "Llanas" },
-            { wrong: "Ingles", right: "Inglés", category: "Agudas" },
-            { wrong: "Murcielago", right: "Murciélago", category: "Esdrújulas" },
-            { wrong: "Trebol", right: "Trébol", category: "Llanas" },
-            { wrong: "Acordeon", right: "Acordeón", category: "Agudas" },
-            { wrong: "Gomez", right: "Gómez", category: "Llanas" },
-            { wrong: "Brujula", right: "Brújula", category: "Esdrújulas" },
-            { wrong: "Avion", right: "Avión", category: "Agudas" }
+            { wrong: "Lapiz", right: "Lápiz", category: "Llanas" }, { wrong: "Arbol", right: "Árbol", category: "Llanas" },
+            { wrong: "Cafe", right: "Café", category: "Agudas" }, { wrong: "Sofa", right: "Sofá", category: "Agudas" },
+            { wrong: "Musica", right: "Música", category: "Esdrújulas" }, { wrong: "Pagina", right: "Página", category: "Esdrújulas" },
+            { wrong: "Compas", right: "Compás", category: "Agudas" }, { wrong: "Dificil", right: "Difícil", category: "Llanas" },
+            { wrong: "Celula", right: "Célula", category: "Esdrújulas" }, { wrong: "Jamas", right: "Jamás", category: "Agudas" },
+            { wrong: "Marmol", right: "Mármol", category: "Llanas" }, { wrong: "Bebere", right: "Beberé", category: "Agudas" },
+            { wrong: "Logico", right: "Lógico", category: "Esdrújulas" }, { wrong: "Angel", right: "Ángel", category: "Llanas" },
+            { wrong: "Cancion", right: "Canción", category: "Agudas" }, { wrong: "Boligrafo", right: "Bolígrafo", category: "Esdrújulas" },
+            { wrong: "Azucar", right: "Azúcar", category: "Llanas" }, { wrong: "Peru", right: "Perú", category: "Agudas" },
+            { wrong: "Oxigeno", right: "Oxígeno", category: "Esdrújulas" }, { wrong: "Facil", right: "Fácil", category: "Llanas" },
+            { wrong: "Ademas", right: "Además", category: "Agudas" }, { wrong: "Telefono", right: "Teléfono", category: "Esdrújulas" },
+            { wrong: "Mastil", right: "Mástil", category: "Llanas" }, { wrong: "Ingles", right: "Inglés", category: "Agudas" },
+            { wrong: "Murcielago", right: "Murciélago", category: "Esdrújulas" }, { wrong: "Trebol", right: "Trébol", category: "Llanas" },
+            { wrong: "Acordeon", right: "Acordeón", category: "Agudas" }, { wrong: "Gomez", right: "Gómez", category: "Llanas" },
+            { wrong: "Brujula", right: "Brújula", category: "Esdrújulas" }, { wrong: "Avion", right: "Avión", category: "Agudas" }
         ];
         
         const BOSS_INITIAL_DIALOGUES = [
-            "Veo que has reunido un pequeño tesoro... Demuéstrame que mereces conservarlo.",
-            "Tus palabras acumuladas cantan una melodía que me atrae. ¿Defenderás tu colección?",
-            "Huelo el poder de la sintaxis en ti. Pero, ¿conoces la verdadera ortografía?",
-            "Has sido descuidado. Dejaste un rastro de tildes olvidadas, y yo lo he seguido hasta aquí.",
-            "Otro coleccionista... Creen que acumular es saber. Te enseñaré la diferencia.",
-            "Las reglas son mis cadenas y tu conocimiento, la llave. No te la dejaré usar.",
-            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas."
+            "Veo que has reunido un pequeño tesoro... Demuéstrame que mereces conservarlo.", "Tus palabras acumuladas cantan una melodía que me atrae. ¿Defenderás tu colección?",
+            "Huelo el poder de la sintaxis en ti. Pero, ¿conoces la verdadera ortografía?", "Has sido descuidado. Dejaste un rastro de tildes olvidadas, y yo lo he seguido hasta aquí.",
+            "Otro coleccionista... Creen que acumular es saber. Te enseñaré la diferencia.", "Las reglas son mis cadenas y tu conocimiento, la llave. No te la dejaré usar.",
+            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas.", "Tus avances no han pasado desapercibidos. Es hora de una pequeña corrección.",
+            "Me llaman ladrón, pero yo me considero un purista. Vengo a limpiar tu colección de errores.", "El conocimiento sin precisión es ruido. Y tú estás haciendo mucho ruido."
         ];
-
         const BOSS_VICTORY_DIALOGUES = [
-            "Impresionante... Por ahora, tu conocimiento es tuyo. Pero volveré a sentir tu poder.",
-            "Has demostrado tu valía, mortal. Disfruta de tu tesoro... mientras puedas.",
-            "Me has vencido, sí. Pero recuerda que una sola tilde olvidada puede deshacerlo todo."
+            "Impresionante... Por ahora, tu conocimiento es tuyo. Pero volveré a sentir tu poder.", "Has demostrado tu valía, mortal. Disfruta de tu tesoro... mientras puedas.",
+            "Me has vencido, sí. Pero recuerda que una sola tilde olvidada puede deshacerlo todo.", "Tu mente es aguda. Una herramienta peligrosa en las manos adecuadas. Hasta la próxima.",
+            "Admito mi derrota. La precisión de tus tildes es un arma formidable."
         ];
-
         const BOSS_DEFEAT_DIALOGUES = [
-            "Tu ignorancia es... deliciosa. Estas palabras estarán mejor conmigo.",
-            "Tal como lo esperaba. Un simple acumulador sin verdadero conocimiento. Gracias por el tributo.",
-            "Te falta práctica. Vuelve cuando sepas la diferencia entre un 'si' y un 'sí'."
+            "Tu ignorancia es... deliciosa. Estas palabras estarán mejor conmigo.", "Tal como lo esperaba. Un simple acumulador sin verdadero conocimiento. Gracias por el tributo.",
+            "Te falta práctica. Vuelve cuando sepas la diferencia entre un 'si' y un 'sí'.", "Un error tan simple... y tan costoso. Tus palabras ahora me pertenecen.",
+            "La duda es el óxido del intelecto. Y el tuyo está completamente corroído."
         ];
-
-        const BOSS_MOCKING_LAUGHTER = [
-            "Jajaja... ¿No te has dado cuenta?",
-            "Tan predecible... Caíste de nuevo.",
-            "Delicioso error. Sigue así.",
-            "Mis trampas son sutiles, ¿no crees? Jaja."
+        const BOSS_MOCKING_LAUGHTER = [ "Jajaja... ¿No te has dado cuenta?", "Tan predecible... Caíste de nuevo.", "Delicioso error. Sigue así.", "Mis trampas son sutiles, ¿no crees? Jaja." ];
+        const THIEF_MOCKERY_ON_FAIL = [
+            "He oído tu fallo desde las sombras. Patético.", "Incluso sin mi intervención, tropiezas. Divertido.",
+            "¿Ves? La acentuación es un arte que no dominas.", "Cada error que cometes... me fortalece.", "Sigue así y no tendré ni que esforzarme en nuestro próximo encuentro."
+        ];
+        const CHRISTOPHER_DIALOGUES = [
+            "Las palabras son el tejido de la realidad...", "Él solo ve las reglas, pero no la gramática que las une.",
+            "Una fisura temporal... una oportunidad.", "No dejes que te robe la esencia del lenguaje.",
+            "El conocimiento es poder, pero la sabiduría es su correcta aplicación.", "Detrás de cada tilde hay una historia, una vibración.",
+            "Estás más cerca de entender la verdad."
         ];
         
         const BOSS_SENTENCES = {
@@ -624,7 +765,9 @@
                 { wrong: "El examen de matematicas fue dificil.", right: "El examen de matemáticas fue difícil." },
                 { wrong: "La comunicacion es la clave del exito.", right: "La comunicación es la clave del éxito." },
                 { wrong: "El agil ladron escapo por el tunel.", right: "El ágil ladrón escapó por el túnel." },
-                { wrong: "El oceano Pacifico es inmenso.", right: "El océano Pacífico es inmenso." }
+                { wrong: "El oceano Pacifico es inmenso.", right: "El océano Pacífico es inmenso." },
+                { wrong: "La lampara ilumino la habitacion.", right: "La lámpara iluminó la habitación." },
+                { wrong: "El helicoptero aterrizo con precision.", right: "El helicóptero aterrizó con precisión." }
             ],
             2: [
                 { wrong: "Tu no sabes si el quiere te o cafe.", right: "Tú no sabes si él quiere té o café." },
@@ -636,7 +779,9 @@
                 { wrong: "Mi te es mas dulce que el de el.", right: "Mi té es más dulce que el de él." },
                 { wrong: "No se si tu sabras la respuesta.", right: "No sé si tú sabrás la respuesta." },
                 { wrong: "El solo quiere estar solo un momento.", right: "Él solo quiere estar solo un momento." },
-                { wrong: "Tu decides si te quedas o te vas.", right: "Tú decides si te quedas o te vas." }
+                { wrong: "Tu decides si te quedas o te vas.", right: "Tú decides si te quedas o te vas." },
+                { wrong: "El me aseguro que si vendra.", right: "Él me aseguró que sí vendrá." },
+                { wrong: "A mi me gusta mas el te que a el.", right: "A mí me gusta más el té que a él." }
             ],
             3: [
                 { wrong: "Aun no se como llego, mas le dire que su exito fue fantastico.", right: "Aún no sé cómo llegó, mas le diré que su éxito fue fantástico." },
@@ -648,38 +793,40 @@
                 { wrong: "El pregunto que cual era mi opinion sobre el.", right: "Él preguntó que cuál era mi opinión sobre él." },
                 { wrong: "Solo se que no se nada, mas tu pareces saberlo todo.", right: "Solo sé que no sé nada, mas tú pareces saberlo todo." },
                 { wrong: "El enfasis de su discurso fue sobre etica y moral.", right: "El énfasis de su discurso fue sobre ética y moral." },
-                { wrong: "La peninsula iberica tiene un clima fantastico.", right: "La península ibérica tiene un clima fantástico." }
+                { wrong: "La peninsula iberica tiene un clima fantastico.", right: "La península ibérica tiene un clima fantástico." },
+                { wrong: "Explicame por que no viniste y que hiciste.", right: "Explícame por qué no viniste y qué hiciste." },
+                { wrong: "No se donde buscar ni a quien preguntar.", right: "No sé dónde buscar ni a quién preguntar." }
             ]
         };
-        const BOSS_WHISPERS = ["Siento el peso de tantas palabras...", "Una tilde fuera de lugar... es una invitación.", "¿Crees que las acumulas solo para ti?", "El eco de una sílaba mal acentuada resuena...", "Un tesoro de conocimiento... tan fácil de despojar."];
+        const BOSS_WHISPERS = ["Siento el peso de tantas palabras...", "Una tilde fuera de lugar... es una invitación.", "¿Crees que las acumulas solo para ti?", "El eco de una sílaba mal acentuada resuena...", "Un tesoro de conocimiento... tan fácil de despojar.", "Tu progreso es un faro en mi oscuridad..."];
 
         const ICON_LIBRARY = {
             'bossIcon': `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle><path d="M10.5 14.5c.5.3 1.2.3 1.7 0 M8 9.5s1-1 4-1 4 1 4 1"/></svg>`,
         };
         
-        const BASE_WORD_DATABASE = {
+        const HUGE_WORD_DATABASE = {
              "Monosílabos": {
                 value: 10,
-                words: ["Sol", "Mar", "Luz", "Voz", "Pan", "Sal", "Miel", "Tren", "Flor", "Rey", "Son", "Paz", "Bien", "Mal", "Gas", "No", "Sí", "Yo", "Él", "Tú", "Ve", "Da", "Sé", "Vi", "Di", "Pie", "Fe", "Ley", "Don", "Fin", "Mes", "Mil", "Res", "Ron", "Set", "Sur", "Tal", "Tez", "Zas", "Dar"],
-                superValueWords: ["Flor", "Voz", "Rey", "Paz"],
+                words: ["Sol", "Mar", "Luz", "Voz", "Pan", "Sal", "Miel", "Tren", "Flor", "Rey", "Son", "Paz", "Bien", "Mal", "Gas", "No", "Sí", "Yo", "Él", "Tú", "Ve", "Da", "Sé", "Vi", "Di", "Pie", "Fe", "Ley", "Don", "Fin", "Mes", "Mil", "Res", "Ron", "Set", "Sur", "Tal", "Tez", "Zas", "Dar", "Ver", "Mas", "Te", "Mi", "Si", "El", "Un", "La", "Los", "Las"],
+                superValueWords: ["Flor", "Voz", "Rey", "Paz", "Luz", "Miel"],
                 limit: 30
             },
             "Agudas": {
                 value: 100,
-                words: ["Acción", "Adicción", "Además", "Andén", "Balón", "Bebé", "Café", "Camión", "Canción", "Colibrí", "Corazón", "Después", "Emoción", "Interés", "Jabalí", "Jamás", "Jardín", "Jazmín", "Menú", "País", "París", "Pasión", "Perfección", "Portugués", "Revolución", "Sofá", "Solución", "También", "Visión", "Volcán", "Comió", "Estudió", "Habló", "Vivió", "Ganará"],
-                superValueWords: ["Colibrí", "Jazmín", "Pasión", "Revolución"],
+                words: ["Acción", "Adicción", "Además", "Andén", "Balón", "Bebé", "Café", "Camión", "Canción", "Colibrí", "Corazón", "Después", "Emoción", "Interés", "Jabalí", "Jamás", "Jardín", "Jazmín", "Menú", "País", "París", "Pasión", "Perfección", "Portugués", "Revolución", "Sofá", "Solución", "También", "Visión", "Volcán", "Comió", "Estudió", "Habló", "Vivió", "Ganará", "Común", "Betún", "Calzón", "Dragón", "Francés", "Inglés", "Japonés", "Maní", "Ratón", "Tiburón", "Vudú", "Bambú", "Jabón", "Melón", "Patín"],
+                superValueWords: ["Colibrí", "Jazmín", "Pasión", "Revolución", "Corazón", "Tiburón"],
                 limit: 30
             },
             "Llanas": {
                 value: 250,
-                words: ["Árbol", "Ángel", "Azúcar", "Cáncer", "Cárcel", "Carácter", "Césped", "Clímax", "Cráter", "Día", "Difícil", "Dólar", "Éter", "Fácil", "Fósil", "Fútbol", "Huésped", "Lápiz", "Líder", "Mártir", "Móvil", "Nácar", "Poesía", "Póker", "Río", "Tórax", "Trébol", "Túnel", "Geografía", "Biología", "Filosofía", "Tecnología", "Psicología", "Economía", "Anatomía", "Sandía", "Policía"],
-                superValueWords: ["Carácter", "Cráter", "Poesía", "Geografía"],
+                words: ["Árbol", "Ángel", "Azúcar", "Cáncer", "Cárcel", "Carácter", "Césped", "Clímax", "Cráter", "Día", "Difícil", "Dólar", "Éter", "Fácil", "Fósil", "Fútbol", "Huésped", "Lápiz", "Líder", "Mártir", "Móvil", "Nácar", "Poesía", "Póker", "Río", "Tórax", "Trébol", "Túnel", "Geografía", "Biología", "Filosofía", "Tecnología", "Psicología", "Economía", "Anatomía", "Sandía", "Policía", "Cómics", "Césped", "Fénix", "Hábil", "Inmóvil", "Referí", "Tándem", "Tótem", "Versátil", "Zombis", "Álbum", "Cáliz"],
+                superValueWords: ["Carácter", "Cráter", "Poesía", "Geografía", "Fénix", "Filosofía"],
                 limit: 30
             },
             "Esdrújulas": {
                 value: 500,
-                words: ["Análisis", "Antártida", "Atmósfera", "Bolígrafo", "Brújula", "Cálculo", "Catástrofe", "Círculo", "Clínica", "Cómpralo", "Déficit", "Esdrújula", "Estómago", "Éxito", "Fábrica", "Fósforo", "Gramática", "Hígado", "Héroe", "Hipócrita", "Índice", "Lágrima", "Lógico", "Mágico", "Máquina", "Matemáticas", "Médico", "Miércoles", "Murciélago", "Músculo", "Música", "Número", "Oxígeno", "Página", "Pájaro", "Plátano", "Público", "Química", "Rápido", "Sábado", "Semáforo", "Sílaba", "Teléfono", "Término", "Tráfico", "Último", "Vértebra", "Víctima", "Aéreo", "Célula"],
-                superValueWords: ["Atmósfera", "Murciélago", "Científico", "Matemáticas"],
+                words: ["Análisis", "Antártida", "Atmósfera", "Bolígrafo", "Brújula", "Cálculo", "Catástrofe", "Círculo", "Clínica", "Cómpralo", "Déficit", "Esdrújula", "Estómago", "Éxito", "Fábrica", "Fósforo", "Gramática", "Hígado", "Héroe", "Hipócrita", "Índice", "Lágrima", "Lógico", "Mágico", "Máquina", "Matemáticas", "Médico", "Miércoles", "Murciélago", "Músculo", "Música", "Número", "Oxígeno", "Página", "Pájaro", "Plátano", "Público", "Química", "Rápido", "Sábado", "Semáforo", "Sílaba", "Teléfono", "Término", "Tráfico", "Último", "Vértebra", "Víctima", "Aéreo", "Célula", "Diálogo", "Época", "Gótico", "Jurásico", "Kilómetro", "Óptimo", "Párrafo", "Pirámide", "Sátira", "Técnica", "Vándalo"],
+                superValueWords: ["Atmósfera", "Murciélago", "Científico", "Matemáticas", "Pirámide", "Jurásico"],
                 limit: 30
             },
             "Sobreesdrújulas": {
@@ -690,24 +837,42 @@
             }
         };
 
-        let WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
+        let WORD_DATABASE = {}; 
 
         const categoryColors = { "Monosílabos": "text-gray-800", "Agudas": "text-green-800", "Llanas": "text-yellow-800", "Esdrújulas": "text-blue-800", "Sobreesdrújulas": "text-purple-800" };
         const categoryBackgrounds = { "Monosílabos": "bg-gray-200 hover:bg-gray-300", "Agudas": "bg-green-200 hover:bg-green-300", "Llanas": "bg-yellow-200 hover:bg-yellow-300", "Esdrújulas": "bg-blue-200 hover:bg-blue-300", "Sobreesdrújulas": "bg-purple-200 hover:bg-purple-300" };
         
         const prestigeUpgradeInfo = {
             aumentoGeneracionRiqueza: { title: "Aumento de Riqueza", desc: "Aumenta la generación de riqueza pasiva.", effect: level => `+${level}%`, icon: `<svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
-            reduccionInflacion: { title: "Reducción de Inflación", desc: "Reduce el efecto de la inflación.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
-            recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
-            duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
-            suerteAumentada: { title: "Suerte Aumentada", desc: "Aumenta la probabilidad de eventos especiales.", effect: level => `+${(level * 0.05)}%`, icon: `<svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`, colors: "bg-yellow-50 border-yellow-200 text-yellow-800" },
-            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-6 h-6 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" }
+            reduccionInflacion: { title: "Control de Inflación", desc: "Reduce el efecto de la inflación en el precio de las palabras.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
+            recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos del diccionario.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
+            duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus Christopher y Super Value.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
+            suerteAumentada: { title: "Suerte Aumentada", desc: "Aumenta la probabilidad de eventos especiales como el Limbo Gramatical.", effect: level => `+${(level * 0.05)}%`, icon: `<svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`, colors: "bg-yellow-50 border-yellow-200 text-yellow-800" },
+            descuentoTienda: { title: "Descuento en Tienda", desc: "Reduce el precio de los artículos de la tienda.", effect: level => `-${(level * 0.25)}%`, icon: `<svg class="w-6 h-6 text-pink-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>`, colors: "bg-pink-50 border-pink-200 text-pink-800" },
+            presagioLadron: { title: "Presagio del Ladrón", desc: "El ladrón susurra antes, dándote más tiempo para prepararte.", effect: level => `+${level} palabras`, icon: `<svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>`, colors: "bg-gray-50 border-gray-200 text-gray-800" },
+            enganoLadron: { title: "Engaño al Ladrón", desc: "Reduce la penalización de tiempo en el reto del Ladrón por cada palabra corrupta comprada.", effect: level => `-${level * 0.5}%/palabra`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" }
         };
+        
+        function generatePlaythroughWordDatabase() {
+            WORD_DATABASE = {};
+            for (const category in HUGE_WORD_DATABASE) {
+                const baseCategory = HUGE_WORD_DATABASE[category];
+                const allWords = [...baseCategory.words];
+                const wordsForThisGame = [];
+                for(let i=0; i<baseCategory.limit && allWords.length > 0; i++) {
+                    const randomIndex = Math.floor(Math.random() * allWords.length);
+                    wordsForThisGame.push(allWords.splice(randomIndex, 1)[0]);
+                }
+                WORD_DATABASE[category] = { ...baseCategory, words: wordsForThisGame.length > 0 ? wordsForThisGame : baseCategory.words };
+            }
+            WORD_DATABASE["Sobreesdrújulas"].words = HUGE_WORD_DATABASE["Sobreesdrújulas"].words;
+        }
 
         function applyScalingToWordDatabase(multiplier) {
-            WORD_DATABASE = JSON.parse(JSON.stringify(BASE_WORD_DATABASE));
-            Object.keys(WORD_DATABASE).forEach(category => {
-                WORD_DATABASE[category].value = BASE_WORD_DATABASE[category].value * multiplier;
+             Object.keys(WORD_DATABASE).forEach(category => {
+                if(HUGE_WORD_DATABASE[category]){
+                    WORD_DATABASE[category].value = HUGE_WORD_DATABASE[category].value * multiplier;
+                }
             });
         }
 
@@ -718,29 +883,18 @@
                 if (playerWords[category] && WORD_DATABASE[category] && category !== "Sobreesdrújulas") {
                     const count = playerWords[category].count || 0;
                     const baseValue = WORD_DATABASE[category].value;
-                    
                     let categoryIncome = count * baseValue;
-
-                    if (superValueBoosts[category] && now < superValueBoosts[category]) {
-                        categoryIncome *= SUPER_VALUE_MULTIPLIER;
-                    }
+                    if (superValueBoosts[category] && now < superValueBoosts[category]) categoryIncome *= SUPER_VALUE_MULTIPLIER;
                     passiveIncome += categoryIncome;
                 }
             });
-            
-            // Aplicar bonus de prestigio de generación de riqueza
-            if (prestigeUpgrades.aumentoGeneracionRiqueza > 0) {
-                passiveIncome *= (1 + prestigeUpgrades.aumentoGeneracionRiqueza * 0.01);
-            }
+            if (prestigeUpgrades.aumentoGeneracionRiqueza > 0) passiveIncome *= (1 + prestigeUpgrades.aumentoGeneracionRiqueza * 0.01);
         }
         
         function resetGameData() {
             let baseCredits = 100;
-            for(let i = 1; i < gameMultiplier; i++) {
-                baseCredits *= 2;
-            }
-            initialCredits = baseCredits; // Riqueza inicial ya no se modifica aquí
-
+            for(let i = 1; i < gameMultiplier; i++) baseCredits *= 2;
+            initialCredits = baseCredits;
             playerMoney = initialCredits;
             passiveIncome = 0;
             consecutiveFailures = 0;
@@ -755,14 +909,9 @@
             christopherBonusCountDuringLimbo = 0;
             bossesDefeated = [];
             corruptedWordsBought = 0;
-            bossBonus1EndTime = 0;
-            bossBonus2EndTime = 0;
-            bossBonus3EndTime = 0;
-
-
-            Object.keys(WORD_DATABASE).forEach(category => {
-                playerWords[category] = { count: 0, list: [] };
-            });
+            playerStats = { wordsBought: 0, challengesWon: 0, bossesDefeatedCount: 0, gameFormats: gameMultiplier - 1 };
+            generatePlaythroughWordDatabase();
+            Object.keys(WORD_DATABASE).forEach(category => playerWords[category] = { count: 0, list: [] });
         }
         
         function resetProgressButKeepLives() {
@@ -775,25 +924,28 @@
             });
         }
 
-        function formatearJuego() {
+        async function formatearJuego() {
             gameMultiplier++;
-            prestigePoints++;
+            prestigePoints += gameMultiplier;
+            playerStats.gameFormats = gameMultiplier - 1;
+            resetGameData(); 
             applyScalingToWordDatabase(gameMultiplier);
-            resetGameData(); // This now correctly uses prestige upgrades
+            await updatePlayerScore();
             savePlayerData(); 
             updateUI();
             changeView('game');
             startGameCommon(false);
-            showModal(`¡Juego formateado! Multiplicador: ${gameMultiplier}x. Has ganado 1 Punto de Prestigio.`);
+            showModal(`¡Juego formateado! Multiplicador: ${gameMultiplier}x. Has ganado ${gameMultiplier} Puntos de Prestigio.`);
         }
         
-        function reiniciarJuegoCompleto() {
-            gameMultiplier = 1;
-            prestigePoints = 1; // Empiezas con 1 punto de prestigio de regalo
-            Object.keys(prestigeUpgrades).forEach(key => prestigeUpgrades[key] = 0);
-            applyScalingToWordDatabase(1);
-            resetGameData();
-            savePlayerData();
+        function initializeGameState() {
+             playerMoney = 100; playerWords = {}; usedChallengeWords = {}; consecutiveFailures = 0; gameMultiplier = 1;
+             shields = { universal: 0 }; prestigePoints = 0;
+             prestigeUpgrades = { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0, presagioLadron: 0, enganoLadron: 0 };
+             bossesDefeated = []; hasBoughtFirstWord = false; isWhispering = false; activeWhisper = ""; corruptedWordsBought = 0;
+             playerStats = { wordsBought: 0, challengesWon: 0, bossesDefeatedCount: 0, gameFormats: 0 };
+             generatePlaythroughWordDatabase();
+             Object.keys(WORD_DATABASE).forEach(category => playerWords[category] = { count: 0, list: [] });
         }
 
         function showModal(message) {
@@ -804,18 +956,11 @@
 
         function changeView(view) {
             currentView = view;
-            ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'limboGramaticalScreen', 'prestigeScreen'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-
+            ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'limboGramaticalScreen', 'prestigeScreen', 'rankingScreen', 'profileScreen'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
             const screen = document.getElementById(`${view}Screen`);
             if (screen) screen.classList.remove('hidden');
-
-            if (view === 'game') {
-                const controls = document.getElementById('gameControls');
-                if (controls) controls.classList.remove('hidden');
-            } else if (view === 'shop' || view === 'prestige' || view === 'tutorial') {
+            if (view === 'game') document.getElementById('gameControls')?.classList.remove('hidden');
+            else if (['shop', 'prestige', 'tutorial', 'ranking', 'profile'].includes(view)) {
                 if (screen) screen.classList.add('flex');
                 if (view === 'prestige') updatePrestigeUI();
                 else if (view === 'shop') updateShopUI();
@@ -823,58 +968,71 @@
         }
         
         async function startNewGame() {
-            proceedWithNewGame();
+            if(!playerCredentials) {
+                showModal("Debes iniciar sesión para reiniciar tu progreso.");
+                return;
+            }
+            showModal("Reiniciando tu cuenta...");
+            const result = await apiRequest('POST', 'resetProgress', { playerID: playerCredentials.playerID });
+            if (result.success) {
+                initializeGameState(); // Resetea el estado local
+                gameStarted = true;
+                changeView('game');
+                await startGameCommon(false); // No cargar, ya está reseteado
+                showModal("Tu progreso ha sido reiniciado.");
+            } else {
+                showModal(`Error al reiniciar: ${result.error}`);
+            }
         }
-
+        
         async function continueGame() {
-            proceedWithContinueGame();
-        }
-        
-        async function proceedWithNewGame() {
-            localStorage.removeItem('dl_player_data');
-            reiniciarJuegoCompleto();
-            gameStarted = true;
-            changeView('game');
-            await startGameCommon(true); // 'true' means load, but data was just removed
-        }
-        
-        async function proceedWithContinueGame() {
-            gameStarted = true;
-            changeView('game');
-            await startGameCommon(true);
+            if(!playerCredentials) {
+                showModal("Por favor, inicia sesión para continuar.");
+                return;
+            }
+            showModal("Cargando partida...");
+            const result = await apiRequest('POST', 'loadGame', { playerID: playerCredentials.playerID });
+            
+            if (result.success) {
+                parseSaveData(result.saveData);
+                gameStarted = true;
+                changeView('game');
+                await startGameCommon(false); // No recargar, acabamos de parsear
+                document.getElementById('messageModal').classList.add('hidden'); // Ocultar "cargando..."
+            } else {
+                showModal(`Error al cargar: ${result.error}`);
+            }
         }
 
         function updateShopUI() {
             const isLimboActive = Date.now() < limboGramaticalEndTime;
-            const limboDiscount = isLimboActive ? 0.79 : 1; // 21% discount
+            const limboDiscount = isLimboActive ? 0.79 : 1;
             const prestigeDiscount = 1 - (prestigeUpgrades.descuentoTienda * 0.0025);
-
             const shieldPrice = SHIELD_PRICE_UNIVERSAL * limboDiscount * prestigeDiscount;
-            document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('en-US')}`;
+            const lifePrice = LIFE_PRICE * limboDiscount * prestigeDiscount;
+            
+            document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('es-ES')}`;
             const buyUniversalShieldBtn = document.getElementById('buyUniversalShield');
-            const canAffordShield = playerMoney >= shieldPrice;
-            buyUniversalShieldBtn.disabled = !canAffordShield;
-            buyUniversalShieldBtn.classList.toggle('opacity-50', !canAffordShield);
-            buyUniversalShieldBtn.classList.toggle('cursor-not-allowed', !canAffordShield);
+            buyUniversalShieldBtn.disabled = playerMoney < shieldPrice;
+            buyUniversalShieldBtn.classList.toggle('opacity-50', buyUniversalShieldBtn.disabled);
+            buyUniversalShieldBtn.classList.toggle('cursor-not-allowed', buyUniversalShieldBtn.disabled);
             document.getElementById('universalCount').textContent = shields.universal;
 
-            const lifePrice = LIFE_PRICE * limboDiscount * prestigeDiscount;
-            document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('en-US')}`;
+            document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('es-ES')}`;
             const buyLifeBtn = document.getElementById('buyLifeButton');
-            const canAffordLife = playerMoney >= lifePrice;
-            const needsLife = consecutiveFailures > 0;
-            const canBuyLife = canAffordLife && needsLife;
-            buyLifeBtn.disabled = !canBuyLife;
-            buyLifeBtn.classList.toggle('opacity-50', !canBuyLife);
-            buyLifeBtn.classList.toggle('cursor-not-allowed', !canBuyLife);
+            buyLifeBtn.disabled = !(playerMoney >= lifePrice && consecutiveFailures > 0);
+            buyLifeBtn.classList.toggle('opacity-50', buyLifeBtn.disabled);
+            buyLifeBtn.classList.toggle('cursor-not-allowed', buyLifeBtn.disabled);
+            
+            const universalPriceEl = document.getElementById('universalPrice');
+            const lifePriceEl = document.getElementById('lifePrice');
+            universalPriceEl.innerHTML = `${shieldPrice.toLocaleString('es-ES')}`;
+            lifePriceEl.innerHTML = `${lifePrice.toLocaleString('es-ES')}`;
 
-            // Visual indicator for store discount
-            const discountSpan = document.createElement('span');
-            discountSpan.className = 'text-xs text-green-600 ml-2';
             if (prestigeUpgrades.descuentoTienda > 0) {
                 const discountValue = (prestigeUpgrades.descuentoTienda * 0.25).toFixed(2);
-                document.getElementById('universalPrice').innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
-                document.getElementById('lifePrice').innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
+                universalPriceEl.innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
+                lifePriceEl.innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
             }
         }
 
@@ -922,12 +1080,8 @@
             savePlayerData(); 
             stopGameLoops();
             stopRulesRotator();
-            
-            const modal = document.getElementById('limboGramaticalScreen');
-            if(modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
+            document.getElementById('limboGramaticalScreen')?.classList.remove('hidden');
+            document.getElementById('limboGramaticalScreen')?.classList.add('flex');
         }
 
         async function generateNewWord(forceNew = false) {
@@ -946,44 +1100,16 @@
                 const category = randomCorrupted.category;
                 const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
                 const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR) * inflationReduction;
-                const dynamicValue = Math.floor((WORD_DATABASE[category].value + (randomCorrupted.wrong.length * PRICE_PER_LETTER)) * inflationMultiplier);
-                currentWord = {
-                    word: randomCorrupted.wrong,
-                    category: category,
-                    value: dynamicValue,
-                    isCorrupted: true,
-                    rightVersion: randomCorrupted.right,
-                    startTime: Date.now()
-                };
+                const dynamicValue = Math.floor((HUGE_WORD_DATABASE[category].value * gameMultiplier + (randomCorrupted.wrong.length * PRICE_PER_LETTER)) * inflationMultiplier);
+                currentWord = { word: randomCorrupted.wrong, category: category, value: dynamicValue, isCorrupted: true, rightVersion: randomCorrupted.right, startTime: Date.now() };
                 updateUI();
-                startWordDisplayTimer(3000); // Consistent timer with normal words
+                startWordDisplayTimer(3000);
                 return;
-            }
-
-            // Check for "Sabiduría del Ladrón" bonus
-            if (Date.now() < bossBonus3EndTime && Math.random() < 0.5) { // 50% chance to force a super value
-                const allSuperValueCategories = Object.keys(WORD_DATABASE).filter(cat => WORD_DATABASE[cat].superValueWords && WORD_DATABASE[cat].superValueWords.length > 0 && cat !== "Sobreesdrújulas");
-                if (allSuperValueCategories.length > 0) {
-                    const randomSVCategory = allSuperValueCategories[Math.floor(Math.random() * allSuperValueCategories.length)];
-                    const svWords = WORD_DATABASE[randomSVCategory].superValueWords;
-                    const randomSVWord = svWords[Math.floor(Math.random() * svWords.length)];
-
-                    if (!playerWords[randomSVCategory]?.list.includes(randomSVWord)) {
-                        let dynamicValue = (WORD_DATABASE[randomSVCategory].value + (randomSVWord.length * PRICE_PER_LETTER)) * SUPER_VALUE_MULTIPLIER;
-                        currentWord = { word: randomSVWord, category: randomSVCategory, value: dynamicValue, isSuperValue: true, startTime: Date.now() };
-                        updateUI();
-                        startWordDisplayTimer(3000);
-                        return;
-                    }
-                }
             }
             
             const isLimboActive = Date.now() < limboGramaticalEndTime;
-            
             let christopherChance = 0.03 + (prestigeUpgrades.suerteAumentada * 0.0005);
-            if (isLimboActive && christopherBonusCountDuringLimbo < 3) {
-                christopherChance += 0.21; 
-            }
+            if (isLimboActive && christopherBonusCountDuringLimbo < 3) christopherChance += 0.21; 
 
             if (Math.random() < christopherChance) {
                 if (isLimboActive) christopherBonusCountDuringLimbo++;
@@ -996,16 +1122,13 @@
             if (isLimboActive) {
                 const allSuperValueWords = [];
                 Object.keys(WORD_DATABASE).forEach(category => {
-                    if (WORD_DATABASE[category].superValueWords && WORD_DATABASE[category].superValueWords.length > 0) {
+                    if (WORD_DATABASE[category].superValueWords?.length > 0) {
                         const ownedWords = playerWords[category]?.list || [];
                         WORD_DATABASE[category].superValueWords.forEach(svWord => {
-                            if (!ownedWords.includes(svWord)) {
-                                allSuperValueWords.push({ word: svWord, category: category });
-                            }
+                            if (!ownedWords.includes(svWord)) allSuperValueWords.push({ word: svWord, category: category });
                         });
                     }
                 });
-
                 if (allSuperValueWords.length > 0) {
                     const randomSV = allSuperValueWords[Math.floor(Math.random() * allSuperValueWords.length)];
                     let dynamicValue = (WORD_DATABASE[randomSV.category].value + (randomSV.word.length * PRICE_PER_LETTER)) * SUPER_VALUE_MULTIPLIER * 0.79;
@@ -1018,58 +1141,41 @@
             
             const nonFinalCategories = Object.keys(WORD_DATABASE).filter(c => c !== "Sobreesdrújulas");
             const incompleteCategories = nonFinalCategories.filter(cat => playerWords[cat] && playerWords[cat].count < WORD_DATABASE[cat].limit);
-            
-            let categoryPool = nonFinalCategories;
-            if (incompleteCategories.length > 0) {
-                categoryPool = incompleteCategories;
-                // Aumentar la probabilidad para las categorías faltantes
-                const completedCount = nonFinalCategories.length - incompleteCategories.length;
-                for (let i = 0; i < completedCount * 2; i++) { // Añadir más peso a las incompletas
-                    categoryPool.push(...incompleteCategories);
-                }
-            }
-            
+            let categoryPool = (incompleteCategories.length > 0) ? incompleteCategories : nonFinalCategories;
             const allCategoriesCompleted = nonFinalCategories.every(cat => playerWords[cat] && playerWords[cat].count >= WORD_DATABASE[cat].limit);
             let randomCategory = allCategoriesCompleted ? "Sobreesdrújulas" : categoryPool[Math.floor(Math.random() * categoryPool.length)];
-            
             let ownedWords = playerWords[randomCategory]?.list || [];
-            let availableWords = WORD_DATABASE[randomCategory].words.filter(word => !ownedWords.includes(word));
+            let availableWords = (WORD_DATABASE[randomCategory]?.words || []).filter(word => !ownedWords.includes(word));
             
-            if (availableWords.length === 0) { 
+            if (availableWords.length === 0 && randomCategory !== "Sobreesdrújulas") { 
                 setTimeout(() => generateNewWord(true), 50); 
                 return;
+            }
+            if(availableWords.length === 0 && randomCategory === "Sobreesdrújulas") {
+                // if all words of all categories are bought, but the sobreesdrujula is not bought yet
             }
             
             let randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
             let isSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).includes(randomWord);
-            
             let dynamicValue = WORD_DATABASE[randomCategory].value;
             if (randomCategory !== "Sobreesdrújulas") {
                 const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
                 const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR) * inflationReduction;
                 dynamicValue = Math.floor((WORD_DATABASE[randomCategory].value + (randomWord.length * PRICE_PER_LETTER)) * inflationMultiplier);
                 if (isSuperValue) dynamicValue *= SUPER_VALUE_MULTIPLIER;
-                
-                const now = Date.now();
-                if (now < bossBonus1EndTime) {
-                    dynamicValue = Math.floor(dynamicValue * 0.90);
-                } else if (now < bossBonus2EndTime) {
-                    dynamicValue = Math.floor(dynamicValue * 0.85);
-                }
             }
-
             currentWord = { word: randomWord, category: randomCategory, value: dynamicValue, isSuperValue, startTime: Date.now() };
             updateUI();
             startWordDisplayTimer(3000);
         }
 
         function updateUI() {
-            document.getElementById('playerMoney').textContent = playerMoney.toLocaleString('en-US');
+            document.getElementById('playerMoney').textContent = playerMoney.toLocaleString('es-ES');
             recalculatePassiveIncome();
             let finalPassiveIncome = passiveIncome;
             if (Date.now() < christopherBoostEndTime) finalPassiveIncome *= 2;
             if (Date.now() < limboGramaticalEndTime) finalPassiveIncome *= 1.21;
-            document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
             const incomeBonusSpan = document.getElementById('prestigeIncomeBonus');
             if (prestigeUpgrades.aumentoGeneracionRiqueza > 0) {
@@ -1086,16 +1192,10 @@
                 
                 if(currentWordEl && wordCategoryEl && wordValueEl) {
                     let wordClass = "";
-                    if (currentWord.isBonus) {
-                        wordClass = "rainbow-text font-black";
-                    } else if (currentWord.isSuperValue) {
-                        wordClass = "super-value-text font-black";
-                    } else if (currentWord.isCorrupted) {
-                        wordClass = "text-red-700 font-black";
-                    }
-                    else {
-                        wordClass = `${categoryColors[currentWord.category] || "text-gray-800"} font-black`;
-                    }
+                    if (currentWord.isBonus) wordClass = "rainbow-text font-black";
+                    else if (currentWord.isSuperValue) wordClass = "super-value-text font-black";
+                    else if (currentWord.isCorrupted) wordClass = "text-red-700 font-black";
+                    else wordClass = `${categoryColors[currentWord.category] || "text-gray-800"} font-black`;
                     
                     currentWordEl.innerHTML = `<span class="${wordClass}">${currentWord.word}</span>`;
                     wordCategoryEl.textContent = currentWord.category;
@@ -1113,20 +1213,13 @@
                     }
                     
                     buyButton.disabled = !canAfford || isOwned || isCategoryComplete;
-
                     buyButton.classList.toggle('opacity-50', buyButton.disabled);
                     buyButton.classList.toggle('cursor-not-allowed', buyButton.disabled);
 
                     if (isCategoryComplete) {
                         wordValueEl.textContent = 'Categoría Completa';
                     } else {
-                        let valueHTML = `${currentWord.value.toLocaleString('en-US')}`;
-                        const now = Date.now();
-                        if (now < bossBonus1EndTime) {
-                            valueHTML += ` <span class="text-xs text-green-600">(-10%)</span>`;
-                        } else if (now < bossBonus2EndTime) {
-                            valueHTML += ` <span class="text-xs text-green-600">(-15%)</span>`;
-                        }
+                        let valueHTML = `${currentWord.value.toLocaleString('es-ES')}`;
                         if (prestigeUpgrades.reduccionInflacion > 0) {
                             const reductionValue = (prestigeUpgrades.reduccionInflacion * 0.5).toFixed(2);
                             valueHTML += ` <span class="text-xs text-green-600">(-${reductionValue}%)</span>`;
@@ -1149,11 +1242,8 @@
             prestigeButton.disabled = false;
             prestigeButton.classList.add('cursor-pointer');
             prestigeButton.classList.remove('cursor-default');
-             if (gameMultiplier > 1) {
-                prestigeButton.classList.add('hover:bg-yellow-200', 'border-yellow-400');
-            } else {
-                prestigeButton.classList.remove('hover:bg-yellow-200', 'border-yellow-400');
-            }
+            if (gameMultiplier > 1) prestigeButton.classList.add('hover:bg-yellow-200', 'border-yellow-400');
+            else prestigeButton.classList.remove('hover:bg-yellow-200', 'border-yellow-400');
             prestigeButton.classList.toggle('luck-glow', prestigeUpgrades.suerteAumentada > 0);
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
@@ -1161,9 +1251,6 @@
             const chrisTimer = document.getElementById('christopherTimerDisplay');
             const svTimer = document.getElementById('superValueTimerDisplay');
             const shieldTimer = document.getElementById('shieldTimerDisplay');
-            const bossBonus1Timer = document.getElementById('bossBonus1TimerDisplay');
-            const bossBonus2Timer = document.getElementById('bossBonus2TimerDisplay');
-            const bossBonus3Timer = document.getElementById('bossBonus3TimerDisplay');
             const now = Date.now();
 
             Object.keys(superValueBoosts).forEach(cat => {
@@ -1194,27 +1281,7 @@
             
             const shieldTimeLeft = Math.ceil(Math.max(0, universalShieldEndTime - now) / 1000);
             shieldTimer.style.display = shieldTimeLeft > 0 ? 'block' : 'none';
-            if (shieldTimeLeft > 0) {
-                shieldTimer.querySelector('span').textContent = `${shieldTimeLeft}s`;
-            }
-
-            const bossBonus1TimeLeft = Math.ceil(Math.max(0, (bossBonus1EndTime - now)) / 1000);
-            bossBonus1Timer.style.display = bossBonus1TimeLeft > 0 ? 'block' : 'none';
-            if(bossBonus1TimeLeft > 0) {
-                bossBonus1Timer.querySelector('span').textContent = `${bossBonus1TimeLeft}s`;
-            }
-
-            const bossBonus2TimeLeft = Math.ceil(Math.max(0, (bossBonus2EndTime - now)) / 1000);
-            bossBonus2Timer.style.display = bossBonus2TimeLeft > 0 ? 'block' : 'none';
-            if(bossBonus2TimeLeft > 0) {
-                bossBonus2Timer.querySelector('span').textContent = `${bossBonus2TimeLeft}s`;
-            }
-
-            const bossBonus3TimeLeft = Math.ceil(Math.max(0, (bossBonus3EndTime - now)) / 1000);
-            bossBonus3Timer.style.display = bossBonus3TimeLeft > 0 ? 'block' : 'none';
-            if(bossBonus3TimeLeft > 0) {
-                bossBonus3Timer.querySelector('span').textContent = `${bossBonus3TimeLeft}s`;
-            }
+            if (shieldTimeLeft > 0) shieldTimer.querySelector('span').textContent = `${shieldTimeLeft}s`;
 
             const inventoryContainer = document.getElementById('inventoryContainer');
             inventoryContainer.innerHTML = '';
@@ -1231,7 +1298,7 @@
                     const wordsList = document.getElementById('wordsList');
                     wordsList.innerHTML = '';
                     if (data.list.length > 0) {
-                        data.list.forEach((word, index) => {
+                        data.list.sort().forEach((word, index) => {
                             const li = document.createElement('li');
                             li.textContent = `${index + 1}. ${word}`;
                             li.className = "p-1 border-b border-gray-200";
@@ -1246,14 +1313,9 @@
 
                 const isChrisActive = Date.now() < christopherBoostEndTime;
                 const isSuperValueActiveForThisCategory = superValueBoosts[category] && Date.now() < superValueBoosts[category];
-
                 let boostIconsHTML = '<div class="absolute top-0 right-1 flex flex-col items-end">';
-                if (isChrisActive && category !== "Sobreesdrújulas") {
-                    boostIconsHTML += `<span class="rainbow-text font-bold text-xs">x2</span>`;
-                }
-                if (isSuperValueActiveForThisCategory) {
-                    boostIconsHTML += `<span class="super-value-text font-bold text-xs">x2</span>`;
-                }
+                if (isChrisActive && category !== "Sobreesdrújulas") boostIconsHTML += `<span class="rainbow-text font-bold text-xs">x2</span>`;
+                if (isSuperValueActiveForThisCategory) boostIconsHTML += `<span class="super-value-text font-bold text-xs">x2</span>`;
                 boostIconsHTML += '</div>';
 
                 categoryDiv.innerHTML = `
@@ -1267,7 +1329,6 @@
 
         function buyWord() {
             if (playerMoney < currentWord.value) return;
-
             if (currentWord.isCorrupted) {
                 playerMoney -= currentWord.value;
                 corruptedWordsBought++;
@@ -1276,16 +1337,14 @@
                 displayActiveWhisper();
                 setTimeout(() => {
                     activeWhisper = originalWhisper;
-                    if(isWhispering) displayActiveWhisper(); // Only revert if still in whisper mode
+                    if(isWhispering) displayActiveWhisper();
                 }, 3000);
                 savePlayerData();
                 updateUI();
                 generateNewWord(true);
                 return;
             }
-            
             let wordBought = false;
-
             if (currentWord.isBonus) {
                 const now = Date.now();
                 const baseDuration = 60000;
@@ -1293,34 +1352,25 @@
                 const remainingTime = (christopherBoostEndTime > now) ? (christopherBoostEndTime - now) : 0;
                 christopherBoostEndTime = now + remainingTime + baseDuration + bonusDuration;
                 wordBought = true;
-            } else if (currentWord.isSuperValue) {
+            } else {
                 const categoryData = playerWords[currentWord.category];
                 if (categoryData.count < WORD_DATABASE[currentWord.category].limit && !categoryData.list.includes(currentWord.word)) {
                     playerMoney -= currentWord.value;
                     categoryData.count++;
                     categoryData.list.push(currentWord.word);
                     wordBought = true;
-                    
-                    const now = Date.now();
-                    const category = currentWord.category;
-                    const baseDuration = 10000;
-                    const bonusDuration = prestigeUpgrades.duracionPotenciadores * 500;
-                    const remainingTime = (superValueBoosts[category] > now) ? (superValueBoosts[category] - now) : 0;
-                    superValueBoosts[category] = now + remainingTime + baseDuration + bonusDuration;
-                }
-            } else { // Normal Word
-                const categoryData = playerWords[currentWord.category];
-                if (categoryData.count < WORD_DATABASE[currentWord.category].limit && !categoryData.list.includes(currentWord.word)) {
-                    playerMoney -= currentWord.value;
-                    categoryData.count++;
-                    categoryData.list.push(currentWord.word);
-                    wordBought = true;
+                    if (currentWord.isSuperValue) {
+                        const now = Date.now();
+                        const category = currentWord.category;
+                        const baseDuration = 10000;
+                        const bonusDuration = prestigeUpgrades.duracionPotenciadores * 500;
+                        const remainingTime = (superValueBoosts[category] > now) ? (superValueBoosts[category] - now) : 0;
+                        superValueBoosts[category] = now + remainingTime + baseDuration + bonusDuration;
+                    }
                 }
             }
-            
             if (currentWord.category === "Sobreesdrújulas" && wordBought) {
-                const winMessage = document.getElementById('winMessage');
-                winMessage.textContent = `¡VICTORIA! Has conseguido una palabra sobreesdrújula. Multiplicador actual: ${gameMultiplier}x.`;
+                document.getElementById('winMessage').textContent = `¡VICTORIA! Has conseguido una palabra sobreesdrújula. Multiplicador actual: ${gameMultiplier}x.`;
                 document.getElementById('nextMultiplier').textContent = gameMultiplier + 1;
                 stopGameLoops();
                 stopRulesRotator();
@@ -1328,16 +1378,13 @@
                 changeView('win');
                 return;
             }
-
-
             if (wordBought) {
                 if (!hasBoughtFirstWord) hasBoughtFirstWord = true;
+                playerStats.wordsBought++;
                 document.getElementById('buyButton').disabled = true;
-                
-                checkBossEncounter(); // Check before saving, as it might change isWhispering state
+                checkBossEncounter();
                 savePlayerData();
                 updateUI();
-                
                 clearTimeout(wordDisplayTimeout);
                 const elapsedTime = Date.now() - currentWord.startTime;
                 const duration = currentWord.isBonus ? 1000 : 3000;
@@ -1347,14 +1394,12 @@
         }
         
         function startDictionaryChallenge() {
-            if (currentView !== 'game') return; // Prevent challenge if in menu
-
+            if (currentView !== 'game' || isChallengeActive || isBossActive) return;
             stopGameLoops();
             isChallengeActive = true;
-            savePlayerData(); // Guardar inmediatamente que el reto está activo
+            savePlayerData();
 
-            const universalShieldActive = Date.now() < universalShieldEndTime;
-            if (universalShieldActive) {
+            if (Date.now() < universalShieldEndTime) {
                 showModal(`¡Protegido por el Escudo Universal! Reto evitado.`);
                 startGameLoops();
                 isChallengeActive = false;
@@ -1372,11 +1417,7 @@
                 return;
             }
             
-            visibilityChangeHandler = () => {
-                if (document.hidden && isChallengeActive) {
-                    endDictionaryChallenge('cheat', document.getElementById('challengeCategory').textContent);
-                }
-            };
+            visibilityChangeHandler = () => { if (document.hidden && isChallengeActive) endDictionaryChallenge('cheat', document.getElementById('challengeCategory').textContent); };
             document.addEventListener('visibilitychange', visibilityChangeHandler);
 
             const categories = ["Agudas", "Llanas", "Esdrújulas"];
@@ -1384,8 +1425,7 @@
             
             const modal = document.getElementById('dictionaryModal');
             document.getElementById('challengeCategory').textContent = challengeCategory;
-            const timerDisplay = document.getElementById('timer');
-            timerDisplay.textContent = 30;
+            document.getElementById('timer').textContent = 30;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             
@@ -1396,70 +1436,150 @@
             let timeLeft = 30;
             challengeTimerInterval = setInterval(() => {
                 timeLeft--;
-                timerDisplay.textContent = timeLeft;
+                document.getElementById('timer').textContent = timeLeft;
                 if (timeLeft <= 0) endDictionaryChallenge(null, challengeCategory);
             }, 1000);
 
             input.onkeyup = (event) => {
-                 if (input.value === AUTONOMOUS_CODE) {
-                    activateAutonomousMode();
-                    return;
-                }
                 if (event.key === 'Enter') endDictionaryChallenge(input.value, challengeCategory);
             };
         }
         
+        function getAccentCategoryFromWord(word) {
+            const originalWord = word;
+            word = word.toLowerCase().trim();
+
+            if (word.length === 0) {
+                return { category: "Desconocida", reason: "No se ingresó palabra." };
+            }
+
+            const normalizedWord = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            
+            // Regex to find vowel groups (including 'y' as a vowel at the end of word or syllable)
+            const vowelGroups = word.match(/[aeiouáéíóúü]+y?|y[aeiouáéíóúü]/gi);
+
+            if (!vowelGroups) {
+                return { category: "Desconocida", reason: `La palabra '${originalWord}' no contiene vocales válidas.` };
+            }
+
+            // Simple Monosyllable Check
+            if (vowelGroups.length === 1 && !/[áéíóú]/.test(word)) {
+                return { category: "Agudas", reason: `'${originalWord}' es un monosílabo.` };
+            }
+
+            let stressPositionFromEnd;
+
+            const accentMatch = word.match(/[áéíóú]/);
+            if (accentMatch) {
+                const accentIndex = word.indexOf(accentMatch[0]);
+                const suffix = word.substring(accentIndex);
+                const suffixVowelGroups = suffix.match(/[aeiouáéíóúü]+/g) || [];
+                stressPositionFromEnd = suffixVowelGroups.length - 1;
+            } else {
+                const lastChar = normalizedWord.slice(-1);
+                if ('ns'.includes(lastChar) || 'aeiou'.includes(lastChar)) {
+                    stressPositionFromEnd = 1; // Llana
+                } else {
+                    stressPositionFromEnd = 0; // Aguda
+                }
+            }
+
+            let detectedCategory = "Desconocida";
+            let reason = "";
+
+            switch (stressPositionFromEnd) {
+                case 0:
+                    detectedCategory = "Agudas";
+                    reason = `'${originalWord}' es una palabra aguda.`;
+                    break;
+                case 1:
+                    detectedCategory = "Llanas";
+                    reason = `'${originalWord}' es una palabra llana.`;
+                    break;
+                case 2:
+                    detectedCategory = "Esdrújulas";
+                    reason = `'${originalWord}' es una palabra esdrújula.`;
+                    break;
+                default:
+                    if (stressPositionFromEnd > 2) {
+                        detectedCategory = "Sobreesdrújulas"; // Not used in challenges, but good to have
+                        reason = `'${originalWord}' es una palabra sobreesdrújula.`;
+                    } else {
+                         reason = `No se pudo clasificar '${originalWord}'.`;
+                    }
+                    break;
+            }
+            return { category: detectedCategory, reason };
+        }
+
+
         async function endDictionaryChallenge(word, category) {
             if (visibilityChangeHandler) {
                 document.removeEventListener('visibilitychange', visibilityChangeHandler);
                 visibilityChangeHandler = null;
             }
-    
             clearInterval(challengeTimerInterval);
             document.getElementById('dictionaryModal').classList.add('hidden');
-            isChallengeActive = false;
-            gamePausedForFeedback = true;
-            stopGameLoops();
+            
+            const finishChallenge = (resultCallback) => {
+                isChallengeActive = false;
+                gamePausedForFeedback = true;
+                stopGameLoops();
+                resultCallback();
+            };
 
             if (word === 'cheat') {
-                handleChallengeFailure("Reto fallido por cambiar de pestaña.");
+                finishChallenge(() => handleChallengeFailure("Reto fallido por cambiar de pestaña."));
                 return;
             }
-
-            if (!word || !/^[A-ZÁÉÍÓÚÜÑa-záéíóúüñ¡!]+$/.test(word.trim())) {
-                handleChallengeFailure("Formato de palabra inválido. Debe contener solo letras.");
-                return;
-            }
-            word = word.trim();
-            word = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-
-
-            if ((usedChallengeWords[category] || []).includes(word.toLowerCase())) {
-                handleChallengeFailure("Palabra ya usada en un reto.");
+            if (!word || !word.trim()) {
+                finishChallenge(() => handleChallengeFailure("No se introdujo ninguna palabra."));
                 return;
             }
             
-            const { category: detectedCategory, reason } = getAccentCategory(word);
+            const normalizedWord = word.trim().toLowerCase();
+            if ((usedChallengeWords[category] || []).includes(normalizedWord)) {
+                finishChallenge(() => handleChallengeFailure(`Palabra repetida. '${word.trim()}' ya fue usada.`));
+                return;
+            }
+
+            const { category: detectedCategory, reason } = getAccentCategoryFromWord(word.trim());
+            
+            if(detectedCategory === "Desconocida") {
+                 finishChallenge(() => handleChallengeFailure(reason));
+                 return;
+            }
 
             if (detectedCategory === category) {
-                if (!usedChallengeWords[category]) usedChallengeWords[category] = [];
-                usedChallengeWords[category].push(word.toLowerCase());
-                
-                const rewardBonus = 1 + (prestigeUpgrades.recompensasDesafio * 0.02);
-                const reward = CHALLENGE_REWARDS[category] * rewardBonus;
-                playerMoney += reward;
-                let successMessage = `¡Correcto! ${reason} Ganas ${reward.toLocaleString('en-US')}.`;
-                if (prestigeUpgrades.recompensasDesafio > 0) {
-                    successMessage += ` (+${prestigeUpgrades.recompensasDesafio * 2}%)`;
-                }
-                showModal(successMessage);
+                finishChallenge(() => {
+                    if (!usedChallengeWords[category]) usedChallengeWords[category] = [];
+                    usedChallengeWords[category].push(normalizedWord);
+                    playerStats.challengesWon++;
+                    const rewardBonus = 1 + (prestigeUpgrades.recompensasDesafio * 0.02);
+                    const reward = CHALLENGE_REWARDS[category] * rewardBonus;
+                    playerMoney += reward;
+                    let successMessage = `¡Correcto! ${reason} Ganas ${reward.toLocaleString('es-ES')}.`;
+                    if (prestigeUpgrades.recompensasDesafio > 0) successMessage += ` (+${prestigeUpgrades.recompensasDesafio * 2}%)`;
+                    showModal(successMessage);
+                });
             } else {
-                handleChallengeFailure(reason);
+                finishChallenge(() => handleChallengeFailure(`Incorrecto. '${word.trim()}' es ${detectedCategory.slice(0,-1).toLowerCase()}, no ${category.slice(0,-1).toLowerCase()}.`));
             }
         }
 
         function handleChallengeFailure(reason) {
             consecutiveFailures++;
+            if (Math.random() < 0.33) {
+                const modal = document.getElementById('thiefMockeryModal');
+                document.getElementById('thiefMockeryIcon').innerHTML = ICON_LIBRARY.bossIcon;
+                document.getElementById('thiefMockeryDialogue').textContent = THIEF_MOCKERY_ON_FAIL[Math.floor(Math.random() * THIEF_MOCKERY_ON_FAIL.length)];
+                modal.classList.remove('hidden', 'opacity-0');
+            } else {
+                showFailureMessage(reason);
+            }
+        }
+        
+        function showFailureMessage(reason) {
             if (consecutiveFailures >= 3) {
                 document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. Razón final: ${reason}`;
                 stopGameLoops();
@@ -1474,45 +1594,33 @@
         function showBossModal() {
             const modal = document.getElementById('bossModal');
             const modalContent = document.getElementById('bossModalContent');
-            
             modal.classList.remove('hidden');
-            
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 modalContent.classList.remove('opacity-0', 'scale-95');
-            }, 20); // A small delay to ensure the transition triggers
+            }, 20);
         }
 
         function hideBossModal(callback) {
             const modal = document.getElementById('bossModal');
             const modalContent = document.getElementById('bossModalContent');
-            
             modal.classList.add('opacity-0');
             modalContent.classList.add('opacity-0', 'scale-95');
-            
             setTimeout(() => {
                 modal.classList.add('hidden');
                 if (callback) callback();
-            }, 500); // This must match the longest transition duration (opacity-500)
+            }, 500);
         }
 
         function checkBossEncounter() {
             if (isBossActive || isChallengeActive || currentView !== 'game') return;
-
             const totalWords = Object.values(playerWords).reduce((sum, cat) => sum + cat.count, 0);
             const nextBossLevel = bossesDefeated.length + 1;
             const milestone = BOSS_MILESTONES[nextBossLevel];
-
             if (!milestone || bossesDefeated.includes(nextBossLevel)) return;
-
-            // Check for boss trigger first
-            if (totalWords >= milestone) {
-                startBossChallenge(nextBossLevel);
-            } 
-            // Else, if not triggering a boss, check for whisper trigger
-            else if (totalWords >= milestone - 5 && !isWhispering) {
-                triggerWhisper();
-            }
+            const whisperThreshold = milestone - 5 - (prestigeUpgrades.presagioLadron || 0);
+            if (totalWords >= milestone) startBossChallenge(nextBossLevel);
+            else if (totalWords >= whisperThreshold && !isWhispering) triggerWhisper();
         }
 
         function triggerWhisper() {
@@ -1521,218 +1629,161 @@
             displayActiveWhisper();
             savePlayerData();
         }
+        
+        function corruptRulesDisplay() {
+            if (!isWhispering || Math.random() > 0.1) return;
+            stopRulesRotator();
+            const rulesDisplay = document.getElementById('rulesDisplay');
+            if (rulesDisplay.parentElement.classList.contains('hidden')) return;
+            const taunt = BOSS_MOCKING_LAUGHTER[Math.floor(Math.random() * BOSS_MOCKING_LAUGHTER.length)];
+            rulesDisplay.innerHTML = `<p class="whisper-text">${taunt}</p>`;
+            setTimeout(() => { if (isWhispering) displayActiveWhisper(); else startRulesRotator(); }, 3000);
+        }
 
         function displayActiveWhisper() {
             if (!isWhispering) return;
-
             stopRulesRotator();
             const rulesDisplay = document.getElementById('rulesDisplay');
-            const rulesContainer = document.getElementById('rulesContainer');
-            
-            rulesContainer.classList.remove('hidden');
+            rulesDisplay.parentElement.classList.remove('hidden');
             rulesDisplay.innerHTML = `<p class="whisper-text">${activeWhisper}</p>`;
             rulesDisplay.style.opacity = 1;
         }
 
         function startBossChallenge(level) {
-             // --- Reset Whisper State ---
             isWhispering = false;
             activeWhisper = "";
-            const rulesContainer = document.getElementById('rulesContainer');
-            if(rulesContainer) rulesContainer.classList.add('hidden');
-            // --- End Reset ---
-
+            document.getElementById('rulesContainer')?.classList.add('hidden');
             isBossActive = true;
             stopGameLoops();
             currentBossLevel = level;
-
-            const sentences = BOSS_SENTENCES[level];
-            currentBossSentence = sentences[Math.floor(Math.random() * sentences.length)];
-
+            currentBossSentence = BOSS_SENTENCES[level][Math.floor(Math.random() * BOSS_SENTENCES[level].length)];
             const dialogueEl = document.getElementById('bossDialogue');
             const challengeContent = document.getElementById('bossChallengeContent');
             const sentenceEl = document.getElementById('bossChallengeSentence');
             const inputEl = document.getElementById('bossChallengeInput');
             const timerEl = document.getElementById('bossTimer');
-
             document.getElementById('bossIconContainer').innerHTML = ICON_LIBRARY.bossIcon;
             challengeContent.classList.add('hidden');
             inputEl.value = '';
             dialogueEl.textContent = '';
-            
             showBossModal();
-
             const dialogueText = BOSS_INITIAL_DIALOGUES[Math.floor(Math.random() * BOSS_INITIAL_DIALOGUES.length)];
-            let i = 0;
-            function typeDialogue() {
-                if (i < dialogueText.length) {
-                    dialogueEl.textContent += dialogueText.charAt(i);
-                    i++;
-                    setTimeout(typeDialogue, 50);
-                } else {
-                    setTimeout(startTheChallenge, 1000);
-                }
-            }
-            typeDialogue();
-
-            function startTheChallenge() {
+            typeEffect(dialogueEl, dialogueText, () => {
                 challengeContent.classList.remove('hidden');
                 sentenceEl.textContent = currentBossSentence.wrong;
                 inputEl.focus();
-                
                 const totalTime = 60;
-                const timeDebuff = totalTime * 0.03 * corruptedWordsBought;
-                let timeLeft = Math.max(15, Math.floor(totalTime - timeDebuff)); // Mínimo 15 segundos
-
+                const timeDebuffPerWord = 0.03 * (1 - ((prestigeUpgrades.enganoLadron || 0) * 0.005));
+                const timeDebuff = totalTime * timeDebuffPerWord * corruptedWordsBought;
+                let timeLeft = Math.max(15, Math.floor(totalTime - timeDebuff));
                 timerEl.textContent = timeLeft;
                 bossTimerInterval = setInterval(() => {
                     timeLeft--;
                     timerEl.textContent = timeLeft;
-                    if (timeLeft <= 0) {
-                        endBossChallenge(false);
-                    }
+                    if (timeLeft <= 0) endBossChallenge(false);
                 }, 1000);
-            }
-            
+            });
             inputEl.onkeyup = (event) => {
-                 if (inputEl.value === AUTONOMOUS_CODE) {
-                    activateAutonomousMode();
-                    return;
-                }
-                if (event.key === 'Enter') {
-                    const isCorrect = inputEl.value.trim().toLowerCase() === currentBossSentence.right.toLowerCase();
-                    endBossChallenge(isCorrect);
-                }
+                if (event.key === 'Enter') endBossChallenge(inputEl.value.trim() === currentBossSentence.right);
             };
         }
 
-        function endBossChallenge(isCorrect) {
+        function typeEffect(element, text, callback) {
+            let i = 0;
+            element.textContent = '';
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 40);
+                } else {
+                    if (callback) setTimeout(callback, 1000); 
+                }
+            }
+            type();
+        }
+
+        async function endBossChallenge(isCorrect) {
             clearInterval(bossTimerInterval);
             isBossActive = false;
-            gamePausedForFeedback = true; 
-
-            const challengeContent = document.getElementById('bossChallengeContent');
-            challengeContent.classList.add('hidden');
+            gamePausedForFeedback = true;
+            document.getElementById('bossChallengeContent').classList.add('hidden');
             const dialogueEl = document.getElementById('bossDialogue');
             dialogueEl.textContent = '';
 
-            const typeFinalDialogue = (text, callback) => {
-                let i = 0;
-                function type() {
-                    if (i < text.length) {
-                        dialogueEl.textContent += text.charAt(i);
-                        i++;
-                        setTimeout(type, 40);
-                    } else {
-                        setTimeout(callback, 2000); 
-                    }
-                }
-                type();
-            };
-
             if (isCorrect) {
                 bossesDefeated.push(currentBossLevel);
-                let prestigeReward = 0;
-                let powerUpMessage = "";
-
-                if(currentBossLevel === 1) {
-                    prestigeReward = 1;
-                    bossBonus1EndTime = Date.now() + 30000;
-                    powerUpMessage = "¡Potenciador 'Dominio Ortográfico' obtenido! 10% de descuento en palabras por 30s.";
-                } else if (currentBossLevel === 2) {
-                    prestigeReward = 2;
-                    bossBonus2EndTime = Date.now() + 45000;
-                    powerUpMessage = "¡'Dominio Ortográfico Mejorado'! 15% de descuento por 45s.";
-                } else if (currentBossLevel === 3) {
-                    prestigeReward = 3;
-                    bossBonus3EndTime = Date.now() + 60000;
-                    powerUpMessage = "¡'Sabiduría del Ladrón'! Aumenta la probabilidad de 'Super Value' por 1 min.";
-                }
+                playerStats.bossesDefeatedCount = bossesDefeated.length;
+                let prestigeReward = { 1: 3, 2: 5, 3: 8 }[currentBossLevel] || 0;
                 prestigePoints += prestigeReward;
-                
                 const finalDialogue = BOSS_VICTORY_DIALOGUES[Math.floor(Math.random() * BOSS_VICTORY_DIALOGUES.length)];
-                const resultMessage = `¡VICTORIA! Has derrotado al Ladrón de Tildes. Ganas ${prestigeReward} Punto(s) de Prestigio. ${powerUpMessage}`;
-                
-                typeFinalDialogue(finalDialogue, () => {
-                    hideBossModal(() => {
-                        showModal(resultMessage);
-                        if (consecutiveFailures < 3) {
-                            changeView('game');
-                        }
-                    });
-                });
-
+                const resultMessage = `¡VICTORIA! Ganas ${prestigeReward} Puntos de Prestigio.`;
+                typeEffect(dialogueEl, finalDialogue, () => hideBossModal(() => {
+                    showModal(resultMessage);
+                    updatePlayerScore();
+                    if (consecutiveFailures < 3) changeView('game');
+                }));
             } else {
                 consecutiveFailures++;
-                let moneyLost = 0;
-                if(currentBossLevel === 1) moneyLost = playerMoney * 0.10;
-                if(currentBossLevel === 2) moneyLost = playerMoney * 0.20;
-                if(currentBossLevel === 3) moneyLost = playerMoney * 0.30;
-                
-                playerMoney -= Math.floor(moneyLost);
-                
+                let moneyLost = playerMoney * ({ 1: 0.10, 2: 0.20, 3: 0.30 }[currentBossLevel] || 0);
+                playerMoney = Math.max(0, playerMoney - Math.floor(moneyLost));
                 const finalDialogue = BOSS_DEFEAT_DIALOGUES[Math.floor(Math.random() * BOSS_DEFEAT_DIALOGUES.length)];
-                const resultMessage = `¡DERROTA! El Ladrón de Tildes te ha robado ${Math.floor(moneyLost).toLocaleString('en-US')}. Pierdes 1 vida.`;
-
-                typeFinalDialogue(finalDialogue, () => {
+                const resultMessage = `¡DERROTA! El Ladrón te roba ${Math.floor(moneyLost).toLocaleString('es-ES')}. Pierdes 1 vida.`;
+                typeEffect(dialogueEl, finalDialogue, () => hideBossModal(() => {
                     if (consecutiveFailures >= 3) {
-                        hideBossModal(() => {
-                            document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. El Ladrón de Tildes fue tu perdición.`;
-                            stopGameLoops();
-                            changeView('gameOver');
-                            gamePausedForFeedback = false;
-                        });
+                        document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. El Ladrón de Tildes fue tu perdición.`;
+                        stopGameLoops();
+                        changeView('gameOver');
+                        gamePausedForFeedback = false;
                     } else {
-                        hideBossModal(() => {
-                            showModal(resultMessage);
-                             if (consecutiveFailures < 3) {
-                                changeView('game');
-                            }
-                        });
+                        showModal(resultMessage);
+                        if (consecutiveFailures < 3) changeView('game');
                     }
-                });
+                }));
+            }
+        }
+        
+        async function deletePlayerFromRanking() {
+            const nameToDelete = prompt("Introduce el nombre exacto del jugador que deseas eliminar del ranking:");
+            if (nameToDelete) {
+                showModal(`Eliminando a ${nameToDelete}...`);
+                const result = await apiRequest('POST', 'deletePlayer', { playerName: nameToDelete });
+                if (result.success) {
+                    showModal(`${nameToDelete} ha sido eliminado del ranking.`);
+                    if (currentView === 'ranking') {
+                        fetchRanking();
+                    }
+                } else {
+                    showModal(`Error al eliminar: ${result.error}`);
+                }
             }
         }
 
-        function savePlayerData() {
+        async function savePlayerData() {
+            if (!playerCredentials || !gameStarted) return;
             try {
                 const data = {
-                    money: playerMoney, words: playerWords, used: usedChallengeWords,
-                    failures: consecutiveFailures, multiplier: gameMultiplier,
-                    credits: initialCredits, shields: shields, shieldEnd: universalShieldEndTime,
-                    chrisEnd: christopherBoostEndTime, svBoosts: superValueBoosts,
-                    limboTriggered: limboGramaticalTriggeredThisPartida,
-                    chrisBonusCount: christopherBonusCountDuringLimbo,
-                    prestigePoints: prestigePoints,
-                    prestigeUpgrades: prestigeUpgrades,
-                    isChallengeActive: isChallengeActive,
-                    bossesDefeated: bossesDefeated,
-                    hasBoughtFirstWord: hasBoughtFirstWord,
-                    isWhispering: isWhispering,
-                    activeWhisper: activeWhisper,
-                    corruptedWordsBought: corruptedWordsBought,
-                    bossBonus1EndTime: bossBonus1EndTime,
-                    bossBonus2EndTime: bossBonus2EndTime,
-                    bossBonus3EndTime: bossBonus3EndTime
+                    money: playerMoney, words: playerWords, used: usedChallengeWords, failures: consecutiveFailures, 
+                    multiplier: gameMultiplier, credits: initialCredits, shields: shields, shieldEnd: universalShieldEndTime,
+                    chrisEnd: christopherBoostEndTime, svBoosts: superValueBoosts, limboTriggered: limboGramaticalTriggeredThisPartida,
+                    chrisBonusCount: christopherBonusCountDuringLimbo, prestigePoints: prestigePoints, prestigeUpgrades: prestigeUpgrades,
+                    isChallengeActive: isChallengeActive, bossesDefeated: bossesDefeated, hasBoughtFirstWord: hasBoughtFirstWord,
+                    isWhispering: isWhispering, activeWhisper: activeWhisper, corruptedWordsBought: corruptedWordsBought,
+                    playerStats: playerStats, wordDatabaseVersion: 2.1
                 };
-                localStorage.setItem('dl_player_data', JSON.stringify(data));
+                await apiRequest('POST', 'saveGame', { playerID: playerCredentials.playerID, saveDataJSON: JSON.stringify(data) });
             } catch (e) { console.error('Error saving data:', e); }
         }
 
-        function loadPlayerData() {
+        function parseSaveData(saveDataJSON) {
             try {
-                const raw = localStorage.getItem('dl_player_data');
-                if (!raw) { 
-                    initializeGameState(); 
-                    return; 
-                }
-                const data = JSON.parse(raw);
+                const data = JSON.parse(saveDataJSON || "{}");
+                 if (!data.wordDatabaseVersion || data.wordDatabaseVersion < 2.1) { initializeGameState(); return; }
                 playerMoney = data.money || 100;
                 playerWords = data.words || {};
                 usedChallengeWords = data.used || {};
                 consecutiveFailures = data.failures || 0;
                 gameMultiplier = data.multiplier || 1;
-                
                 shields = data.shields || { universal: 0 };
                 universalShieldEndTime = data.shieldEnd || 0;
                 christopherBoostEndTime = data.chrisEnd || 0;
@@ -1740,68 +1791,30 @@
                 limboGramaticalTriggeredThisPartida = data.limboTriggered || false;
                 christopherBonusCountDuringLimbo = data.chrisBonusCount || 0;
                 prestigePoints = data.prestigePoints || 0;
-                prestigeUpgrades = data.prestigeUpgrades || { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
+                prestigeUpgrades = data.prestigeUpgrades || { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0, presagioLadron: 0, enganoLadron: 0 };
                 bossesDefeated = data.bossesDefeated || [];
                 hasBoughtFirstWord = data.hasBoughtFirstWord || false;
                 isWhispering = data.isWhispering || false;
                 activeWhisper = data.activeWhisper || "";
                 corruptedWordsBought = data.corruptedWordsBought || 0;
-                bossBonus1EndTime = data.bossBonus1EndTime || 0;
-                bossBonus2EndTime = data.bossBonus2EndTime || 0;
-                bossBonus3EndTime = data.bossBonus3EndTime || 0;
-
-
-                if (data.isChallengeActive) {
-                    activeChallengeOnLoad = true;
-                }
-
+                playerStats = data.playerStats || { wordsBought: 0, challengesWon: 0, bossesDefeatedCount: 0, gameFormats: 0 };
+                if (data.isChallengeActive) activeChallengeOnLoad = true;
                 let baseCredits = 100;
-                for(let i = 1; i < gameMultiplier; i++) {
-                    baseCredits *= 2;
-                }
+                for(let i = 1; i < gameMultiplier; i++) baseCredits *= 2;
                 initialCredits = baseCredits;
-
+                generatePlaythroughWordDatabase();
                 if (gameMultiplier > 1) applyScalingToWordDatabase(gameMultiplier);
-                
-                Object.keys(WORD_DATABASE).forEach(category => {
-                    if (!playerWords[category]) {
-                        playerWords[category] = { count: 0, list: [] };
-                    }
-                });
-
-            } catch (e) { 
-                console.error('Error loading data:', e); 
+                Object.keys(WORD_DATABASE).forEach(category => { if (!playerWords[category]) playerWords[category] = { count: 0, list: [] }; });
+            } catch (e) {
+                console.error('Error parsing save data:', e);
                 initializeGameState();
             }
-        }
-
-        function initializeGameState() {
-             playerMoney = 100;
-             playerWords = {};
-             usedChallengeWords = {};
-             consecutiveFailures = 0;
-             gameMultiplier = 1;
-             shields = { universal: 0 };
-             prestigePoints = 0;
-             prestigeUpgrades = { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
-             bossesDefeated = [];
-             hasBoughtFirstWord = false;
-             isWhispering = false;
-             activeWhisper = "";
-             corruptedWordsBought = 0;
-             bossBonus1EndTime = 0;
-             bossBonus2EndTime = 0;
-             bossBonus3EndTime = 0;
-             Object.keys(WORD_DATABASE).forEach(category => {
-                playerWords[category] = { count: 0, list: [] };
-            });
         }
         
         function mainGameLoop(timestamp) {
             if (!lastUpdateTime) lastUpdateTime = timestamp;
             const deltaTime = timestamp - lastUpdateTime;
             lastUpdateTime = timestamp;
-            
             timeSinceLastIncomeUpdate += deltaTime;
             if (timeSinceLastIncomeUpdate >= 1000) {
                 let incomeThisSecond = passiveIncome;
@@ -1811,7 +1824,6 @@
                 timeSinceLastIncomeUpdate = 0;
                 updateUI();
             }
-            
             updateTimerBarUI();
             animationFrameId = requestAnimationFrame(mainGameLoop);
         }
@@ -1820,18 +1832,15 @@
             if (!gameStarted || currentView !== 'game' || !currentWord.startTime) return;
             const bar = document.getElementById('wordTimerBar');
             if (!bar) return;
-
             const now = Date.now();
             const duration = currentWord.isBonus ? 1000 : 3000;
             const elapsedTime = now - currentWord.startTime;
             const timeLeft = Math.max(0, duration - elapsedTime);
             const percentage = (timeLeft / duration) * 100;
-            
             bar.style.width = `${percentage}%`;
-
-            if (timeLeft > (duration * 2/3)) bar.style.backgroundColor = '#ef4444'; // red-500
-            else if (timeLeft > (duration * 1/3)) bar.style.backgroundColor = '#eab308'; // yellow-500
-            else bar.style.backgroundColor = '#22c55e'; // green-500
+            if (timeLeft > (duration * 2/3)) bar.style.backgroundColor = '#ef4444'; 
+            else if (timeLeft > (duration * 1/3)) bar.style.backgroundColor = '#eab308';
+            else bar.style.backgroundColor = '#22c55e';
         }
 
         const accentuationRules = [
@@ -1848,10 +1857,8 @@
             stopRulesRotator(); 
             const rulesContainer = document.getElementById('rulesContainer');
             const rulesDisplay = document.getElementById('rulesDisplay');
-            if (!rulesContainer || !rulesDisplay || isWhispering) return;
-
+            if (!rulesContainer || !rulesDisplay || isWhispering || Date.now() < limboGramaticalEndTime) return;
             rulesContainer.classList.remove('hidden');
-
             const updateRule = () => {
                 rulesDisplay.style.opacity = 0;
                 setTimeout(() => {
@@ -1861,192 +1868,210 @@
                     currentRuleIndex = (currentRuleIndex + 1) % accentuationRules.length;
                 }, 500); 
             };
-            
             updateRule(); 
             rulesInterval = setInterval(updateRule, 15000);
         }
 
         function stopRulesRotator() {
-            if (rulesInterval) {
-                clearInterval(rulesInterval);
-                rulesInterval = null;
-            }
-            const rulesContainer = document.getElementById('rulesContainer');
-            if(rulesContainer) rulesContainer.classList.add('hidden');
+            if (rulesInterval) clearInterval(rulesInterval);
+            rulesInterval = null;
+            document.getElementById('rulesContainer')?.classList.add('hidden');
         }
 
         function startGameLoops() {
-            if (animationFrameId || isBossActive) return; // Prevent multiple loops
+            if (animationFrameId || isBossActive) return;
             stopGameLoops();
-
-            if (isWhispering) {
+            if (Date.now() < limboGramaticalEndTime) startChristopherWhispers();
+            else if (isWhispering) {
                 displayActiveWhisper();
+                whisperInterval = setInterval(corruptRulesDisplay, 5000);
             } else {
                 startRulesRotator();
             }
-
             animationFrameId = requestAnimationFrame(mainGameLoop);
-
             challengeInterval = setInterval(() => {
                 if (hasBoughtFirstWord && Math.random() < 0.15 && !isChallengeActive && gameStarted && !isBossActive && currentView === 'game') {
                     startDictionaryChallenge();
                 }
             }, 5000);
         }
+        
+        function startChristopherWhispers() {
+            stopChristopherWhispers();
+            const rulesContainer = document.getElementById('rulesContainer');
+            const rulesDisplay = document.getElementById('rulesDisplay');
+            if (!rulesContainer || !rulesDisplay) return;
+            rulesContainer.classList.remove('hidden');
+            const showWhisper = () => {
+                if (Date.now() >= limboGramaticalEndTime) { stopChristopherWhispers(); return; }
+                const whisper = CHRISTOPHER_DIALOGUES[Math.floor(Math.random() * CHRISTOPHER_DIALOGUES.length)];
+                rulesDisplay.style.opacity = 0;
+                setTimeout(() => {
+                    rulesDisplay.innerHTML = `<p class="christopher-whisper-text">${whisper}</p>`;
+                    rulesDisplay.style.opacity = 1;
+                }, 500);
+            };
+            showWhisper();
+            christopherWhisperInterval = setInterval(showWhisper, 8000);
+        }
+        
+        function stopChristopherWhispers() {
+             if(christopherWhisperInterval) clearInterval(christopherWhisperInterval);
+             christopherWhisperInterval = null;
+        }
 
         function stopGameLoops() {
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
             clearInterval(challengeInterval);
+            clearInterval(rankingUpdateInterval);
+            clearInterval(whisperInterval);
+            stopChristopherWhispers();
             clearTimeout(wordDisplayTimeout);
-            challengeInterval = null;
-            lastUpdateTime = 0;
+            challengeInterval = null; rankingUpdateInterval = null; whisperInterval = null; lastUpdateTime = 0;
         }
         
         async function startGameCommon(shouldLoad = true) {
-            if (shouldLoad) {
-                loadPlayerData();
+             if (shouldLoad && playerCredentials) {
+                 await continueGame();
+             } else {
+                 if (activeChallengeOnLoad) {
+                    handleChallengeFailure("Reto abandonado al recargar la página.");
+                    activeChallengeOnLoad = false;
+                    isChallengeActive = false;
+                 }
+                startGameLoops();
+                if(playerCredentials) rankingUpdateInterval = setInterval(updatePlayerScore, 30000);
+                generateNewWord(true);
+                setInterval(savePlayerData, 10000);
             }
-            
-            if (activeChallengeOnLoad) {
-                handleChallengeFailure("Reto abandonado.");
-                activeChallengeOnLoad = false; // Reset the flag
-                isChallengeActive = false;
-                savePlayerData(); // Save the cleared state
-            }
-
-            startGameLoops();
-            generateNewWord(true);
-            setInterval(savePlayerData, 5000); // Guardado automático cada 5 segundos
         }
         
-        function syllabify(word) {
-            // A more robust syllabification algorithm that correctly handles hiatuses.
-            let lowerWord = word.toLowerCase().replace(/y/g, 'i');
-
-            // Pre-emptively split known hiatus patterns with a placeholder.
-            // 1. Accented weak vowel + strong vowel (and vice-versa)
-            lowerWord = lowerWord.replace(/([aeo])([íú])/g, '$1-$2'); // e.g., ba-úl
-            lowerWord = lowerWord.replace(/([íú])([aeo])/g, '$1-$2'); // e.g., policí-a
-
-            // 2. Two strong vowels
-            lowerWord = lowerWord.replace(/([aeo])([aeo])/g, '$1-$2'); // e.g., po-eta
-
-            // This complex regex groups consonants with their following vowel group (diphthongs/triphthongs).
-            // It's designed to not split within a vowel group unless a hyphen is already there.
-            const syllableRegex = /[^aeiouíú]*[aeiouíú]+(?:[^aeiouíú-](?![aeiouíú]))?/g;
+        async function apiRequest(method, action, params = {}) {
+            if (APPS_SCRIPT_URL === 'PASTE_YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                console.error("API URL is not set. Please deploy the Google Apps Script and paste the URL.");
+                return { success: false, error: "La URL de la API no ha sido configurada." };
+            }
             
-            let syllableMatches = lowerWord.match(syllableRegex);
+            try {
+                // All requests go through POST to simplify server logic and CORS handling.
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    redirect: 'follow',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action, ...params, originalMethod: method })
+                });
 
-            if (!syllableMatches) return [word]; // Fallback for simple cases
-
-            // Reconstruct the syllables with original casing from the pre-split word.
-            let result = [];
-            let originalIndex = 0;
-            syllableMatches.join('-').split('-').forEach(syllable => {
-                if (syllable) {
-                    result.push(word.substring(originalIndex, originalIndex + syllable.length));
-                    originalIndex += syllable.length;
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
                 }
-            });
-
-            return result;
+                
+                return await response.json();
+            } catch (error) {
+                console.error(`API request failed for action "${action}":`, error);
+                return { success: false, error: "Error de red o del servidor. Asegúrate de que la URL de la API es correcta y está desplegada." };
+            }
         }
-
-        function getAccentCategory(word) {
-            const originalWord = word;
-            const cleanedWord = word.toLowerCase().trim();
-            const syllables = syllabify(originalWord);
-            const numSyllables = syllables.length;
-
-            if (numSyllables <= 1) {
-                return { category: "Agudas", reason: `La palabra '${originalWord}' es un monosílabo. Gramaticalmente, los monosílabos se consideran palabras agudas ya que la fuerza de voz recae en su única (y última) sílaba.` };
-            }
-
-            let stressedSyllableIndex = -1;
-            const accentedVowels = "áéíóú";
+        
+        async function fetchRanking() {
+            const tableBody = document.getElementById('rankingTableBody');
+            tableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4"><div class="loading-spinner mx-auto"></div><p class="mt-2">Cargando ranking...</p></td></tr>`;
             
-            for (let i = 0; i < numSyllables; i++) {
-                if (syllables[i].split('').some(char => accentedVowels.includes(char.toLowerCase()))) {
-                    stressedSyllableIndex = i;
-                    break;
-                }
-            }
+            const result = await apiRequest('POST', 'getRanking');
 
-            let category = "Desconocida";
-            
-            if (stressedSyllableIndex !== -1) {
-                const positionFromEnd = numSyllables - 1 - stressedSyllableIndex;
-                if (positionFromEnd === 0) category = "Agudas";
-                else if (positionFromEnd === 1) category = "Llanas";
-                else if (positionFromEnd === 2) category = "Esdrújulas";
-                else if (positionFromEnd >= 3) category = "Sobreesdrújulas";
+            if (result.success) {
+                renderRanking(result.data);
             } else {
-                const lastChar = cleanedWord.slice(-1).replace('y', 'i');
-                if ('ns'.includes(lastChar) || 'aeiou'.includes(lastChar)) {
-                    stressedSyllableIndex = numSyllables - 2;
-                    category = "Llanas";
-                } else {
-                    stressedSyllableIndex = numSyllables - 1;
-                    category = "Agudas";
-                }
+                tableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500">Error de conexión con el ranking: ${result.error}</td></tr>`;
             }
-            
-            const positionText = ['última', 'penúltima', 'antepenúltima'][numSyllables - 1 - stressedSyllableIndex] || 'anterior a la antepenúltima';
-            const stressedSyllableText = `'${syllables[stressedSyllableIndex]}'`;
-            let reason = `'${originalWord}' es ${category} porque su sílaba tónica es la ${positionText} (${stressedSyllableText}). `;
-            
-            switch (category) {
-                case "Agudas":
-                    if (cleanedWord.split('').some(char => accentedVowels.includes(char))) reason += "Lleva tilde porque las palabras agudas la llevan cuando terminan en 'n', 's' o vocal.";
-                    else reason += `No lleva tilde porque las palabras agudas solo la llevan si terminan en 'n', 's' o vocal.`;
-                    break;
-                case "Llanas":
-                     if (cleanedWord.split('').some(char => accentedVowels.includes(char))) reason += `Lleva tilde porque las palabras llanas la llevan cuando NO terminan en 'n', 's' o vocal.`;
-                     else reason += `No lleva tilde porque las palabras llanas solo la llevan si NO terminan en 'n', 's' o vocal.`;
-                    break;
-                case "Esdrújulas":
-                case "Sobreesdrújulas":
-                     reason += `Las palabras ${category.toLowerCase()}s siempre llevan tilde.`;
-                     break;
-            }
-
-            return { category, reason };
         }
         
+        function showRanking() {
+            changeView('ranking');
+            if (playerCredentials?.playerName) {
+                document.getElementById('nameInputContainer').classList.add('hidden');
+                document.getElementById('rankingTableContainer').classList.remove('hidden');
+                fetchRanking();
+            } else {
+                document.getElementById('nameInputContainer').classList.remove('hidden');
+                document.getElementById('rankingTableContainer').classList.add('hidden');
+            }
+        }
+
+        function renderRanking(rankingData) {
+            const tableBody = document.getElementById('rankingTableBody');
+            tableBody.innerHTML = '';
+            if (!rankingData || rankingData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-gray-500">El ranking está vacío. ¡Sé el primero!</td></tr>`;
+                return;
+            }
+            rankingData.forEach((player, index) => {
+                const isCurrentUser = playerCredentials && player.name === playerCredentials.playerName;
+                const row = document.createElement('tr');
+                row.className = `border-b border-gray-200 ${isCurrentUser ? 'bg-yellow-100 font-bold' : ''}`;
+                row.innerHTML = `<td class="p-2 font-bold text-center">${index + 1}</td><td class="p-2">${player.name}</td><td class="p-2 text-right">${player.multiplier}x</td>`;
+                tableBody.appendChild(row);
+            });
+        }
+
+        async function updatePlayerScore() {
+            if (!playerCredentials || !gameStarted) return;
+            await apiRequest('POST', 'updateRanking', {
+                name: playerCredentials.playerName,
+                multiplier: gameMultiplier,
+                stats: playerStats
+            });
+        }
+
+        async function handleLogin() {
+            const nameInput = document.getElementById('playerNameInput');
+            const playerName = nameInput.value.trim();
+            if (playerName.length < 3 || playerName.length > 15) { showModal("Tu nombre debe tener entre 3 y 15 caracteres."); return; }
+            if (!/^[a-zA-Z0-9_]+$/.test(playerName)) { showModal("El nombre solo puede contener letras, números y guiones bajos."); return; }
+
+            showModal("Registrando y creando partida...");
+            const result = await apiRequest('POST', 'registerUser', { playerName });
+
+            if(result.success) {
+                playerCredentials = { playerName: result.playerName, playerID: result.playerID };
+                localStorage.setItem('dl_player_credentials', JSON.stringify(playerCredentials));
+                document.getElementById('playerNameDisplay').textContent = result.playerName;
+                document.getElementById('loginView').classList.add('hidden');
+                document.getElementById('loggedInView').classList.remove('hidden');
+                document.getElementById('messageModal').classList.add('hidden');
+                initializeGameState(); // User is new, so start fresh
+                 // Muestra el botón de administrador si el nombre de usuario es 'Didac'
+                if (playerCredentials.playerName === 'Didac') {
+                    document.getElementById('adminDeleteButton').classList.remove('hidden');
+                }
+            } else {
+                showModal(result.error);
+            }
+        }
+
+        function handleLogout() {
+            playerCredentials = null;
+            localStorage.removeItem('dl_player_credentials');
+            document.getElementById('loginView').classList.remove('hidden');
+            document.getElementById('loggedInView').classList.add('hidden');
+            document.getElementById('playerNameInput').value = '';
+            document.getElementById('adminDeleteButton').classList.add('hidden');
+            // No need to call server, just clear local state
+        }
+
         function updatePrestigeUI() {
             document.getElementById('prestigePointsDisplay').textContent = prestigePoints;
             const container = document.getElementById('prestigeUpgradesContainer');
             container.innerHTML = '';
-
             Object.keys(prestigeUpgrades).forEach(key => {
                 const info = prestigeUpgradeInfo[key];
-                const level = prestigeUpgrades[key];
-                
+                const level = prestigeUpgrades[key] || 0;
                 const upgradeCard = document.createElement('div');
                 upgradeCard.className = `border-2 rounded-xl p-3 flex items-center justify-between space-x-2 ${info.colors}`;
-                
-                upgradeCard.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <div class="p-2 rounded-full ${info.colors.split(' ')[0].replace('-50', '-200')}">
-                             ${info.icon}
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-gray-800" title="${info.desc}">${info.title}</h3>
-                            <p class="text-sm font-semibold text-blue-600">Nivel ${level} | ${info.effect(level)}</p>
-                        </div>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <button id="upgrade-${key}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
-                            Mejorar
-                        </button>
-                    </div>
-                `;
+                upgradeCard.innerHTML = `<div class="flex items-center space-x-3"><div class="p-2 rounded-full ${info.colors.split(' ')[0].replace('-50', '-200')}">${info.icon}</div><div><h3 class="font-bold text-gray-800" title="${info.desc}">${info.title}</h3><p class="text-sm font-semibold text-blue-600">Nivel ${level} | ${info.effect(level)}</p></div></div><div class="flex-shrink-0"><button id="upgrade-${key}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">Mejorar</button></div>`;
                 container.appendChild(upgradeCard);
             });
-            
             Object.keys(prestigeUpgrades).forEach(key => {
                 const button = document.getElementById(`upgrade-${key}`);
                 button.disabled = prestigePoints < 1;
@@ -2057,164 +2082,115 @@
         function upgradePrestige(key) {
             if (prestigePoints > 0) {
                 prestigePoints--;
+                if (!prestigeUpgrades[key]) prestigeUpgrades[key] = 0;
                 prestigeUpgrades[key]++;
                 updatePrestigeUI();
                 savePlayerData();
             }
         }
 
-        function typeEffect(element, text, callback) {
+        function typeEffectForInput(element, text, callback) {
             let i = 0;
             element.value = '';
             function type() {
                 if (i < text.length) {
                     element.value += text.charAt(i);
                     i++;
-                    setTimeout(type, 50); // 50ms delay between characters
+                    setTimeout(type, 40);
                 } else {
-                    if (callback) {
-                        setTimeout(callback, 250); // Short delay after typing before callback
-                    }
+                    if (callback) setTimeout(callback, 250);
                 }
             }
             type();
         }
 
-        // --- Autonomous Mode Logic ---
-        function startAutonomousMode() {
-            if (isAutonomousModeActive) return;
-            isAutonomousModeActive = true;
-            autonomousModePending = false;
-            showModal("Modo Autónomo Activado");
-            console.log("Modo Autónomo Activado");
-            
-            isChallengeActive = false;
-            isBossActive = false;
-            gamePausedForFeedback = false;
-            if(!animationFrameId) startGameLoops();
-            
-            if (autonomousModeInterval) clearInterval(autonomousModeInterval);
-            autonomousModeInterval = setInterval(autonomousModeLoop, 200);
+        function copyPlayerID() {
+            const input = document.getElementById('playerIDCopyInput');
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+            try {
+                // A more robust copy method that doesn't rely on execCommand
+                navigator.clipboard.writeText(input.value).then(() => {
+                    showModal("¡ID copiado al portapapeles!");
+                }).catch(() => {
+                    // Fallback for older browsers
+                    document.execCommand('copy');
+                    showModal("¡ID copiado al portapapeles!");
+                });
+            } catch (err) {
+                 showModal("No se pudo copiar el ID. Por favor, cópialo manualmente.");
+            }
         }
 
-        function activateAutonomousMode() {
-            if (isAutonomousModeActive || autonomousModePending) return;
-            
-            const dictionaryModal = document.getElementById('dictionaryModal');
-            const bossModal = document.getElementById('bossModal');
-            const isChallengeRunning = !dictionaryModal.classList.contains('hidden');
-            const isBossRunning = !bossModal.classList.contains('hidden') && !document.getElementById('bossChallengeContent').classList.contains('hidden');
-            
-            if (isChallengeRunning || isBossRunning) {
-                showModal("Reto detectado. El Modo Autónomo lo resolverá y se activará después.");
-                autonomousModePending = true; 
+        async function showProfile() {
+            changeView('profile');
+            const profileDataEl = document.getElementById('profileData');
+            const profileLoadingEl = document.getElementById('profileLoading');
 
-                if (isChallengeRunning) {
-                    const challengeCategory = document.getElementById('challengeCategory').textContent;
-                    const input = document.getElementById('challengeInput');
-                    const wordToUse = WORD_DATABASE[challengeCategory].words[Math.floor(Math.random() * WORD_DATABASE[challengeCategory].words.length)];
-                    typeEffect(input, wordToUse, () => {
-                        endDictionaryChallenge(wordToUse, challengeCategory); 
-                    });
-                } else if (isBossRunning) {
-                    const inputEl = document.getElementById('bossChallengeInput');
-                    typeEffect(inputEl, currentBossSentence.right, () => {
-                        endBossChallenge(true);
-                    });
+            profileLoadingEl.classList.remove('hidden');
+            profileDataEl.classList.add('hidden');
+
+            if (!playerCredentials) {
+                showModal("Debes iniciar sesión para ver tu perfil.");
+                changeView('startup');
+                return;
+            }
+            
+            // Populate with local data first
+            document.getElementById('profilePlayerName').textContent = playerCredentials.playerName;
+            document.getElementById('profileMultiplier').textContent = `${gameMultiplier}x`;
+            document.getElementById('playerIDCopyInput').value = playerCredentials.playerID;
+            
+            // Fetch rank from server
+            const result = await apiRequest('POST', 'getPlayerProfileData', { playerName: playerCredentials.playerName });
+
+            if(result.success) {
+                document.getElementById('profileRank').textContent = result.rank ? `#${result.rank}` : 'N/A';
+            } else {
+                document.getElementById('profileRank').textContent = '#?';
+            }
+
+            profileLoadingEl.classList.add('hidden');
+            profileDataEl.classList.remove('hidden');
+        }
+
+        async function handleLoginWithID() {
+            const idInput = document.getElementById('playerIDInput');
+            const playerID = idInput.value.trim();
+            if (!playerID) {
+                showModal("Por favor, introduce un ID de jugador.");
+                return;
+            }
+            showModal("Cargando partida con ID...");
+            
+            const result = await apiRequest('POST', 'loadGame', { playerID });
+            
+            if (result.success && result.playerName) {
+                playerCredentials = { playerName: result.playerName, playerID: playerID };
+                localStorage.setItem('dl_player_credentials', JSON.stringify(playerCredentials));
+                
+                document.getElementById('playerNameDisplay').textContent = result.playerName;
+                document.getElementById('loginView').classList.add('hidden');
+                document.getElementById('loggedInView').classList.remove('hidden');
+                
+                parseSaveData(result.saveData);
+                gameStarted = true;
+                changeView('game');
+                await startGameCommon(false); // Do not load again from server
+                document.getElementById('messageModal').classList.add('hidden');
+                 // Muestra el botón de administrador si el nombre de usuario es 'Didac'
+                if (playerCredentials.playerName === 'Didac') {
+                    document.getElementById('adminDeleteButton').classList.remove('hidden');
                 }
             } else {
-                startAutonomousMode();
-            }
-        }
-
-        function autonomousModeLoop() {
-            // 1. Pausa Inteligente en Menús
-            if (currentView === 'shop' || currentView === 'prestige') {
-                return; // PAUSA si el usuario abre un menú
-            }
-            
-            if (!isAutonomousModeActive) {
-                clearInterval(autonomousModeInterval);
-                return;
-            }
-            
-            if (autonomousState !== 'idle') return;
-
-            // Maneja varios modales que puedan aparecer
-            const messageModal = document.getElementById('messageModal');
-            if (!messageModal.classList.contains('hidden')) {
-                document.getElementById('modalCloseButton').click();
-                return;
-            }
-            
-            const limboModal = document.getElementById('limboGramaticalScreen');
-            if (!limboModal.classList.contains('hidden')) {
-                document.getElementById('startLimboGramatical').click();
-                return;
-            }
-
-            const winScreen = document.getElementById('winScreen');
-            if (!winScreen.classList.contains('hidden')) {
-                document.getElementById('seguirJugandoButton').click();
-                return;
-            }
-            
-            // Vuelve a verificar si hay retos que hayan comenzado entre intervalos
-            const dictionaryModal = document.getElementById('dictionaryModal');
-            if (!dictionaryModal.classList.contains('hidden')) {
-                autonomousState = 'solvingChallenge';
-                const challengeCategory = document.getElementById('challengeCategory').textContent;
-                const input = document.getElementById('challengeInput');
-                
-                const usedWords = usedChallengeWords[challengeCategory] || [];
-                const allWords = WORD_DATABASE[challengeCategory].words;
-                const availableWords = allWords.filter(w => !usedWords.includes(w.toLowerCase()));
-
-                let wordToUse;
-                if (availableWords.length > 0) {
-                    wordToUse = availableWords[Math.floor(Math.random() * availableWords.length)];
-                } else {
-                    wordToUse = allWords[Math.floor(Math.random() * allWords.length)];
-                }
-
-                typeEffect(input, wordToUse, () => {
-                    endDictionaryChallenge(wordToUse, challengeCategory);
-                    autonomousState = 'idle';
-                });
-                return;
-            }
-
-            const bossModal = document.getElementById('bossModal');
-            if (!bossModal.classList.contains('hidden') && !document.getElementById('bossChallengeContent').classList.contains('hidden')) {
-                autonomousState = 'solvingBoss';
-                const inputEl = document.getElementById('bossChallengeInput');
-                typeEffect(inputEl, currentBossSentence.right, () => {
-                    endBossChallenge(true);
-                    autonomousState = 'idle';
-                });
-                return;
-            }
-            
-            // 2. Lógica Simplificada: Solo comprar palabras y bonus
-            const buyButton = document.getElementById('buyButton');
-            
-            if (currentWord.isBonus && !buyButton.disabled) {
-                buyWord(); 
-                return;
-            }
-            
-            if (!buyButton.disabled && !currentWord.isCorrupted) {
-                autonomousState = 'buyingWord';
-                setTimeout(() => {
-                    if (isAutonomousModeActive) {
-                        buyWord();
-                    }
-                    autonomousState = 'idle';
-                }, 1000); 
+                showModal(result.error || "No se pudo encontrar la partida. Verifica el ID.");
+                idInput.value = '';
             }
         }
 
         function setupEventListeners() {
+            document.getElementById('loginButton').addEventListener('click', handleLogin);
+            document.getElementById('logoutButton').addEventListener('click', handleLogout);
             document.getElementById('playGameButton').addEventListener('click', continueGame);
             document.getElementById('resetProgressButton').addEventListener('click', startNewGame);
             document.getElementById('tutorialButton').addEventListener('click', () => changeView('tutorial'));
@@ -2223,78 +2199,88 @@
             document.getElementById('prestigeButton').addEventListener('click', () => changeView('prestige'));
             document.getElementById('homeButton').addEventListener('click', () => {
                 stopGameLoops();
-                stopRulesRotator();
-                savePlayerData();
-                const resetBtn = document.getElementById('resetProgressButton');
-                const hasSaveData = localStorage.getItem('dl_player_data');
-                if (hasSaveData) {
-                    const data = JSON.parse(hasSaveData);
-                    const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
-                    resetBtn.style.display = hasProgress ? 'block' : 'none';
-                } else {
-                    resetBtn.style.display = 'none';
-                }
+                if(gameStarted) savePlayerData();
                 changeView('startup');
             });
             document.getElementById('backToGameFromTutorial').addEventListener('click', () => changeView('startup'));
             document.getElementById('backToGameFromShop').addEventListener('click', () => changeView('game'));
             document.getElementById('backToGameFromPrestige').addEventListener('click', () => changeView('game'));
-            document.getElementById('buyUniversalShield').addEventListener('click', () => buyShield('universal'));
+            document.getElementById('buyUniversalShield').addEventListener('click', buyShield);
             document.getElementById('buyLifeButton').addEventListener('click', buyLife);
             
+            document.getElementById('profileButton').addEventListener('click', showProfile);
+            document.getElementById('backToHomeFromProfile').addEventListener('click', () => changeView('startup'));
+            document.getElementById('copyPlayerIDButton').addEventListener('click', copyPlayerID);
+            document.getElementById('showLoginWithId').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('registerSection').classList.add('hidden');
+                document.getElementById('loginWithIdSection').classList.remove('hidden');
+            });
+            document.getElementById('showRegister').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('loginWithIdSection').classList.add('hidden');
+                document.getElementById('registerSection').classList.remove('hidden');
+            });
+            document.getElementById('loginWithIdButton').addEventListener('click', handleLoginWithID);
+            document.getElementById('adminDeleteButton').addEventListener('click', deletePlayerFromRanking);
+
+
             document.getElementById('modalCloseButton').addEventListener('click', () => {
                 document.getElementById('messageModal').classList.add('hidden');
                 if (gamePausedForFeedback) {
                     gamePausedForFeedback = false;
                     if (consecutiveFailures < 3 && !isBossActive) {
-                        if (autonomousModePending) {
-                            setTimeout(() => {
-                                startAutonomousMode();
-                            }, 250);
-                        } else {
-                           startGameLoops();
-                           generateNewWord(true);
-                           savePlayerData();
-                        }
+                       startGameLoops();
+                       generateNewWord(true);
+                       savePlayerData();
                     }
                 }
             });
+            document.getElementById('thiefMockeryCloseButton').addEventListener('click', () => {
+                document.getElementById('thiefMockeryModal').classList.add('hidden', 'opacity-0');
+                showFailureMessage("Vigila tus tildes...");
+            });
             document.getElementById('wordsModalCloseButton').addEventListener('click', () => document.getElementById('wordsModal').classList.add('hidden'));
-            document.getElementById('backToGameFromGameOver').addEventListener('click', () => {
-                reiniciarJuegoCompleto();
-                changeView('game');
-                startGameCommon();
+            document.getElementById('backToGameFromGameOver').addEventListener('click', async () => {
+                await startNewGame();
             });
             document.getElementById('seguirJugandoButton').addEventListener('click', formatearJuego);
-            document.getElementById('reiniciarButton').addEventListener('click', () => {
-                reiniciarJuegoCompleto();
-                changeView('game');
-                startGameCommon();
+            document.getElementById('reiniciarButton').addEventListener('click', async () => {
+                await startNewGame();
             });
-
             document.getElementById('startLimboGramatical').addEventListener('click', () => {
                 const modal = document.getElementById('limboGramaticalScreen');
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-
                 limboGramaticalEndTime = Date.now() + 60000;
                 startGameLoops(); 
                 generateNewWord(true);
             });
-
-            // Guardar el juego automáticamente al cerrar la pestaña/navegador
-            window.addEventListener('beforeunload', savePlayerData);
+            document.getElementById('rankingButton').addEventListener('click', showRanking);
+            document.getElementById('backToHomeFromRanking').addEventListener('click', () => changeView('startup'));
+            window.addEventListener('beforeunload', () => {
+                if(gameStarted) savePlayerData();
+            });
         }
 
         async function initGame() {
-            const resetBtn = document.getElementById('resetProgressButton');
-            const hasSaveData = localStorage.getItem('dl_player_data');
-            if (hasSaveData) {
-                 const data = JSON.parse(hasSaveData);
-                 const hasProgress = data.words && Object.values(data.words).some(cat => cat.count > 0);
-                 resetBtn.style.display = hasProgress ? 'block' : 'none';
-            } else {
-                resetBtn.style.display = 'none';
+            const savedCredentials = localStorage.getItem('dl_player_credentials');
+            if (savedCredentials) {
+                try {
+                    playerCredentials = JSON.parse(savedCredentials);
+                    document.getElementById('playerNameDisplay').textContent = playerCredentials.playerName;
+                    document.getElementById('loginView').classList.add('hidden');
+                    document.getElementById('loggedInView').classList.remove('hidden');
+
+                    // Muestra el botón de administrador si el nombre de usuario es 'Didac'
+                    if (playerCredentials.playerName === 'Didac') {
+                        document.getElementById('adminDeleteButton').classList.remove('hidden');
+                    }
+                } catch(e) {
+                    console.error("Failed to parse credentials", e);
+                    localStorage.removeItem('dl_player_credentials');
+                    playerCredentials = null;
+                }
             }
             changeView('startup');
             setupEventListeners();
