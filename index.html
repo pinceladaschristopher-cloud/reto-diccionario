@@ -122,6 +122,35 @@
             100% { box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.6); }
         }
 
+        .boss-modal-bg {
+            background-color: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(8px);
+        }
+
+        .whisper-text {
+            font-size: 1.5rem; /* Increased size */
+            font-weight: 900; /* Bolder */
+            color: #111827; /* Darker gray */
+            animation: flicker-dark 2s infinite;
+            text-align: center;
+        }
+        
+        @keyframes flicker-dark {
+            0%, 100% {
+                text-shadow: 0 0 5px rgba(220, 38, 38, 0.4), 0 0 2px rgba(0,0,0,0.5);
+                opacity: 0.8;
+            }
+            50% {
+                text-shadow: 0 0 15px rgba(220, 38, 38, 0.8), 0 0 5px rgba(0,0,0,0.7);
+                opacity: 1;
+            }
+        }
+
+        .corrupted-text-effect {
+            animation: flicker-dark 2s infinite;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen">
@@ -130,7 +159,7 @@
         <div class="text-center w-full max-w-4xl mx-auto">
             <h1 class="text-4xl sm:text-6xl font-black text-blue-900 mb-8">EL RETO DEL DICCIONARIO</h1>
             <div class="flex flex-col items-center gap-4">
-                <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4 w-full">
+                <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4 w-full max-w-2xl">
                     <button id="playGameButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
                         JUGAR
                     </button>
@@ -138,7 +167,7 @@
                         Tutorial
                     </button>
                 </div>
-                <button id="resetProgressButton" class="text-sm text-gray-500 hover:text-red-500 hover:underline hidden">Reiniciar progreso</button>
+                <button id="resetProgressButton" class="text-sm text-gray-500 hover:text-red-500 hover:underline hidden mt-4">Reiniciar progreso</button>
             </div>
         </div>
         <p class="absolute bottom-4 text-xs text-gray-400 text-center">© 2025 El Reto del Diccionario | Desarrollado por Didac-Click Group.</p>
@@ -161,7 +190,13 @@
                         <span class="font-bold">El Desafío:</span> Ocasionalmente, se te pedirá escribir una palabra de una categoría en 30s. ¡Cuidado! 3 fallos reinician tu progreso.
                     </li>
                      <li>
-                        <span class="font-bold">Bonus y Eventos:</span> Busca palabras <strong class="super-value-text">Super Value</strong> (rojas) para potenciar una categoría, o el <strong>Bonus <span class="rainbow-text">CHRISTOPHER</span></strong> para potenciar todo. ¡Mantente alerta a eventos raros como el <span class="glitch-wrapper"><strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramátical: ???">Limbo Gramátical: ???</strong></span>!
+                        <span class="font-bold">Bonus:</span> Busca palabras <strong class="super-value-text">Super Value</strong> (rojas) para potenciar una categoría, o el <strong>Bonus <span class="rainbow-text">CHRISTOPHER</span></strong> para potenciar todo.
+                    </li>
+                    <li>
+                        <span class="font-bold">Limbo Gramatical:</span> ¡Mantente alerta a eventos raros! El <span class="glitch-wrapper"><strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramatical: ???">Limbo Gramatical: ???</strong></span> es una fisura en la realidad que te ofrece grandes recompensas.
+                    </li>
+                    <li>
+                        <span class="font-bold">El Ladrón de Tildes:</span> ¡Ten cuidado! Cuando el Ladrón se acerca, susurra. Durante este tiempo, podría intentar engañarte con <strong class="corrupted-text-effect">palabras corruptas: ???</strong>. Comprarlas tendrá consecuencias.
                     </li>
                     <li>
                         <span class="font-bold">Tienda y Prestigio:</span> Usa la <span class="font-bold">Tienda</span> para comprar Vidas y Escudos. Al ganar y <span class="font-bold text-purple-700">Formatear</span>, obtienes un multiplicador permanente y <span class="font-bold text-yellow-700">Puntos de Prestigio</span>, que puedes usar para mejoras haciendo clic en el botón del multiplicador.
@@ -175,7 +210,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Game Container -->
     <div class="container mx-auto p-2 flex flex-col items-center min-h-screen">
@@ -191,7 +225,7 @@
                     </p>
                 </div>
 
-                <div class="flex flex-col items-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
+                <div id="currentWordCard" class="flex flex-col items-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
                     <h3 class="text-xl font-bold mb-2">Palabra Actual</h3>
                     <p id="currentWord" class="text-3xl sm:text-5xl font-black mb-1">Cargando...</p>
                     <p id="wordCategory" class="text-md font-semibold text-gray-500 mb-1"></p>
@@ -202,7 +236,7 @@
                         </button>
                     </div>
                     <div id="wordTimerBarContainer" class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div id="wordTimerBar" class="h-2.5 rounded-full" style="width: 100%; transition: width 0.05s linear, background-color 0.5s ease;"></div>
+                        <div id="wordTimerBar" class="h-2.5 rounded-full" style="width: 100%; transition: width 0.05s linear, background-color: 0.5s ease;"></div>
                     </div>
                 </div>
             </div>
@@ -242,6 +276,16 @@
         </div>
         <div id="shieldTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-indigo-300 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
             <span class="text-indigo-600">0s</span>
+        </div>
+        <!-- Contadores de Bonus de Jefe -->
+        <div id="bossBonus1TimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-red-700 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
+            <span class="whisper-text" style="font-size: 1rem;">0s</span>
+        </div>
+        <div id="bossBonus2TimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-red-700 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
+            <span class="whisper-text" style="font-size: 1rem;">0s</span>
+        </div>
+        <div id="bossBonus3TimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-red-700 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
+            <span class="whisper-text" style="font-size: 1rem;">0s</span>
         </div>
         <button id="shopButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
             Tienda
@@ -353,6 +397,23 @@
             <p class="text-lg font-semibold text-gray-800 mt-4">Verificando palabra...</p>
         </div>
     </div>
+    
+    <!-- Modal for Boss Challenge -->
+    <div id="bossModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[200] hidden opacity-0 transition-opacity duration-500">
+        <div id="bossModalContent" class="bg-gray-800 text-white p-8 max-w-2xl w-full text-center rounded-xl shadow-2xl border-4 border-red-700 transform transition-all duration-300 scale-95 opacity-0">
+            <div id="bossIconContainer" class="w-16 h-16 mx-auto mb-4 text-red-500">
+                <!-- SVG Icon will be inserted here by JS -->
+            </div>
+            <h3 class="text-3xl font-extrabold text-red-500 mb-2">EL LADRÓN DE TILDES</h3>
+            <p id="bossDialogue" class="text-md text-gray-300 mb-4 h-10"></p>
+            <div id="bossChallengeContent" class="hidden">
+                <p class="text-md text-gray-400 mb-2">Reescribe la oración con las tildes correctas:</p>
+                <p id="bossChallengeSentence" class="text-2xl font-mono bg-gray-900 p-3 rounded-lg mb-4"></p>
+                <p class="text-sm font-bold text-gray-400">Tiempo restante: <span id="bossTimer" class="text-red-500">60</span>s</p>
+                <input id="bossChallengeInput" type="text" class="w-full mt-4 p-3 text-center text-lg font-semibold border-2 bg-gray-700 border-gray-600 rounded-lg focus:outline-none focus:border-red-500 text-white">
+            </div>
+        </div>
+    </div>
 
     <!-- Modal for Game Over -->
     <div id="gameOverScreen" class="fixed inset-0 bg-red-900/80 backdrop-blur-sm hidden flex flex-col justify-center items-center p-0">
@@ -455,6 +516,9 @@
         let limboGramaticalEndTime = 0;
         let limboGramaticalTriggeredThisPartida = false;
         let christopherBonusCountDuringLimbo = 0;
+        let bossBonus1EndTime = 0; // Descuento 10%
+        let bossBonus2EndTime = 0; // Descuento 15%
+        let bossBonus3EndTime = 0; // Super Value Aumentado
 
         // --- UI & Game Flow ---
         let currentView = 'game';
@@ -463,6 +527,21 @@
         let gamePausedForFeedback = false;
         let activeChallengeOnLoad = false;
         let visibilityChangeHandler = null;
+        let isAutonomousModeActive = false;
+        let autonomousModePending = false;
+        let autonomousModeInterval = null;
+        const AUTONOMOUS_CODE = "21031999";
+        let autonomousState = 'idle'; // idle, solvingChallenge, solvingBoss, buyingWord
+
+        // --- Boss Variables ---
+        let bossesDefeated = [], whisperInterval = null;
+        const BOSS_MILESTONES = { 1: 40, 2: 80, 3: 120 };
+        let currentBossLevel = 0, currentBossSentence = {};
+        let bossTimerInterval;
+        let isBossActive = false;
+        let isWhispering = false;
+        let activeWhisper = "";
+        let corruptedWordsBought = 0;
         
         // --- Game Constants ---
         const PRICE_PER_LETTER = 15;
@@ -471,6 +550,112 @@
         const SHIELD_PRICE_UNIVERSAL = 1000000;
         const LIFE_PRICE = 2000000;
         const CHALLENGE_REWARDS = { "Agudas": 10000, "Llanas": 20000, "Esdrújulas": 40000 };
+        
+        const CORRUPTED_WORDS = [
+            { wrong: "Lapiz", right: "Lápiz", category: "Llanas" },
+            { wrong: "Arbol", right: "Árbol", category: "Llanas" },
+            { wrong: "Cafe", right: "Café", category: "Agudas" },
+            { wrong: "Sofa", right: "Sofá", category: "Agudas" },
+            { wrong: "Musica", right: "Música", category: "Esdrújulas" },
+            { wrong: "Pagina", right: "Página", category: "Esdrújulas" },
+            { wrong: "Compas", right: "Compás", category: "Agudas" },
+            { wrong: "Dificil", right: "Difícil", category: "Llanas" },
+            { wrong: "Celula", right: "Célula", category: "Esdrújulas" },
+            { wrong: "Jamas", right: "Jamás", category: "Agudas" },
+            { wrong: "Marmol", right: "Mármol", category: "Llanas" },
+            { wrong: "Bebere", right: "Beberé", category: "Agudas" },
+            { wrong: "Logico", right: "Lógico", category: "Esdrújulas" },
+            { wrong: "Angel", right: "Ángel", category: "Llanas" },
+            { wrong: "Cancion", right: "Canción", category: "Agudas" },
+            { wrong: "Boligrafo", right: "Bolígrafo", category: "Esdrújulas" },
+            { wrong: "Azucar", right: "Azúcar", category: "Llanas" },
+            { wrong: "Peru", right: "Perú", category: "Agudas" },
+            { wrong: "Oxigeno", right: "Oxígeno", category: "Esdrújulas" },
+            { wrong: "Facil", right: "Fácil", category: "Llanas" },
+            { wrong: "Ademas", right: "Además", category: "Agudas" },
+            { wrong: "Telefono", right: "Teléfono", category: "Esdrújulas" },
+            { wrong: "Mastil", right: "Mástil", category: "Llanas" },
+            { wrong: "Ingles", right: "Inglés", category: "Agudas" },
+            { wrong: "Murcielago", right: "Murciélago", category: "Esdrújulas" },
+            { wrong: "Trebol", right: "Trébol", category: "Llanas" },
+            { wrong: "Acordeon", right: "Acordeón", category: "Agudas" },
+            { wrong: "Gomez", right: "Gómez", category: "Llanas" },
+            { wrong: "Brujula", right: "Brújula", category: "Esdrújulas" },
+            { wrong: "Avion", right: "Avión", category: "Agudas" }
+        ];
+        
+        const BOSS_INITIAL_DIALOGUES = [
+            "Veo que has reunido un pequeño tesoro... Demuéstrame que mereces conservarlo.",
+            "Tus palabras acumuladas cantan una melodía que me atrae. ¿Defenderás tu colección?",
+            "Huelo el poder de la sintaxis en ti. Pero, ¿conoces la verdadera ortografía?",
+            "Has sido descuidado. Dejaste un rastro de tildes olvidadas, y yo lo he seguido hasta aquí.",
+            "Otro coleccionista... Creen que acumular es saber. Te enseñaré la diferencia.",
+            "Las reglas son mis cadenas y tu conocimiento, la llave. No te la dejaré usar.",
+            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas."
+        ];
+
+        const BOSS_VICTORY_DIALOGUES = [
+            "Impresionante... Por ahora, tu conocimiento es tuyo. Pero volveré a sentir tu poder.",
+            "Has demostrado tu valía, mortal. Disfruta de tu tesoro... mientras puedas.",
+            "Me has vencido, sí. Pero recuerda que una sola tilde olvidada puede deshacerlo todo."
+        ];
+
+        const BOSS_DEFEAT_DIALOGUES = [
+            "Tu ignorancia es... deliciosa. Estas palabras estarán mejor conmigo.",
+            "Tal como lo esperaba. Un simple acumulador sin verdadero conocimiento. Gracias por el tributo.",
+            "Te falta práctica. Vuelve cuando sepas la diferencia entre un 'si' y un 'sí'."
+        ];
+
+        const BOSS_MOCKING_LAUGHTER = [
+            "Jajaja... ¿No te has dado cuenta?",
+            "Tan predecible... Caíste de nuevo.",
+            "Delicioso error. Sigue así.",
+            "Mis trampas son sutiles, ¿no crees? Jaja."
+        ];
+        
+        const BOSS_SENTENCES = {
+            1: [
+                { wrong: "El habil mecanico arreglo el automovil rapido.", right: "El hábil mecánico arregló el automóvil rápido." },
+                { wrong: "El pajaro carpintero volaba rapido hacia el arbol.", right: "El pájaro carpintero volaba rápido hacia el árbol." },
+                { wrong: "La musica clasica es mi pasion.", right: "La música clásica es mi pasión." },
+                { wrong: "El volcan entro en erupcion ayer.", right: "El volcán entró en erupción ayer." },
+                { wrong: "Jamas volvere a ese tragico lugar.", right: "Jamás volveré a ese trágico lugar." },
+                { wrong: "El sabado por la mañana tomare un cafe.", right: "El sábado por la mañana tomaré un café." },
+                { wrong: "El examen de matematicas fue dificil.", right: "El examen de matemáticas fue difícil." },
+                { wrong: "La comunicacion es la clave del exito.", right: "La comunicación es la clave del éxito." },
+                { wrong: "El agil ladron escapo por el tunel.", right: "El ágil ladrón escapó por el túnel." },
+                { wrong: "El oceano Pacifico es inmenso.", right: "El océano Pacífico es inmenso." }
+            ],
+            2: [
+                { wrong: "Tu no sabes si el quiere te o cafe.", right: "Tú no sabes si él quiere té o café." },
+                { wrong: "El me dijo que tu no sabias si el queria mas te.", right: "Él me dijo que tú no sabías si él quería más té." },
+                { wrong: "Se que tu tienes mi libro, pero el no lo sabe.", right: "Sé que tú tienes mi libro, pero él no lo sabe." },
+                { wrong: "Si tu vienes, el se ira.", right: "Si tú vienes, él se irá." },
+                { wrong: "De mas de lo que el te pide.", right: "Dé más de lo que él te pide." },
+                { wrong: "Aun no he terminado, aun cuando todos se han ido.", right: "Aún no he terminado, aun cuando todos se han ido." },
+                { wrong: "Mi te es mas dulce que el de el.", right: "Mi té es más dulce que el de él." },
+                { wrong: "No se si tu sabras la respuesta.", right: "No sé si tú sabrás la respuesta." },
+                { wrong: "El solo quiere estar solo un momento.", right: "Él solo quiere estar solo un momento." },
+                { wrong: "Tu decides si te quedas o te vas.", right: "Tú decides si te quedas o te vas." }
+            ],
+            3: [
+                { wrong: "Aun no se como llego, mas le dire que su exito fue fantastico.", right: "Aún no sé cómo llegó, mas le diré que su éxito fue fantástico." },
+                { wrong: "Dime que necesitas y cuando lo quieres para saber como ayudarte.", right: "Dime qué necesitas y cuándo lo quieres para saber cómo ayudarte." },
+                { wrong: "Quien te dijo que y como lo supiste es un misterio.", right: "Quién te dijo qué y cómo lo supiste es un misterio." },
+                { wrong: "No entiendo por que ries, ni cual es el motivo.", right: "No entiendo por qué ríes, ni cuál es el motivo." },
+                { wrong: "Donde esta el libro del que te hable cuando te vi.", right: "Dónde está el libro del que te hablé cuando te vi." },
+                { wrong: "Cuanto tiempo ha pasado desde que el se fue.", right: "Cuánto tiempo ha pasado desde que él se fue." },
+                { wrong: "El pregunto que cual era mi opinion sobre el.", right: "Él preguntó que cuál era mi opinión sobre él." },
+                { wrong: "Solo se que no se nada, mas tu pareces saberlo todo.", right: "Solo sé que no sé nada, mas tú pareces saberlo todo." },
+                { wrong: "El enfasis de su discurso fue sobre etica y moral.", right: "El énfasis de su discurso fue sobre ética y moral." },
+                { wrong: "La peninsula iberica tiene un clima fantastico.", right: "La península ibérica tiene un clima fantástico." }
+            ]
+        };
+        const BOSS_WHISPERS = ["Siento el peso de tantas palabras...", "Una tilde fuera de lugar... es una invitación.", "¿Crees que las acumulas solo para ti?", "El eco de una sílaba mal acentuada resuena...", "Un tesoro de conocimiento... tan fácil de despojar."];
+
+        const ICON_LIBRARY = {
+            'bossIcon': `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle><path d="M10.5 14.5c.5.3 1.2.3 1.7 0 M8 9.5s1-1 4-1 4 1 4 1"/></svg>`,
+        };
         
         const BASE_WORD_DATABASE = {
              "Monosílabos": {
@@ -568,6 +753,12 @@
             hasBoughtFirstWord = false;
             limboGramaticalTriggeredThisPartida = false;
             christopherBonusCountDuringLimbo = 0;
+            bossesDefeated = [];
+            corruptedWordsBought = 0;
+            bossBonus1EndTime = 0;
+            bossBonus2EndTime = 0;
+            bossBonus3EndTime = 0;
+
 
             Object.keys(WORD_DATABASE).forEach(category => {
                 playerWords[category] = { count: 0, list: [] };
@@ -624,10 +815,10 @@
             if (view === 'game') {
                 const controls = document.getElementById('gameControls');
                 if (controls) controls.classList.remove('hidden');
-            } else if (view === 'shop' || view === 'prestige') {
+            } else if (view === 'shop' || view === 'prestige' || view === 'tutorial') {
                 if (screen) screen.classList.add('flex');
                 if (view === 'prestige') updatePrestigeUI();
-                else updateShopUI();
+                else if (view === 'shop') updateShopUI();
             }
         }
         
@@ -741,14 +932,51 @@
 
         async function generateNewWord(forceNew = false) {
             if (isChallengeActive) return;
-            
+
             if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && Math.random() < (0.001 + prestigeUpgrades.suerteAumentada * 0.0005)) {
                 limboGramaticalTriggeredThisPartida = true;
                 triggerLimboGramatical();
                 return;
             }
-            
+
             if (forceNew) clearTimeout(wordDisplayTimeout);
+
+            if (isWhispering && Math.random() < 0.35) {
+                const randomCorrupted = CORRUPTED_WORDS[Math.floor(Math.random() * CORRUPTED_WORDS.length)];
+                const category = randomCorrupted.category;
+                const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
+                const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR) * inflationReduction;
+                const dynamicValue = Math.floor((WORD_DATABASE[category].value + (randomCorrupted.wrong.length * PRICE_PER_LETTER)) * inflationMultiplier);
+                currentWord = {
+                    word: randomCorrupted.wrong,
+                    category: category,
+                    value: dynamicValue,
+                    isCorrupted: true,
+                    rightVersion: randomCorrupted.right,
+                    startTime: Date.now()
+                };
+                updateUI();
+                startWordDisplayTimer(3000); // Consistent timer with normal words
+                return;
+            }
+
+            // Check for "Sabiduría del Ladrón" bonus
+            if (Date.now() < bossBonus3EndTime && Math.random() < 0.5) { // 50% chance to force a super value
+                const allSuperValueCategories = Object.keys(WORD_DATABASE).filter(cat => WORD_DATABASE[cat].superValueWords && WORD_DATABASE[cat].superValueWords.length > 0 && cat !== "Sobreesdrújulas");
+                if (allSuperValueCategories.length > 0) {
+                    const randomSVCategory = allSuperValueCategories[Math.floor(Math.random() * allSuperValueCategories.length)];
+                    const svWords = WORD_DATABASE[randomSVCategory].superValueWords;
+                    const randomSVWord = svWords[Math.floor(Math.random() * svWords.length)];
+
+                    if (!playerWords[randomSVCategory]?.list.includes(randomSVWord)) {
+                        let dynamicValue = (WORD_DATABASE[randomSVCategory].value + (randomSVWord.length * PRICE_PER_LETTER)) * SUPER_VALUE_MULTIPLIER;
+                        currentWord = { word: randomSVWord, category: randomSVCategory, value: dynamicValue, isSuperValue: true, startTime: Date.now() };
+                        updateUI();
+                        startWordDisplayTimer(3000);
+                        return;
+                    }
+                }
+            }
             
             const isLimboActive = Date.now() < limboGramaticalEndTime;
             
@@ -788,10 +1016,22 @@
                 }
             }
             
-            let categories = Object.keys(WORD_DATABASE);
-            const nonFinalCategories = categories.filter(c => c !== "Sobreesdrújulas");
+            const nonFinalCategories = Object.keys(WORD_DATABASE).filter(c => c !== "Sobreesdrújulas");
+            const incompleteCategories = nonFinalCategories.filter(cat => playerWords[cat] && playerWords[cat].count < WORD_DATABASE[cat].limit);
+            
+            let categoryPool = nonFinalCategories;
+            if (incompleteCategories.length > 0) {
+                categoryPool = incompleteCategories;
+                // Aumentar la probabilidad para las categorías faltantes
+                const completedCount = nonFinalCategories.length - incompleteCategories.length;
+                for (let i = 0; i < completedCount * 2; i++) { // Añadir más peso a las incompletas
+                    categoryPool.push(...incompleteCategories);
+                }
+            }
+            
             const allCategoriesCompleted = nonFinalCategories.every(cat => playerWords[cat] && playerWords[cat].count >= WORD_DATABASE[cat].limit);
-            let randomCategory = allCategoriesCompleted ? "Sobreesdrújulas" : nonFinalCategories[Math.floor(Math.random() * nonFinalCategories.length)];
+            let randomCategory = allCategoriesCompleted ? "Sobreesdrújulas" : categoryPool[Math.floor(Math.random() * categoryPool.length)];
+            
             let ownedWords = playerWords[randomCategory]?.list || [];
             let availableWords = WORD_DATABASE[randomCategory].words.filter(word => !ownedWords.includes(word));
             
@@ -807,8 +1047,15 @@
             if (randomCategory !== "Sobreesdrújulas") {
                 const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
                 const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR) * inflationReduction;
-                dynamicValue = (WORD_DATABASE[randomCategory].value + (randomWord.length * PRICE_PER_LETTER)) * inflationMultiplier;
+                dynamicValue = Math.floor((WORD_DATABASE[randomCategory].value + (randomWord.length * PRICE_PER_LETTER)) * inflationMultiplier);
                 if (isSuperValue) dynamicValue *= SUPER_VALUE_MULTIPLIER;
+                
+                const now = Date.now();
+                if (now < bossBonus1EndTime) {
+                    dynamicValue = Math.floor(dynamicValue * 0.90);
+                } else if (now < bossBonus2EndTime) {
+                    dynamicValue = Math.floor(dynamicValue * 0.85);
+                }
             }
 
             currentWord = { word: randomWord, category: randomCategory, value: dynamicValue, isSuperValue, startTime: Date.now() };
@@ -824,7 +1071,6 @@
             if (Date.now() < limboGramaticalEndTime) finalPassiveIncome *= 1.21;
             document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-            // Indicador visual para bonus de Prestigio de riqueza
             const incomeBonusSpan = document.getElementById('prestigeIncomeBonus');
             if (prestigeUpgrades.aumentoGeneracionRiqueza > 0) {
                 incomeBonusSpan.textContent = `(+${prestigeUpgrades.aumentoGeneracionRiqueza}%)`;
@@ -834,43 +1080,59 @@
             }
 
             if (currentWord.word) {
-                let wordClass = "";
-                if (currentWord.isBonus) {
-                    wordClass = "rainbow-text font-black";
-                } else if (currentWord.isSuperValue) {
-                    wordClass = "super-value-text font-black";
-                } else {
-                    wordClass = `${categoryColors[currentWord.category] || "text-gray-800"} font-black`;
-                }
+                const currentWordEl = document.getElementById('currentWord');
+                const wordCategoryEl = document.getElementById('wordCategory');
+                const wordValueEl = document.getElementById('wordValue');
                 
-                document.getElementById('currentWord').innerHTML = `<span class="${wordClass}">${currentWord.word}</span>`;
-                document.getElementById('wordCategory').textContent = currentWord.category;
-                
-                const buyButton = document.getElementById('buyButton');
-                const canAfford = playerMoney >= currentWord.value;
-                let isOwned = false;
-                let isCategoryComplete = false;
-
-                if (!currentWord.isBonus && currentWord.category && playerWords[currentWord.category]) {
-                    const categoryData = playerWords[currentWord.category];
-                    const limit = WORD_DATABASE[currentWord.category]?.limit;
-                    isCategoryComplete = categoryData && limit && categoryData.count >= limit;
-                    isOwned = (categoryData.list || []).includes(currentWord.word);
-                }
-
-                buyButton.disabled = !canAfford || isOwned || isCategoryComplete;
-                buyButton.classList.toggle('opacity-50', buyButton.disabled);
-                buyButton.classList.toggle('cursor-not-allowed', buyButton.disabled);
-
-                if (isCategoryComplete) {
-                    document.getElementById('wordValue').textContent = 'Categoría Completa';
-                } else {
-                    let valueHTML = `${currentWord.value.toLocaleString('en-US')}`;
-                    if (prestigeUpgrades.reduccionInflacion > 0) {
-                        const reductionValue = (prestigeUpgrades.reduccionInflacion * 0.5).toFixed(2);
-                        valueHTML += ` <span class="text-xs text-green-600">(-${reductionValue}%)</span>`;
+                if(currentWordEl && wordCategoryEl && wordValueEl) {
+                    let wordClass = "";
+                    if (currentWord.isBonus) {
+                        wordClass = "rainbow-text font-black";
+                    } else if (currentWord.isSuperValue) {
+                        wordClass = "super-value-text font-black";
+                    } else if (currentWord.isCorrupted) {
+                        wordClass = "text-red-700 font-black";
                     }
-                    document.getElementById('wordValue').innerHTML = valueHTML;
+                    else {
+                        wordClass = `${categoryColors[currentWord.category] || "text-gray-800"} font-black`;
+                    }
+                    
+                    currentWordEl.innerHTML = `<span class="${wordClass}">${currentWord.word}</span>`;
+                    wordCategoryEl.textContent = currentWord.category;
+                    
+                    const buyButton = document.getElementById('buyButton');
+                    const canAfford = playerMoney >= currentWord.value;
+                    let isOwned = false;
+                    let isCategoryComplete = false;
+
+                    if (!currentWord.isBonus && !currentWord.isCorrupted && currentWord.category && playerWords[currentWord.category]) {
+                        const categoryData = playerWords[currentWord.category];
+                        const limit = WORD_DATABASE[currentWord.category]?.limit;
+                        isCategoryComplete = categoryData && limit && categoryData.count >= limit;
+                        isOwned = (categoryData.list || []).includes(currentWord.word);
+                    }
+                    
+                    buyButton.disabled = !canAfford || isOwned || isCategoryComplete;
+
+                    buyButton.classList.toggle('opacity-50', buyButton.disabled);
+                    buyButton.classList.toggle('cursor-not-allowed', buyButton.disabled);
+
+                    if (isCategoryComplete) {
+                        wordValueEl.textContent = 'Categoría Completa';
+                    } else {
+                        let valueHTML = `${currentWord.value.toLocaleString('en-US')}`;
+                        const now = Date.now();
+                        if (now < bossBonus1EndTime) {
+                            valueHTML += ` <span class="text-xs text-green-600">(-10%)</span>`;
+                        } else if (now < bossBonus2EndTime) {
+                            valueHTML += ` <span class="text-xs text-green-600">(-15%)</span>`;
+                        }
+                        if (prestigeUpgrades.reduccionInflacion > 0) {
+                            const reductionValue = (prestigeUpgrades.reduccionInflacion * 0.5).toFixed(2);
+                            valueHTML += ` <span class="text-xs text-green-600">(-${reductionValue}%)</span>`;
+                        }
+                        wordValueEl.innerHTML = valueHTML;
+                    }
                 }
             }
 
@@ -895,11 +1157,13 @@
             prestigeButton.classList.toggle('luck-glow', prestigeUpgrades.suerteAumentada > 0);
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
-            // Timers
             const limboTimer = document.getElementById('limboGramaticalTimerDisplay');
             const chrisTimer = document.getElementById('christopherTimerDisplay');
             const svTimer = document.getElementById('superValueTimerDisplay');
             const shieldTimer = document.getElementById('shieldTimerDisplay');
+            const bossBonus1Timer = document.getElementById('bossBonus1TimerDisplay');
+            const bossBonus2Timer = document.getElementById('bossBonus2TimerDisplay');
+            const bossBonus3Timer = document.getElementById('bossBonus3TimerDisplay');
             const now = Date.now();
 
             Object.keys(superValueBoosts).forEach(cat => {
@@ -934,8 +1198,24 @@
                 shieldTimer.querySelector('span').textContent = `${shieldTimeLeft}s`;
             }
 
+            const bossBonus1TimeLeft = Math.ceil(Math.max(0, (bossBonus1EndTime - now)) / 1000);
+            bossBonus1Timer.style.display = bossBonus1TimeLeft > 0 ? 'block' : 'none';
+            if(bossBonus1TimeLeft > 0) {
+                bossBonus1Timer.querySelector('span').textContent = `${bossBonus1TimeLeft}s`;
+            }
 
-            // Inventory
+            const bossBonus2TimeLeft = Math.ceil(Math.max(0, (bossBonus2EndTime - now)) / 1000);
+            bossBonus2Timer.style.display = bossBonus2TimeLeft > 0 ? 'block' : 'none';
+            if(bossBonus2TimeLeft > 0) {
+                bossBonus2Timer.querySelector('span').textContent = `${bossBonus2TimeLeft}s`;
+            }
+
+            const bossBonus3TimeLeft = Math.ceil(Math.max(0, (bossBonus3EndTime - now)) / 1000);
+            bossBonus3Timer.style.display = bossBonus3TimeLeft > 0 ? 'block' : 'none';
+            if(bossBonus3TimeLeft > 0) {
+                bossBonus3Timer.querySelector('span').textContent = `${bossBonus3TimeLeft}s`;
+            }
+
             const inventoryContainer = document.getElementById('inventoryContainer');
             inventoryContainer.innerHTML = '';
             Object.keys(WORD_DATABASE).forEach(category => {
@@ -987,6 +1267,22 @@
 
         function buyWord() {
             if (playerMoney < currentWord.value) return;
+
+            if (currentWord.isCorrupted) {
+                playerMoney -= currentWord.value;
+                corruptedWordsBought++;
+                const originalWhisper = activeWhisper;
+                activeWhisper = BOSS_MOCKING_LAUGHTER[Math.floor(Math.random() * BOSS_MOCKING_LAUGHTER.length)];
+                displayActiveWhisper();
+                setTimeout(() => {
+                    activeWhisper = originalWhisper;
+                    if(isWhispering) displayActiveWhisper(); // Only revert if still in whisper mode
+                }, 3000);
+                savePlayerData();
+                updateUI();
+                generateNewWord(true);
+                return;
+            }
             
             let wordBought = false;
 
@@ -1037,19 +1333,22 @@
             if (wordBought) {
                 if (!hasBoughtFirstWord) hasBoughtFirstWord = true;
                 document.getElementById('buyButton').disabled = true;
+                
+                checkBossEncounter(); // Check before saving, as it might change isWhispering state
                 savePlayerData();
+                updateUI();
                 
                 clearTimeout(wordDisplayTimeout);
                 const elapsedTime = Date.now() - currentWord.startTime;
                 const duration = currentWord.isBonus ? 1000 : 3000;
                 const newRemainingTime = Math.max(0, (duration - elapsedTime) - 1000);
                 startWordDisplayTimer(newRemainingTime);
-                
-                updateUI();
             }
         }
         
         function startDictionaryChallenge() {
+            if (currentView !== 'game') return; // Prevent challenge if in menu
+
             stopGameLoops();
             isChallengeActive = true;
             savePlayerData(); // Guardar inmediatamente que el reto está activo
@@ -1102,6 +1401,10 @@
             }, 1000);
 
             input.onkeyup = (event) => {
+                 if (input.value === AUTONOMOUS_CODE) {
+                    activateAutonomousMode();
+                    return;
+                }
                 if (event.key === 'Enter') endDictionaryChallenge(input.value, challengeCategory);
             };
         }
@@ -1123,11 +1426,13 @@
                 return;
             }
 
-            if (!word || !/^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ¡!]+$/.test(word.trim())) {
-                handleChallengeFailure("Formato de palabra inválido. Debe empezar con mayúscula y contener solo letras.");
+            if (!word || !/^[A-ZÁÉÍÓÚÜÑa-záéíóúüñ¡!]+$/.test(word.trim())) {
+                handleChallengeFailure("Formato de palabra inválido. Debe contener solo letras.");
                 return;
             }
             word = word.trim();
+            word = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+
 
             if ((usedChallengeWords[category] || []).includes(word.toLowerCase())) {
                 handleChallengeFailure("Palabra ya usada en un reto.");
@@ -1165,7 +1470,230 @@
                 showModal(`¡Fallo! ${reason}. Has perdido tus palabras. Te quedan ${3 - consecutiveFailures} intentos.`);
             }
         }
-        
+       
+        function showBossModal() {
+            const modal = document.getElementById('bossModal');
+            const modalContent = document.getElementById('bossModalContent');
+            
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('opacity-0', 'scale-95');
+            }, 20); // A small delay to ensure the transition triggers
+        }
+
+        function hideBossModal(callback) {
+            const modal = document.getElementById('bossModal');
+            const modalContent = document.getElementById('bossModalContent');
+            
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                if (callback) callback();
+            }, 500); // This must match the longest transition duration (opacity-500)
+        }
+
+        function checkBossEncounter() {
+            if (isBossActive || isChallengeActive || currentView !== 'game') return;
+
+            const totalWords = Object.values(playerWords).reduce((sum, cat) => sum + cat.count, 0);
+            const nextBossLevel = bossesDefeated.length + 1;
+            const milestone = BOSS_MILESTONES[nextBossLevel];
+
+            if (!milestone || bossesDefeated.includes(nextBossLevel)) return;
+
+            // Check for boss trigger first
+            if (totalWords >= milestone) {
+                startBossChallenge(nextBossLevel);
+            } 
+            // Else, if not triggering a boss, check for whisper trigger
+            else if (totalWords >= milestone - 5 && !isWhispering) {
+                triggerWhisper();
+            }
+        }
+
+        function triggerWhisper() {
+            isWhispering = true;
+            activeWhisper = BOSS_WHISPERS[Math.floor(Math.random() * BOSS_WHISPERS.length)];
+            displayActiveWhisper();
+            savePlayerData();
+        }
+
+        function displayActiveWhisper() {
+            if (!isWhispering) return;
+
+            stopRulesRotator();
+            const rulesDisplay = document.getElementById('rulesDisplay');
+            const rulesContainer = document.getElementById('rulesContainer');
+            
+            rulesContainer.classList.remove('hidden');
+            rulesDisplay.innerHTML = `<p class="whisper-text">${activeWhisper}</p>`;
+            rulesDisplay.style.opacity = 1;
+        }
+
+        function startBossChallenge(level) {
+             // --- Reset Whisper State ---
+            isWhispering = false;
+            activeWhisper = "";
+            const rulesContainer = document.getElementById('rulesContainer');
+            if(rulesContainer) rulesContainer.classList.add('hidden');
+            // --- End Reset ---
+
+            isBossActive = true;
+            stopGameLoops();
+            currentBossLevel = level;
+
+            const sentences = BOSS_SENTENCES[level];
+            currentBossSentence = sentences[Math.floor(Math.random() * sentences.length)];
+
+            const dialogueEl = document.getElementById('bossDialogue');
+            const challengeContent = document.getElementById('bossChallengeContent');
+            const sentenceEl = document.getElementById('bossChallengeSentence');
+            const inputEl = document.getElementById('bossChallengeInput');
+            const timerEl = document.getElementById('bossTimer');
+
+            document.getElementById('bossIconContainer').innerHTML = ICON_LIBRARY.bossIcon;
+            challengeContent.classList.add('hidden');
+            inputEl.value = '';
+            dialogueEl.textContent = '';
+            
+            showBossModal();
+
+            const dialogueText = BOSS_INITIAL_DIALOGUES[Math.floor(Math.random() * BOSS_INITIAL_DIALOGUES.length)];
+            let i = 0;
+            function typeDialogue() {
+                if (i < dialogueText.length) {
+                    dialogueEl.textContent += dialogueText.charAt(i);
+                    i++;
+                    setTimeout(typeDialogue, 50);
+                } else {
+                    setTimeout(startTheChallenge, 1000);
+                }
+            }
+            typeDialogue();
+
+            function startTheChallenge() {
+                challengeContent.classList.remove('hidden');
+                sentenceEl.textContent = currentBossSentence.wrong;
+                inputEl.focus();
+                
+                const totalTime = 60;
+                const timeDebuff = totalTime * 0.03 * corruptedWordsBought;
+                let timeLeft = Math.max(15, Math.floor(totalTime - timeDebuff)); // Mínimo 15 segundos
+
+                timerEl.textContent = timeLeft;
+                bossTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerEl.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        endBossChallenge(false);
+                    }
+                }, 1000);
+            }
+            
+            inputEl.onkeyup = (event) => {
+                 if (inputEl.value === AUTONOMOUS_CODE) {
+                    activateAutonomousMode();
+                    return;
+                }
+                if (event.key === 'Enter') {
+                    const isCorrect = inputEl.value.trim().toLowerCase() === currentBossSentence.right.toLowerCase();
+                    endBossChallenge(isCorrect);
+                }
+            };
+        }
+
+        function endBossChallenge(isCorrect) {
+            clearInterval(bossTimerInterval);
+            isBossActive = false;
+            gamePausedForFeedback = true; 
+
+            const challengeContent = document.getElementById('bossChallengeContent');
+            challengeContent.classList.add('hidden');
+            const dialogueEl = document.getElementById('bossDialogue');
+            dialogueEl.textContent = '';
+
+            const typeFinalDialogue = (text, callback) => {
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        dialogueEl.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, 40);
+                    } else {
+                        setTimeout(callback, 2000); 
+                    }
+                }
+                type();
+            };
+
+            if (isCorrect) {
+                bossesDefeated.push(currentBossLevel);
+                let prestigeReward = 0;
+                let powerUpMessage = "";
+
+                if(currentBossLevel === 1) {
+                    prestigeReward = 1;
+                    bossBonus1EndTime = Date.now() + 30000;
+                    powerUpMessage = "¡Potenciador 'Dominio Ortográfico' obtenido! 10% de descuento en palabras por 30s.";
+                } else if (currentBossLevel === 2) {
+                    prestigeReward = 2;
+                    bossBonus2EndTime = Date.now() + 45000;
+                    powerUpMessage = "¡'Dominio Ortográfico Mejorado'! 15% de descuento por 45s.";
+                } else if (currentBossLevel === 3) {
+                    prestigeReward = 3;
+                    bossBonus3EndTime = Date.now() + 60000;
+                    powerUpMessage = "¡'Sabiduría del Ladrón'! Aumenta la probabilidad de 'Super Value' por 1 min.";
+                }
+                prestigePoints += prestigeReward;
+                
+                const finalDialogue = BOSS_VICTORY_DIALOGUES[Math.floor(Math.random() * BOSS_VICTORY_DIALOGUES.length)];
+                const resultMessage = `¡VICTORIA! Has derrotado al Ladrón de Tildes. Ganas ${prestigeReward} Punto(s) de Prestigio. ${powerUpMessage}`;
+                
+                typeFinalDialogue(finalDialogue, () => {
+                    hideBossModal(() => {
+                        showModal(resultMessage);
+                        if (consecutiveFailures < 3) {
+                            changeView('game');
+                        }
+                    });
+                });
+
+            } else {
+                consecutiveFailures++;
+                let moneyLost = 0;
+                if(currentBossLevel === 1) moneyLost = playerMoney * 0.10;
+                if(currentBossLevel === 2) moneyLost = playerMoney * 0.20;
+                if(currentBossLevel === 3) moneyLost = playerMoney * 0.30;
+                
+                playerMoney -= Math.floor(moneyLost);
+                
+                const finalDialogue = BOSS_DEFEAT_DIALOGUES[Math.floor(Math.random() * BOSS_DEFEAT_DIALOGUES.length)];
+                const resultMessage = `¡DERROTA! El Ladrón de Tildes te ha robado ${Math.floor(moneyLost).toLocaleString('en-US')}. Pierdes 1 vida.`;
+
+                typeFinalDialogue(finalDialogue, () => {
+                    if (consecutiveFailures >= 3) {
+                        hideBossModal(() => {
+                            document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. El Ladrón de Tildes fue tu perdición.`;
+                            stopGameLoops();
+                            changeView('gameOver');
+                            gamePausedForFeedback = false;
+                        });
+                    } else {
+                        hideBossModal(() => {
+                            showModal(resultMessage);
+                             if (consecutiveFailures < 3) {
+                                changeView('game');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
         function savePlayerData() {
             try {
                 const data = {
@@ -1177,7 +1705,15 @@
                     chrisBonusCount: christopherBonusCountDuringLimbo,
                     prestigePoints: prestigePoints,
                     prestigeUpgrades: prestigeUpgrades,
-                    isChallengeActive: isChallengeActive // Guardar el estado del reto
+                    isChallengeActive: isChallengeActive,
+                    bossesDefeated: bossesDefeated,
+                    hasBoughtFirstWord: hasBoughtFirstWord,
+                    isWhispering: isWhispering,
+                    activeWhisper: activeWhisper,
+                    corruptedWordsBought: corruptedWordsBought,
+                    bossBonus1EndTime: bossBonus1EndTime,
+                    bossBonus2EndTime: bossBonus2EndTime,
+                    bossBonus3EndTime: bossBonus3EndTime
                 };
                 localStorage.setItem('dl_player_data', JSON.stringify(data));
             } catch (e) { console.error('Error saving data:', e); }
@@ -1186,7 +1722,10 @@
         function loadPlayerData() {
             try {
                 const raw = localStorage.getItem('dl_player_data');
-                if (!raw) return;
+                if (!raw) { 
+                    initializeGameState(); 
+                    return; 
+                }
                 const data = JSON.parse(raw);
                 playerMoney = data.money || 100;
                 playerWords = data.words || {};
@@ -1202,31 +1741,60 @@
                 christopherBonusCountDuringLimbo = data.chrisBonusCount || 0;
                 prestigePoints = data.prestigePoints || 0;
                 prestigeUpgrades = data.prestigeUpgrades || { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
+                bossesDefeated = data.bossesDefeated || [];
+                hasBoughtFirstWord = data.hasBoughtFirstWord || false;
+                isWhispering = data.isWhispering || false;
+                activeWhisper = data.activeWhisper || "";
+                corruptedWordsBought = data.corruptedWordsBought || 0;
+                bossBonus1EndTime = data.bossBonus1EndTime || 0;
+                bossBonus2EndTime = data.bossBonus2EndTime || 0;
+                bossBonus3EndTime = data.bossBonus3EndTime || 0;
+
 
                 if (data.isChallengeActive) {
                     activeChallengeOnLoad = true;
                 }
 
-                // Recalculate initialCredits based on loaded prestige data
                 let baseCredits = 100;
                 for(let i = 1; i < gameMultiplier; i++) {
                     baseCredits *= 2;
                 }
                 initialCredits = baseCredits;
-                // Note: We don't reset playerMoney here, just recalculate what the base should be.
 
                 if (gameMultiplier > 1) applyScalingToWordDatabase(gameMultiplier);
                 
-                let totalWords = 0;
                 Object.keys(WORD_DATABASE).forEach(category => {
                     if (!playerWords[category]) {
                         playerWords[category] = { count: 0, list: [] };
                     }
-                    totalWords += playerWords[category].count || 0;
                 });
-                hasBoughtFirstWord = totalWords > 0;
 
-            } catch (e) { console.error('Error loading data:', e); }
+            } catch (e) { 
+                console.error('Error loading data:', e); 
+                initializeGameState();
+            }
+        }
+
+        function initializeGameState() {
+             playerMoney = 100;
+             playerWords = {};
+             usedChallengeWords = {};
+             consecutiveFailures = 0;
+             gameMultiplier = 1;
+             shields = { universal: 0 };
+             prestigePoints = 0;
+             prestigeUpgrades = { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0 };
+             bossesDefeated = [];
+             hasBoughtFirstWord = false;
+             isWhispering = false;
+             activeWhisper = "";
+             corruptedWordsBought = 0;
+             bossBonus1EndTime = 0;
+             bossBonus2EndTime = 0;
+             bossBonus3EndTime = 0;
+             Object.keys(WORD_DATABASE).forEach(category => {
+                playerWords[category] = { count: 0, list: [] };
+            });
         }
         
         function mainGameLoop(timestamp) {
@@ -1280,7 +1848,7 @@
             stopRulesRotator(); 
             const rulesContainer = document.getElementById('rulesContainer');
             const rulesDisplay = document.getElementById('rulesDisplay');
-            if (!rulesContainer || !rulesDisplay) return;
+            if (!rulesContainer || !rulesDisplay || isWhispering) return;
 
             rulesContainer.classList.remove('hidden');
 
@@ -1308,13 +1876,19 @@
         }
 
         function startGameLoops() {
-            if (animationFrameId) return; // Prevent multiple loops
+            if (animationFrameId || isBossActive) return; // Prevent multiple loops
             stopGameLoops();
-            startRulesRotator();
+
+            if (isWhispering) {
+                displayActiveWhisper();
+            } else {
+                startRulesRotator();
+            }
+
             animationFrameId = requestAnimationFrame(mainGameLoop);
 
             challengeInterval = setInterval(() => {
-                if (hasBoughtFirstWord && Math.random() < 0.15 && !isChallengeActive && gameStarted) {
+                if (hasBoughtFirstWord && Math.random() < 0.15 && !isChallengeActive && gameStarted && !isBossActive && currentView === 'game') {
                     startDictionaryChallenge();
                 }
             }, 5000);
@@ -1349,31 +1923,36 @@
         }
         
         function syllabify(word) {
-            const originalWord = word;
-            word = word.toLowerCase();
+            // A more robust syllabification algorithm that correctly handles hiatuses.
+            let lowerWord = word.toLowerCase().replace(/y/g, 'i');
 
-            if (word.length <= 3) return [originalWord];
+            // Pre-emptively split known hiatus patterns with a placeholder.
+            // 1. Accented weak vowel + strong vowel (and vice-versa)
+            lowerWord = lowerWord.replace(/([aeo])([íú])/g, '$1-$2'); // e.g., ba-úl
+            lowerWord = lowerWord.replace(/([íú])([aeo])/g, '$1-$2'); // e.g., policí-a
 
-            let syllables = word.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[^aeiouáéíóúü](?![aeiouáéíóúü]))?/gi);
+            // 2. Two strong vowels
+            lowerWord = lowerWord.replace(/([aeo])([aeo])/g, '$1-$2'); // e.g., po-eta
 
-            if (syllables) {
-                const restored = syllables.join('');
-                if (restored !== word) {
-                    syllables = word.match(/[^aeiouáéíóúü]*[aeiouáéíóúü]+(?:[bcdfghjklmnpqrstvwxyz](?![lr]))?/gi);
-                }
-            }
+            // This complex regex groups consonants with their following vowel group (diphthongs/triphthongs).
+            // It's designed to not split within a vowel group unless a hyphen is already there.
+            const syllableRegex = /[^aeiouíú]*[aeiouíú]+(?:[^aeiouíú-](?![aeiouíú]))?/g;
             
-            if (!syllables) return [originalWord];
+            let syllableMatches = lowerWord.match(syllableRegex);
 
-            let restoredSyllables = [];
+            if (!syllableMatches) return [word]; // Fallback for simple cases
+
+            // Reconstruct the syllables with original casing from the pre-split word.
+            let result = [];
             let originalIndex = 0;
-            for (const syll of syllables) {
-                if(syll) {
-                    restoredSyllables.push(originalWord.substr(originalIndex, syll.length));
-                    originalIndex += syll.length;
+            syllableMatches.join('-').split('-').forEach(syllable => {
+                if (syllable) {
+                    result.push(word.substring(originalIndex, originalIndex + syllable.length));
+                    originalIndex += syllable.length;
                 }
-            }
-            return restoredSyllables;
+            });
+
+            return result;
         }
 
         function getAccentCategory(word) {
@@ -1405,7 +1984,7 @@
                 else if (positionFromEnd === 2) category = "Esdrújulas";
                 else if (positionFromEnd >= 3) category = "Sobreesdrújulas";
             } else {
-                const lastChar = cleanedWord.slice(-1);
+                const lastChar = cleanedWord.slice(-1).replace('y', 'i');
                 if ('ns'.includes(lastChar) || 'aeiou'.includes(lastChar)) {
                     stressedSyllableIndex = numSyllables - 2;
                     category = "Llanas";
@@ -1484,6 +2063,157 @@
             }
         }
 
+        function typeEffect(element, text, callback) {
+            let i = 0;
+            element.value = '';
+            function type() {
+                if (i < text.length) {
+                    element.value += text.charAt(i);
+                    i++;
+                    setTimeout(type, 50); // 50ms delay between characters
+                } else {
+                    if (callback) {
+                        setTimeout(callback, 250); // Short delay after typing before callback
+                    }
+                }
+            }
+            type();
+        }
+
+        // --- Autonomous Mode Logic ---
+        function startAutonomousMode() {
+            if (isAutonomousModeActive) return;
+            isAutonomousModeActive = true;
+            autonomousModePending = false;
+            showModal("Modo Autónomo Activado");
+            console.log("Modo Autónomo Activado");
+            
+            isChallengeActive = false;
+            isBossActive = false;
+            gamePausedForFeedback = false;
+            if(!animationFrameId) startGameLoops();
+            
+            if (autonomousModeInterval) clearInterval(autonomousModeInterval);
+            autonomousModeInterval = setInterval(autonomousModeLoop, 200);
+        }
+
+        function activateAutonomousMode() {
+            if (isAutonomousModeActive || autonomousModePending) return;
+            
+            const dictionaryModal = document.getElementById('dictionaryModal');
+            const bossModal = document.getElementById('bossModal');
+            const isChallengeRunning = !dictionaryModal.classList.contains('hidden');
+            const isBossRunning = !bossModal.classList.contains('hidden') && !document.getElementById('bossChallengeContent').classList.contains('hidden');
+            
+            if (isChallengeRunning || isBossRunning) {
+                showModal("Reto detectado. El Modo Autónomo lo resolverá y se activará después.");
+                autonomousModePending = true; 
+
+                if (isChallengeRunning) {
+                    const challengeCategory = document.getElementById('challengeCategory').textContent;
+                    const input = document.getElementById('challengeInput');
+                    const wordToUse = WORD_DATABASE[challengeCategory].words[Math.floor(Math.random() * WORD_DATABASE[challengeCategory].words.length)];
+                    typeEffect(input, wordToUse, () => {
+                        endDictionaryChallenge(wordToUse, challengeCategory); 
+                    });
+                } else if (isBossRunning) {
+                    const inputEl = document.getElementById('bossChallengeInput');
+                    typeEffect(inputEl, currentBossSentence.right, () => {
+                        endBossChallenge(true);
+                    });
+                }
+            } else {
+                startAutonomousMode();
+            }
+        }
+
+        function autonomousModeLoop() {
+            // 1. Pausa Inteligente en Menús
+            if (currentView === 'shop' || currentView === 'prestige') {
+                return; // PAUSA si el usuario abre un menú
+            }
+            
+            if (!isAutonomousModeActive) {
+                clearInterval(autonomousModeInterval);
+                return;
+            }
+            
+            if (autonomousState !== 'idle') return;
+
+            // Maneja varios modales que puedan aparecer
+            const messageModal = document.getElementById('messageModal');
+            if (!messageModal.classList.contains('hidden')) {
+                document.getElementById('modalCloseButton').click();
+                return;
+            }
+            
+            const limboModal = document.getElementById('limboGramaticalScreen');
+            if (!limboModal.classList.contains('hidden')) {
+                document.getElementById('startLimboGramatical').click();
+                return;
+            }
+
+            const winScreen = document.getElementById('winScreen');
+            if (!winScreen.classList.contains('hidden')) {
+                document.getElementById('seguirJugandoButton').click();
+                return;
+            }
+            
+            // Vuelve a verificar si hay retos que hayan comenzado entre intervalos
+            const dictionaryModal = document.getElementById('dictionaryModal');
+            if (!dictionaryModal.classList.contains('hidden')) {
+                autonomousState = 'solvingChallenge';
+                const challengeCategory = document.getElementById('challengeCategory').textContent;
+                const input = document.getElementById('challengeInput');
+                
+                const usedWords = usedChallengeWords[challengeCategory] || [];
+                const allWords = WORD_DATABASE[challengeCategory].words;
+                const availableWords = allWords.filter(w => !usedWords.includes(w.toLowerCase()));
+
+                let wordToUse;
+                if (availableWords.length > 0) {
+                    wordToUse = availableWords[Math.floor(Math.random() * availableWords.length)];
+                } else {
+                    wordToUse = allWords[Math.floor(Math.random() * allWords.length)];
+                }
+
+                typeEffect(input, wordToUse, () => {
+                    endDictionaryChallenge(wordToUse, challengeCategory);
+                    autonomousState = 'idle';
+                });
+                return;
+            }
+
+            const bossModal = document.getElementById('bossModal');
+            if (!bossModal.classList.contains('hidden') && !document.getElementById('bossChallengeContent').classList.contains('hidden')) {
+                autonomousState = 'solvingBoss';
+                const inputEl = document.getElementById('bossChallengeInput');
+                typeEffect(inputEl, currentBossSentence.right, () => {
+                    endBossChallenge(true);
+                    autonomousState = 'idle';
+                });
+                return;
+            }
+            
+            // 2. Lógica Simplificada: Solo comprar palabras y bonus
+            const buyButton = document.getElementById('buyButton');
+            
+            if (currentWord.isBonus && !buyButton.disabled) {
+                buyWord(); 
+                return;
+            }
+            
+            if (!buyButton.disabled && !currentWord.isCorrupted) {
+                autonomousState = 'buyingWord';
+                setTimeout(() => {
+                    if (isAutonomousModeActive) {
+                        buyWord();
+                    }
+                    autonomousState = 'idle';
+                }, 1000); 
+            }
+        }
+
         function setupEventListeners() {
             document.getElementById('playGameButton').addEventListener('click', continueGame);
             document.getElementById('resetProgressButton').addEventListener('click', startNewGame);
@@ -1511,14 +2241,21 @@
             document.getElementById('backToGameFromPrestige').addEventListener('click', () => changeView('game'));
             document.getElementById('buyUniversalShield').addEventListener('click', () => buyShield('universal'));
             document.getElementById('buyLifeButton').addEventListener('click', buyLife);
+            
             document.getElementById('modalCloseButton').addEventListener('click', () => {
                 document.getElementById('messageModal').classList.add('hidden');
                 if (gamePausedForFeedback) {
                     gamePausedForFeedback = false;
-                    if (consecutiveFailures < 3) {
-                       startGameLoops();
-                       generateNewWord(true);
-                       savePlayerData();
+                    if (consecutiveFailures < 3 && !isBossActive) {
+                        if (autonomousModePending) {
+                            setTimeout(() => {
+                                startAutonomousMode();
+                            }, 250);
+                        } else {
+                           startGameLoops();
+                           generateNewWord(true);
+                           savePlayerData();
+                        }
                     }
                 }
             });
