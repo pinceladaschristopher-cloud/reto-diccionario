@@ -417,9 +417,7 @@
         <div id="limboGramaticalTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center glitch-wrapper">
             <span class="rainbow-text glitch-text" data-text="0s">0s</span>
         </div>
-        <div id="christopherTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
-            <span class="rainbow-text">0s</span>
-        </div>
+        <!-- Eliminado: christopherTimerDisplay -->
         <div id="superValueTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
             <span class="super-value-text">0s</span>
         </div>
@@ -598,7 +596,7 @@
                 <h2 class="text-3xl font-extrabold rainbow-text glitch-text mb-4" data-text="¡Limbo Gramatical!">¡Limbo Gramatical!</h2>
             </div>
             <p class="text-md text-gray-600 mb-6">
-                 El Tío Christopher tiene un regalo para ti. Aprovéchalo.
+                 Una fisura en el tiempo-espacio se ha abierto. Aprovéchala.
             </p>
             <button id="startLimboGramatical" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
                 Entendido
@@ -671,7 +669,6 @@
         let challengeInterval = null;
         let challengeTimerInterval;
         let isChallengeActive = false;
-        let christopherWhisperInterval = null;
         
         // --- Bonus State ---
         let universalShieldEndTime = 0;
@@ -747,13 +744,6 @@
             "He oído tu fallo desde las sombras. Patético.", "Incluso sin mi intervención, tropiezas. Divertido.",
             "¿Ves? La acentuación es un arte que no dominas.", "Cada error que cometes... me fortalece.", "Sigue así y no tendré ni que esforzarme en nuestro próximo encuentro."
         ];
-        const CHRISTOPHER_DIALOGUES = [
-            "Las palabras son el tejido de la realidad...", "Él solo ve las reglas, pero no la gramática que las une.",
-            "Una fisura temporal... una oportunidad.", "No dejes que te robe la esencia del lenguaje.",
-            "El conocimiento es poder, pero la sabiduría es su correcta aplicación.", "Detrás de cada tilde hay una historia, una vibración.",
-            "Estás más cerca de entender la verdad."
-        ];
-        
         const BOSS_SENTENCES = {
             1: [
                 { wrong: "El habil mecanico arreglo el automovil rapido.", right: "El hábil mecánico arregló el automóvil rápido." },
@@ -795,7 +785,7 @@
                 { wrong: "El enfasis de su discurso fue sobre etica y moral.", right: "El énfasis de su discurso fue sobre ética y moral." },
                 { wrong: "La peninsula iberica tiene un clima fantastico.", right: "La península ibérica tiene un clima fantástico." },
                 { wrong: "Explicame por que no viniste y que hiciste.", right: "Explícame por qué no viniste y qué hiciste." },
-                { wrong: "No se donde buscar ni a quien preguntar.", right: "No sé dónde buscar ni a quién preguntar." }
+                { wrong: "No se donde buscar ni a quien preguntar.", right: "No sé dónde buscar ni a quien preguntar." }
             ]
         };
         const BOSS_WHISPERS = ["Siento el peso de tantas palabras...", "Una tilde fuera de lugar... es una invitación.", "¿Crees que las acumulas solo para ti?", "El eco de una sílaba mal acentuada resuena...", "Un tesoro de conocimiento... tan fácil de despojar.", "Tu progreso es un faro en mi oscuridad..."];
@@ -843,7 +833,7 @@
         const categoryBackgrounds = { "Monosílabos": "bg-gray-200 hover:bg-gray-300", "Agudas": "bg-green-200 hover:bg-green-300", "Llanas": "bg-yellow-200 hover:bg-yellow-300", "Esdrújulas": "bg-blue-200 hover:bg-blue-300", "Sobreesdrújulas": "bg-purple-200 hover:bg-purple-300" };
         
         const prestigeUpgradeInfo = {
-            aumentoGeneracionRiqueza: { title: "Aumento de Riqueza", desc: "Aumenta la generación de riqueza pasiva.", effect: level => `+${level}%`, icon: `<svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
+            aumentoGeneracionRiqueza: { title: "Aumento de Riqueza", desc: "Aumenta la generación de riqueza pasiva.", effect: level => `+${level}%`, icon: `<svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08-.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
             reduccionInflacion: { title: "Control de Inflación", desc: "Reduce el efecto de la inflación en el precio de las palabras.", effect: level => `-${(level * 0.5)}%`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" },
             recompensasDesafio: { title: "Recompensas de Desafío", desc: "Aumenta el dinero ganado en los retos del diccionario.", effect: level => `+${(level * 2)}%`, icon: `<svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l-2 2V8a2 2 0 012-2z" /></svg>`, colors: "bg-blue-50 border-blue-200 text-blue-800" },
             duracionPotenciadores: { title: "Duración de Potenciadores", desc: "Aumenta la duración de los bonus Christopher y Super Value.", effect: level => `+${(level * 0.5)}s`, icon: `<svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`, colors: "bg-purple-50 border-purple-200 text-purple-800" },
@@ -936,6 +926,22 @@
             changeView('game');
             startGameCommon(false);
             showModal(`¡Juego formateado! Multiplicador: ${gameMultiplier}x. Has ganado ${gameMultiplier} Puntos de Prestigio.`);
+        }
+
+        /**
+         * Llama a la API para eliminar el puntaje actual del ranking
+         * al perder las 3 vidas.
+         */
+        async function clearRankingOnGameOver() {
+            if (!playerCredentials) return;
+
+            // Solo si el multiplicador es mayor a 1, ya que el multiplicador 1 es el inicial sin puntaje significativo.
+            if (gameMultiplier > 1) {
+                await apiRequest('POST', 'clearRankingScore', {
+                    playerID: playerCredentials.playerID,
+                    multiplier: gameMultiplier // Pasamos el multiplicador que se debe borrar.
+                });
+            }
         }
         
         function initializeGameState() {
@@ -1248,7 +1254,6 @@
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
             const limboTimer = document.getElementById('limboGramaticalTimerDisplay');
-            const chrisTimer = document.getElementById('christopherTimerDisplay');
             const svTimer = document.getElementById('superValueTimerDisplay');
             const shieldTimer = document.getElementById('shieldTimerDisplay');
             const now = Date.now();
@@ -1256,6 +1261,18 @@
             Object.keys(superValueBoosts).forEach(cat => {
                 if (now >= superValueBoosts[cat]) delete superValueBoosts[cat];
             });
+            
+            // Lógica unificada de temporizador de bonus (Super Value/Christopher)
+            const boostEndTimes = Object.values(superValueBoosts);
+            if (christopherBoostEndTime > now) boostEndTimes.push(christopherBoostEndTime);
+            const maxBoostEndTime = boostEndTimes.length > 0 ? Math.max(...boostEndTimes) : 0;
+            const boostTimeLeft = Math.ceil(Math.max(0, maxBoostEndTime - now) / 1000);
+
+            svTimer.style.display = boostTimeLeft > 0 ? 'block' : 'none';
+            if(boostTimeLeft > 0) {
+                svTimer.querySelector('span').textContent = `${boostTimeLeft}s`;
+                svTimer.classList.toggle('prestige-glow', prestigeUpgrades.duracionPotenciadores > 0);
+            }
 
             const limboTimeLeft = Math.ceil(Math.max(0, limboGramaticalEndTime - now) / 1000);
             limboTimer.style.display = limboTimeLeft > 0 ? 'block' : 'none';
@@ -1264,20 +1281,6 @@
                 limboTimer.querySelector('span').dataset.text = `${limboTimeLeft}s`;
             }
 
-            const chrisTimeLeft = Math.ceil(Math.max(0, (christopherBoostEndTime - now)) / 1000);
-            chrisTimer.style.display = chrisTimeLeft > 0 ? 'block' : 'none';
-            if(chrisTimeLeft > 0) {
-                chrisTimer.querySelector('span').textContent = `${chrisTimeLeft}s`;
-                chrisTimer.classList.toggle('prestige-glow', prestigeUpgrades.duracionPotenciadores > 0);
-            }
-
-            const maxSuperValueEndTime = Object.values(superValueBoosts).length > 0 ? Math.max(...Object.values(superValueBoosts)) : 0;
-            const svTimeLeft = Math.ceil(Math.max(0, maxSuperValueEndTime - now) / 1000);
-            svTimer.style.display = svTimeLeft > 0 ? 'block' : 'none';
-            if(svTimeLeft > 0) {
-                svTimer.querySelector('span').textContent = `${svTimeLeft}s`;
-                svTimer.classList.toggle('prestige-glow', prestigeUpgrades.duracionPotenciadores > 0);
-            }
             
             const shieldTimeLeft = Math.ceil(Math.max(0, universalShieldEndTime - now) / 1000);
             shieldTimer.style.display = shieldTimeLeft > 0 ? 'block' : 'none';
@@ -1581,6 +1584,7 @@
         
         function showFailureMessage(reason) {
             if (consecutiveFailures >= 3) {
+                clearRankingOnGameOver(); // Llama a la API para borrar el récord.
                 document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. Razón final: ${reason}`;
                 stopGameLoops();
                 stopRulesRotator();
@@ -1731,6 +1735,7 @@
                 const resultMessage = `¡DERROTA! El Ladrón te roba ${Math.floor(moneyLost).toLocaleString('es-ES')}. Pierdes 1 vida.`;
                 typeEffect(dialogueEl, finalDialogue, () => hideBossModal(() => {
                     if (consecutiveFailures >= 3) {
+                        clearRankingOnGameOver(); // Llama a la API para borrar el récord.
                         document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. El Ladrón de Tildes fue tu perdición.`;
                         stopGameLoops();
                         changeView('gameOver');
@@ -1881,8 +1886,8 @@
         function startGameLoops() {
             if (animationFrameId || isBossActive) return;
             stopGameLoops();
-            if (Date.now() < limboGramaticalEndTime) startChristopherWhispers();
-            else if (isWhispering) {
+            
+            if (isWhispering) {
                 displayActiveWhisper();
                 whisperInterval = setInterval(corruptRulesDisplay, 5000);
             } else {
@@ -1896,28 +1901,8 @@
             }, 5000);
         }
         
-        function startChristopherWhispers() {
-            stopChristopherWhispers();
-            const rulesContainer = document.getElementById('rulesContainer');
-            const rulesDisplay = document.getElementById('rulesDisplay');
-            if (!rulesContainer || !rulesDisplay) return;
-            rulesContainer.classList.remove('hidden');
-            const showWhisper = () => {
-                if (Date.now() >= limboGramaticalEndTime) { stopChristopherWhispers(); return; }
-                const whisper = CHRISTOPHER_DIALOGUES[Math.floor(Math.random() * CHRISTOPHER_DIALOGUES.length)];
-                rulesDisplay.style.opacity = 0;
-                setTimeout(() => {
-                    rulesDisplay.innerHTML = `<p class="christopher-whisper-text">${whisper}</p>`;
-                    rulesDisplay.style.opacity = 1;
-                }, 500);
-            };
-            showWhisper();
-            christopherWhisperInterval = setInterval(showWhisper, 8000);
-        }
-        
         function stopChristopherWhispers() {
-             if(christopherWhisperInterval) clearInterval(christopherWhisperInterval);
-             christopherWhisperInterval = null;
+             // Esta función ahora está vacía ya que los diálogos de Christopher han sido eliminados.
         }
 
         function stopGameLoops() {
