@@ -46,14 +46,16 @@
             backdrop-filter: blur(4px);
         }
         
-        #limboGramaticalBox {
+        .rainbow-border {
             border: 4px solid;
             border-image-slice: 1;
             border-image-source: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
             animation: rainbow-border-animation 2s linear infinite;
         }
         @keyframes rainbow-border-animation {
-            to { border-image-source: linear-gradient(-45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); }
+            0% { border-image-source: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); }
+            50% { border-image-source: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); }
+            100% { border-image-source: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); }
         }
 
         .glitch-wrapper {
@@ -130,14 +132,6 @@
             50% { box-shadow: 0 0 16px 6px rgba(79, 70, 229, 0.9); }
         }
 
-        .income-glow {
-            box-shadow: 0 0 12px 4px rgba(251, 191, 36, 0.8); /* Gold */
-            animation: pulse-gold 2s infinite;
-        }
-        @keyframes pulse-gold {
-            50% { box-shadow: 0 0 16px 6px rgba(251, 191, 36, 1); }
-        }
-
         .limbo-glow {
             box-shadow: 0 0 12px 4px rgba(139, 92, 246, 0.7); /* Purple */
             animation: pulse-purple 2s infinite;
@@ -145,17 +139,14 @@
         @keyframes pulse-purple {
             50% { box-shadow: 0 0 16px 6px rgba(139, 92, 246, 0.9); }
         }
-        
-        .confusion-glow {
-            box-shadow: 0 0 12px 4px rgba(220, 38, 38, 0.7); /* Red */
-            animation: pulse-red 1s infinite;
-        }
-        @keyframes pulse-red {
-            50% { box-shadow: 0 0 16px 6px rgba(220, 38, 38, 0.9); }
-        }
 
         .boss-modal-bg {
             background-color: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(8px);
+        }
+
+        .christopher-modal-bg {
+            background-color: rgba(224, 231, 255, 0.9);
             backdrop-filter: blur(8px);
         }
 
@@ -165,14 +156,6 @@
             color: #111827; /* Darker gray */
             animation: flicker-dark 2s infinite;
             text-align: center;
-        }
-
-        .christopher-whisper-text {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: #4f46e5; /* Indigo */
-            text-align: center;
-            animation: flicker-light 2.5s infinite;
         }
         
         @keyframes flicker-dark {
@@ -185,18 +168,6 @@
                 opacity: 1;
             }
         }
-        
-        @keyframes flicker-light {
-            0%, 100% {
-                text-shadow: 0 0 7px rgba(165, 180, 252, 0.6), 0 0 3px rgba(255,255,255,0.8);
-                opacity: 0.9;
-            }
-            50% {
-                text-shadow: 0 0 18px rgba(129, 140, 248, 0.9), 0 0 6px rgba(255,255,255,1);
-                opacity: 1;
-            }
-        }
-
 
         .corrupted-text-effect {
             animation: flicker-dark 2s infinite;
@@ -290,23 +261,24 @@
     <div id="tutorialScreen" class="fixed inset-0 modal-bg hidden flex items-center justify-center p-4 z-[100]">
         <div class="w-full max-w-3xl bg-white p-6 rounded-xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-blue-300">
             <div id="integratedTutorial" class="text-left text-gray-800">
-                <h2 class="text-2xl font-extrabold text-blue-800 mb-3 text-center">¿Cómo se juega?</h2>
-                <p class="text-md text-gray-700 mb-4 leading-relaxed text-center">
-                    Acumula <span class="font-bold text-blue-700">palabras</span> y <span class="font-bold text-green-700">dinero</span> para ganar.<br>
-                    <span class="text-sky-600 font-semibold">El objetivo es comprar la palabra <span class="underline decoration-sky-400">Sobreesdrújula</span>.</span>
-                </p>
-                <ol class="list-decimal pl-5 space-y-3 text-sm text-gray-600">
+                <h2 class="text-2xl font-extrabold text-blue-800 mb-3 text-center">Guía Rápida</h2>
+                <ol class="list-decimal pl-5 space-y-4 text-gray-700">
                     <li>
-                        <span class="font-bold">El Juego:</span> Compra palabras para ganar dinero pasivo. Reúne 30 de cada tipo para poder comprar la Sobreesdrújula y ganar la partida.
+                        <span class="font-bold">Objetivo:</span> Compra palabras para ganar dinero y colecciona 30 de cada tipo para desbloquear la <span class="font-bold text-purple-700">Sobreesdrújula</span> y ganar la partida.
                     </li>
                     <li>
-                        <span class="font-bold">Desafíos y Vidas:</span> Ocasionalmente, tendrás 30s para escribir una palabra de una categoría. Si fallas 3 veces, tu partida se reinicia (pierdes palabras y dinero) pero conservas tu progreso de prestigio.
+                        <span class="font-bold">El Ladrón de Tildes:</span> Es un enemigo impredecible.
+                        <ul class="list-disc pl-5 mt-2 text-sm space-y-1">
+                            <li><span class="font-semibold text-red-600">Ataques Sorpresa:</span> Puede robarte dinero, palabras o incluso una vida. A veces, te confundirá llenando el juego de palabras corruptas.</li>
+                             <li><span class="font-semibold text-red-600">Mini-Retos:</span> Ocasionalmente, te someterá a pruebas rápidas de ortografía. Si fallas 3 veces, la partida se reinicia (pero conservas el prestigio).</li>
+                             <li><span class="font-semibold text-red-600">El Trato:</span> Si te queda una sola vida, podría ofrecerte un trato para recuperarla... a un alto precio.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="font-bold">Bonus y Ayuda:</span> Aprovecha las palabras <span class="super-value-text font-bold">rojas</span> y el bonus <span class="rainbow-text font-bold">CHRISTOPHER</span>. A veces, si te opones al Ladrón, un <span class="font-bold text-indigo-600">LIMBO GRAMATICAL</span> podría abrirse para ayudarte.
                     </li>
                      <li>
-                        <span class="font-bold">Bonus y Peligros:</span> Busca palabras <strong class="super-value-text">rojas</strong> o el bonus <strong class="rainbow-text">CHRISTOPHER</strong> para ganar más. Ten cuidado con el <strong class="corrupted-text-effect">Ladrón de Tildes</strong> y sus palabras corruptas.
-                    </li>
-                    <li>
-                        <span class="font-bold">Prestigio:</span> Al ganar, puedes <span class="font-bold text-purple-700">Formatear</span> para aumentar tu multiplicador y ganar <span class="font-bold text-yellow-700">Puntos de Prestigio</span> para comprar mejoras permanentes.
+                        <span class="font-bold">Prestigio:</span> Al ganar, puedes <span class="font-bold text-yellow-600">Formatear</span> para aumentar tu multiplicador de ganancias y obtener <span class="font-bold text-yellow-700">Puntos de Prestigio</span> para mejoras permanentes.
                     </li>
                 </ol>
             </div>
@@ -514,14 +486,23 @@
         </div>
     </div>
 
-    <!-- Modal for Dictionary Challenge -->
-    <div id="dictionaryModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4 z-[200]">
-        <div class="bg-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-4 border-red-500">
-            <h3 class="text-3xl font-extrabold text-red-700 mb-2">¡EL DICCIONARIO!</h3>
-            <p class="text-md text-gray-600 mb-4">Escribe una palabra de la categoría:</p>
-            <p id="challengeCategory" class="text-4xl font-black mb-4"></p>
-            <p class="text-sm font-bold text-gray-500">Tiempo restante: <span id="timer" class="text-red-500">30</span>s</p>
-            <input id="challengeInput" type="text" class="w-full mt-4 p-3 text-center text-lg font-semibold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-gray-800">
+    <!-- Modal for Mini-Challenge -->
+    <div id="thiefMiniChallengeModal" class="fixed inset-0 boss-modal-bg hidden justify-center items-center p-4 z-[200]">
+        <div class="bg-gray-800 p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-4 border-red-500 text-white">
+            <div id="thiefMiniChallengeIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
+            <h3 class="text-3xl font-extrabold text-red-500 mb-2">¡MINI-RETO!</h3>
+            <p id="challengeDescription" class="text-md text-gray-300 mb-4"></p>
+            <p id="challengeQuestion" class="text-4xl font-black mb-4 font-mono"></p>
+            <p class="text-sm font-bold text-gray-400">Tiempo restante: <span id="challengeTimer" class="text-red-500">30</span>s</p>
+            
+            <div id="challengeInputContainer">
+                 <input id="challengeInput" type="text" class="w-full mt-4 p-3 text-center text-lg font-semibold border-2 bg-gray-700 border-gray-600 rounded-lg focus:outline-none focus:border-red-500 text-white">
+            </div>
+
+            <div id="challengeButtonsContainer" class="hidden justify-center gap-4 mt-4">
+                <button id="trueButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">Verdadero</button>
+                <button id="falseButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Falso</button>
+            </div>
         </div>
     </div>
 
@@ -539,9 +520,7 @@
     <!-- Modal for Boss Challenge -->
     <div id="bossModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[200] hidden opacity-0 transition-opacity duration-200">
         <div id="bossModalContent" class="bg-gray-800 text-white p-8 max-w-2xl w-full text-center rounded-xl shadow-2xl border-4 border-red-700 transform transition-all duration-150 scale-95 opacity-0">
-            <div id="bossIconContainer" class="w-16 h-16 mx-auto mb-4 text-red-500">
-                <!-- SVG Icon will be inserted here by JS -->
-            </div>
+            <div id="bossIconContainer" class="w-16 h-16 mx-auto mb-4 text-red-500"></div>
             <h3 class="text-3xl font-extrabold text-red-500 mb-2">EL LADRÓN DE TILDES</h3>
             <p id="bossDialogue" class="text-md text-gray-300 mb-4 h-10"></p>
             <div id="bossChallengeContent" class="hidden">
@@ -553,15 +532,54 @@
         </div>
     </div>
     
-    <!-- Modal de Burla del Ladrón -->
-    <div id="thiefMockeryModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-200">
+    <!-- Modal de Susurro/Burla del Ladrón -->
+    <div id="thiefWhisperModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-200">
         <div class="bg-gray-800 text-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-2 border-red-700">
-             <div id="thiefMockeryIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
-            <h4 class="text-xl font-bold text-red-400 mb-2">El Ladrón de Tildes se ríe...</h4>
-            <p id="thiefMockeryDialogue" class="text-gray-300 mb-4 italic"></p>
-            <button id="thiefMockeryCloseButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Continuar</button>
+             <div id="thiefWhisperIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
+            <p id="thiefWhisperDialogue" class="text-gray-300 text-lg mb-4 italic"></p>
+            <button id="thiefWhisperCloseButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Continuar</button>
         </div>
     </div>
+
+    <!-- Modal for Random Thief Attack -->
+    <div id="randomThiefAttackModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-gray-800 text-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-2 border-red-700">
+             <div id="randomThiefIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
+            <h4 class="text-xl font-bold text-red-400 mb-2">El Ladrón de Tildes ataca...</h4>
+            <p id="randomThiefDialogue" class="text-gray-300 mb-4 italic h-10"></p>
+            <div id="randomThiefEffect" class="hidden bg-gray-900 p-4 rounded-lg">
+                <p id="randomThiefEffectText" class="text-lg font-bold text-gray-200"></p>
+            </div>
+            <button id="randomThiefCloseButton" class="hidden mt-6 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Continuar</button>
+        </div>
+    </div>
+
+     <!-- Modal for Thief's Deal -->
+    <div id="thiefDealModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[260] hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-gray-800 text-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-2 border-red-700">
+             <div id="thiefDealIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
+            <h4 class="text-xl font-bold text-red-400 mb-2">Un Trato Inesperado</h4>
+            <p id="thiefDealDialogue" class="text-gray-300 mb-4"></p>
+            <div class="flex justify-center gap-4 mt-6">
+                <button id="acceptDealButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">Aceptar Trato</button>
+                <button id="rejectDealButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Rechazar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for LIMBO GRAMATICAL -->
+    <div id="limboGramaticalModal" class="fixed inset-0 christopher-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white text-gray-800 p-8 max-w-md w-full text-center rounded-xl shadow-2xl rainbow-border">
+             <div id="christopherFissureIcon" class="w-12 h-12 mx-auto mb-3 text-indigo-500"></div>
+            <h4 class="text-xl font-bold text-indigo-700 mb-2">¡Has entrado al <span class="rainbow-text">LIMBO GRAMATICAL</span>!</h4>
+            <p id="christopherFissureDialogue" class="text-gray-600 mb-4 h-16"></p>
+            <div id="christopherFissureEffect" class="hidden bg-indigo-50 p-4 rounded-lg">
+                <p id="christopherFissureEffectText" class="text-lg font-bold text-indigo-800"></p>
+            </div>
+            <button id="christopherFissureCloseButton" class="hidden mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full">¡Gracias!</button>
+        </div>
+    </div>
+
 
     <!-- Modal for Game Over -->
     <div id="gameOverScreen" class="fixed inset-0 bg-red-900/80 backdrop-blur-sm hidden flex flex-col justify-center items-center p-0 z-[300]">
@@ -587,21 +605,6 @@
                     Reiniciar
                 </button>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal for Limbo Gramatical -->
-    <div id="limboGramaticalScreen" class="fixed inset-0 modal-bg hidden flex-col items-center justify-center p-8 z-[102]">
-        <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl text-center relative z-[102] border-4 border-purple-500">
-            <div class="glitch-wrapper">
-                <h2 class="text-3xl font-extrabold rainbow-text glitch-text mb-4" data-text="¡Limbo Gramatical!">¡Limbo Gramatical!</h2>
-            </div>
-            <p class="text-md text-gray-600 mb-6">
-                 Una fisura en el tiempo-espacio se ha abierto. Aprovéchala.
-            </p>
-            <button id="startLimboGramatical" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition duration-150 transform hover:scale-105">
-                Entendido
-            </button>
         </div>
     </div>
     
@@ -667,6 +670,7 @@
         let challengeInterval = null;
         let challengeTimerInterval;
         let isChallengeActive = false;
+        let randomThiefAttackInterval = null;
         
         // --- Bonus State ---
         let universalShieldEndTime = 0;
@@ -674,7 +678,9 @@
         let superValueBoosts = {}; 
         let limboGramaticalEndTime = 0;
         let limboGramaticalTriggeredThisPartida = false;
-        let christopherBonusCountDuringLimbo = 0;
+        let dealRejectedForLimboBoost = false;
+        let hasHadFirstRandomAttackThisPartida = false;
+        let confusionModeEndTime = 0;
 
         // --- UI & Game Flow ---
         let currentView = 'startup';
@@ -684,10 +690,11 @@
         let activeChallengeOnLoad = false;
         let visibilityChangeHandler = null;
         let confirmCallback = null;
+        let currentChallengeData = {};
 
         // --- Boss Variables ---
         let bossesDefeated = [], whisperInterval = null;
-        const BOSS_MILESTONES = { 1: 40, 2: 80, 3: 120 };
+        const BOSS_MILESTONES = { 1: 35, 2: 80, 3: 120 }; 
         let currentBossLevel = 0, currentBossSentence = {};
         let bossTimerInterval;
         let isBossActive = false;
@@ -701,7 +708,7 @@
         const INFLATION_FACTOR = 100;
         const SHIELD_PRICE_UNIVERSAL = 1000000;
         const LIFE_PRICE = 2000000;
-        const CHALLENGE_REWARDS = { "Agudas": 10000, "Llanas": 20000, "Esdrújulas": 40000 };
+        const CHALLENGE_REWARDS = { base: 50000 };
         
         const CORRUPTED_WORDS = [
             { wrong: "Lapiz", right: "Lápiz", category: "Llanas" }, { wrong: "Arbol", right: "Árbol", category: "Llanas" },
@@ -720,12 +727,27 @@
             { wrong: "Acordeon", right: "Acordeón", category: "Agudas" }, { wrong: "Gomez", right: "Gómez", category: "Llanas" },
             { wrong: "Brujula", right: "Brújula", category: "Esdrújulas" }, { wrong: "Avion", right: "Avión", category: "Agudas" }
         ];
+
+        const MINI_CHALLENGE_WORDS = {
+            anagram: ["juego", "reto", "libro", "letra", "tilde", "error", "texto", "frase"],
+            accent: [{wrong: "logica", right: "lógica"}, {wrong: "arabe", right: "árabe"}, {wrong: "video", right: "vídeo"}, {wrong: "camion", right: "camión"}, {wrong: "carcel", right: "cárcel"}, {wrong: "exito", right: "éxito"}, {wrong: "jamas", right: "jamás"}, {wrong: "ultimo", right: "último"}],
+            trueFalse: [
+                { word: "Reloj", category: "Agudas", isCorrect: true },
+                { word: "Casa", category: "Agudas", isCorrect: false },
+                { word: "Fácil", category: "Llanas", isCorrect: true },
+                { word: "Libro", category: "Esdrújulas", isCorrect: false },
+                { word: "Pájaro", category: "Esdrújulas", isCorrect: true },
+                { word: "Resolver", category: "Llanas", isCorrect: false },
+                { word: "Cantar", category: "Agudas", isCorrect: true },
+                { word: "Lámpara", category: "Llanas", isCorrect: false },
+            ]
+        };
         
         const BOSS_INITIAL_DIALOGUES = [
             "Veo que has reunido un pequeño tesoro... Demuéstrame que mereces conservarlo.", "Tus palabras acumuladas cantan una melodía que me atrae. ¿Defenderás tu colección?",
             "Huelo el poder de la sintaxis en ti. Pero, ¿conoces la verdadera ortografía?", "Has sido descuidado. Dejaste un rastro de tildes olvidadas, y yo lo he seguido hasta aquí.",
             "Otro coleccionista... Creen que acumular es saber. Te enseñaré la diferencia.", "Las reglas son mis cadenas y tu conocimiento, la llave. No te la dejaré usar.",
-            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas.", "Tus avances no han pasado desapercebidos. Es hora de una pequeña corrección.",
+            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas.", "Tus avances no han pasado desapercibidos. Es hora de una pequeña corrección.",
             "Me llaman ladrón, pero yo me considero un purista. Vengo a limpiar tu colección de errores.", "El conocimiento sin precisión es ruido. Y tú estás haciendo mucho ruido."
         ];
         const BOSS_VICTORY_DIALOGUES = [
@@ -791,6 +813,7 @@
 
         const ICON_LIBRARY = {
             'bossIcon': `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle><path d="M10.5 14.5c.5.3 1.2.3 1.7 0 M8 9.5s1-1 4-1 4 1 4 1"/></svg>`,
+            'christopherIcon': `<svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>`
         };
         
         const HUGE_WORD_DATABASE = {
@@ -896,7 +919,6 @@
             initialCredits = baseCredits;
             playerMoney = initialCredits;
             passiveIncome = 0;
-            // consecutiveFailures = 0; // No se resetea al formatear
             usedChallengeWords = {};
             shields = { universal: 0 };
             christopherBoostEndTime = 0;
@@ -905,9 +927,11 @@
             limboGramaticalEndTime = 0;
             hasBoughtFirstWord = false;
             limboGramaticalTriggeredThisPartida = false;
-            christopherBonusCountDuringLimbo = 0;
+            dealRejectedForLimboBoost = false;
             bossesDefeated = [];
             corruptedWordsBought = 0;
+            hasHadFirstRandomAttackThisPartida = false;
+            confusionModeEndTime = 0;
             playerStats = { wordsBought: 0, challengesWon: 0, bossesDefeatedCount: 0, gameFormats: gameMultiplier - 1 };
             generatePlaythroughWordDatabase();
             Object.keys(WORD_DATABASE).forEach(category => playerWords[category] = { count: 0, list: [] });
@@ -924,6 +948,9 @@
         }
 
         async function formatearJuego() {
+            document.getElementById('seguirJugandoButton').disabled = true;
+            document.getElementById('reiniciarButton').disabled = true;
+
             const failuresToKeep = consecutiveFailures;
             gameMultiplier++;
             prestigePoints += gameMultiplier;
@@ -939,18 +966,12 @@
             showModal(`¡Juego formateado! Multiplicador: ${gameMultiplier}x. Has ganado ${gameMultiplier} Puntos de Prestigio.`);
         }
 
-        /**
-         * Llama a la API para eliminar el puntaje actual del ranking
-         * al perder las 3 vidas.
-         */
         async function clearRankingOnGameOver() {
             if (!playerCredentials) return;
-
-            // Solo si el multiplicador es mayor a 1, ya que el multiplicador 1 es el inicial sin puntaje significativo.
             if (gameMultiplier > 1) {
                 await apiRequest('POST', 'clearRankingScore', {
                     playerID: playerCredentials.playerID,
-                    multiplier: gameMultiplier // Pasamos el multiplicador que se debe borrar.
+                    multiplier: gameMultiplier 
                 });
             }
         }
@@ -960,6 +981,7 @@
              shields = { universal: 0 }; prestigePoints = 0;
              prestigeUpgrades = { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0, presagioLadron: 0, enganoLadron: 0 };
              bossesDefeated = []; hasBoughtFirstWord = false; isWhispering = false; activeWhisper = ""; corruptedWordsBought = 0;
+             hasHadFirstRandomAttackThisPartida = false; confusionModeEndTime = 0; dealRejectedForLimboBoost = false;
              playerStats = { wordsBought: 0, challengesWon: 0, bossesDefeatedCount: 0, gameFormats: 0 };
              generatePlaythroughWordDatabase();
              Object.keys(WORD_DATABASE).forEach(category => playerWords[category] = { count: 0, list: [] });
@@ -986,7 +1008,7 @@
 
         function changeView(view) {
             currentView = view;
-            ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'limboGramaticalScreen', 'prestigeScreen', 'rankingScreen', 'profileScreen'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+            ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'prestigeScreen', 'rankingScreen', 'profileScreen'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
             const screen = document.getElementById(`${view}Screen`);
             if (screen) screen.classList.remove('hidden');
             if (view === 'game') document.getElementById('gameControls')?.classList.remove('hidden');
@@ -1005,10 +1027,10 @@
             showModal("Reiniciando tu cuenta...");
             const result = await apiRequest('POST', 'resetProgress', { playerID: playerCredentials.playerID });
             if (result.success) {
-                initializeGameState(); // Resetea el estado local
+                initializeGameState(); 
                 gameStarted = true;
                 changeView('game');
-                await startGameCommon(false); // No cargar, ya está reseteado
+                await startGameCommon(false); 
                 showModal("Tu progreso ha sido reiniciado.");
             } else {
                 showModal(`Error al reiniciar: ${result.error}`);
@@ -1026,12 +1048,9 @@
             if (result.success) {
                 parseSaveData(result.saveData);
                 
-                // Si hay una recompensa de temporada, mostrarla antes de iniciar el juego.
                 if (result.seasonReward) {
                     showModal(`¡Fin de temporada! Alcanzaste la liga ${result.seasonReward.league} y ganaste ${result.seasonReward.points} Puntos de Prestigio. Tu multiplicador se ha reajustado.`);
-                    // La partida ya se actualizó en el servidor, así que parseSaveData ya tiene los datos correctos.
-                    // El modal de mensaje pausará el inicio del juego hasta que se cierre.
-                    gamePausedForFeedback = true; // Usamos la pausa para esperar al jugador
+                    gamePausedForFeedback = true; 
                 }
 
                 gameStarted = true;
@@ -1039,7 +1058,7 @@
                 
                 if (!result.seasonReward) {
                     await startGameCommon(false);
-                    document.getElementById('messageModal').classList.add('hidden'); // Ocultar "cargando..."
+                    document.getElementById('messageModal').classList.add('hidden');
                 }
 
             } else {
@@ -1054,9 +1073,8 @@
             const shieldPrice = Math.floor(SHIELD_PRICE_UNIVERSAL * limboDiscount * prestigeDiscount);
             const lifePrice = Math.floor(LIFE_PRICE * limboDiscount * prestigeDiscount);
 
-            // Escudo Universal
             const buyUniversalShieldBtn = document.getElementById('buyUniversalShield');
-            buyUniversalShieldBtn.innerHTML = `Comprar (${shieldPrice.toLocaleString('es-ES')})`;
+            buyUniversalShieldBtn.innerHTML = `Comprar (${shieldPrice.toLocaleString('en-US')})`;
             if (prestigeUpgrades.descuentoTienda > 0) {
                 const discountValue = (prestigeUpgrades.descuentoTienda * 0.25).toFixed(2);
                 buyUniversalShieldBtn.innerHTML += ` <span class="text-xs opacity-80">-${discountValue}%</span>`;
@@ -1066,9 +1084,8 @@
             buyUniversalShieldBtn.classList.toggle('cursor-not-allowed', buyUniversalShieldBtn.disabled);
             document.getElementById('universalCount').textContent = shields.universal;
 
-            // Comprar Vida
             const buyLifeBtn = document.getElementById('buyLifeButton');
-            buyLifeBtn.innerHTML = `Comprar (${lifePrice.toLocaleString('es-ES')})`;
+            buyLifeBtn.innerHTML = `Comprar (${lifePrice.toLocaleString('en-US')})`;
             if (prestigeUpgrades.descuentoTienda > 0) {
                 const discountValue = (prestigeUpgrades.descuentoTienda * 0.25).toFixed(2);
                 buyLifeBtn.innerHTML += ` <span class="text-xs opacity-80">-${discountValue}%</span>`;
@@ -1118,26 +1135,78 @@
         }
 
         function triggerLimboGramatical() {
-            christopherBonusCountDuringLimbo = 0;
-            savePlayerData(); 
             stopGameLoops();
-            stopRulesRotator();
-            document.getElementById('limboGramaticalScreen')?.classList.remove('hidden');
-            document.getElementById('limboGramaticalScreen')?.classList.add('flex');
+            
+            const modal = document.getElementById('limboGramaticalModal');
+            const dialogueEl = document.getElementById('christopherFissureDialogue');
+            const effectDiv = document.getElementById('christopherFissureEffect');
+            const effectTextEl = document.getElementById('christopherFissureEffectText');
+            const closeButton = document.getElementById('christopherFissureCloseButton');
+            
+            document.getElementById('christopherFissureIcon').innerHTML = ICON_LIBRARY.christopherIcon;
+            dialogueEl.textContent = '';
+            effectDiv.classList.add('hidden');
+            closeButton.classList.add('hidden');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 20);
+
+            gamePausedForFeedback = true; 
+
+            typeEffect(dialogueEl, "Siento la oscuridad del Ladrón cernirse sobre ti. Abriré una brecha... un LIMBO GRAMATICAL para darte ventaja.", () => {
+                setTimeout(() => {
+                    consecutiveFailures = 0;
+                    shields.universal += 3;
+                    updateUI();
+                    effectTextEl.innerHTML = "¡VIDAS RESTAURADAS!<br>+3 ESCUDOS";
+                    effectDiv.classList.remove('hidden');
+
+                    typeEffect(dialogueEl, "Toma esto. Restaura tus fuerzas y protégete de sus trucos.", () => {
+                        setTimeout(() => {
+                            typeEffect(dialogueEl, "Durante 120 segundos, el tiempo aquí es tuyo. ¡Aprovéchalo!", () => {
+                                closeButton.classList.remove('hidden');
+                            });
+                        }, 1000);
+                    });
+                }, 1000);
+            });
         }
+
 
         async function generateNewWord(forceNew = false) {
             if (isChallengeActive) return;
+            
+            let limboChance = 0.001 + prestigeUpgrades.suerteAumentada * 0.0005;
+            if (dealRejectedForLimboBoost) {
+                limboChance = 1.0; // 100%
+            }
 
-            if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && Math.random() < (0.001 + prestigeUpgrades.suerteAumentada * 0.0005)) {
+            if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && Math.random() < limboChance) {
+                if (dealRejectedForLimboBoost) {
+                    dealRejectedForLimboBoost = false; 
+                }
                 limboGramaticalTriggeredThisPartida = true;
                 triggerLimboGramatical();
                 return;
             }
 
             if (forceNew) clearTimeout(wordDisplayTimeout);
+            
+            const isConfusionActive = Date.now() < confusionModeEndTime;
+            if (isConfusionActive && Math.random() < 0.70) { 
+                const randomCorrupted = CORRUPTED_WORDS[Math.floor(Math.random() * CORRUPTED_WORDS.length)];
+                const category = randomCorrupted.category;
+                const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
+                const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR) * inflationReduction;
+                const dynamicValue = Math.floor((HUGE_WORD_DATABASE[category].value * gameMultiplier + (randomCorrupted.wrong.length * PRICE_PER_LETTER)) * inflationMultiplier);
+                currentWord = { word: randomCorrupted.wrong, category: category, value: dynamicValue, isCorrupted: true, rightVersion: randomCorrupted.right, startTime: Date.now() };
+                updateUI();
+                startWordDisplayTimer(3000);
+                return;
+            }
 
-            if (isWhispering && Math.random() < 0.35) {
+
+            if (isWhispering && Math.random() < 0.15) { // Reducido de 0.35 a 0.15
                 const randomCorrupted = CORRUPTED_WORDS[Math.floor(Math.random() * CORRUPTED_WORDS.length)];
                 const category = randomCorrupted.category;
                 const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
@@ -1151,10 +1220,8 @@
             
             const isLimboActive = Date.now() < limboGramaticalEndTime;
             let christopherChance = 0.03 + (prestigeUpgrades.suerteAumentada * 0.0005);
-            if (isLimboActive && christopherBonusCountDuringLimbo < 3) christopherChance += 0.21; 
 
             if (Math.random() < christopherChance) {
-                if (isLimboActive) christopherBonusCountDuringLimbo++;
                 currentWord = { word: "CHRISTOPHER", category: "Bonus", value: 0, isBonus: true, startTime: Date.now() };
                 updateUI();
                 startWordDisplayTimer(1000 + (prestigeUpgrades.duracionPotenciadores * 500));
@@ -1193,9 +1260,7 @@
                 setTimeout(() => generateNewWord(true), 50); 
                 return;
             }
-            if(availableWords.length === 0 && randomCategory === "Sobreesdrújulas") {
-                // if all words of all categories are bought, but the sobreesdrujula is not bought yet
-            }
+            if(availableWords.length === 0 && randomCategory === "Sobreesdrújulas") { }
             
             let randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
             let isSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).includes(randomWord);
@@ -1212,12 +1277,12 @@
         }
 
         function updateUI() {
-            document.getElementById('playerMoney').textContent = playerMoney.toLocaleString('es-ES');
+            document.getElementById('playerMoney').textContent = playerMoney.toLocaleString('en-US');
             recalculatePassiveIncome();
             let finalPassiveIncome = passiveIncome;
             if (Date.now() < christopherBoostEndTime) finalPassiveIncome *= 2;
             if (Date.now() < limboGramaticalEndTime) finalPassiveIncome *= 1.21;
-            document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            document.getElementById('passiveIncome').textContent = finalPassiveIncome.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
             const incomeBonusSpan = document.getElementById('prestigeIncomeBonus');
             if (prestigeUpgrades.aumentoGeneracionRiqueza > 0) {
@@ -1267,7 +1332,7 @@
                     if (isCategoryComplete) {
                         wordValueEl.textContent = 'Categoría Completa';
                     } else {
-                        let valueHTML = `${currentWord.value.toLocaleString('es-ES')}`;
+                        let valueHTML = `${currentWord.value.toLocaleString('en-US')}`;
                         if (prestigeUpgrades.reduccionInflacion > 0 && currentWord.category !== "Sobreesdrújulas") {
                             const reductionValue = (prestigeUpgrades.reduccionInflacion * 0.5).toFixed(2);
                             valueHTML += ` <span class="text-xs text-green-600">(-${reductionValue}%)</span>`;
@@ -1297,27 +1362,14 @@
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
             const now = Date.now();
-
-            // Lógica de brillos para los bonus
-            const playerMoneyCard = document.getElementById('playerMoneyCard');
             const shopButton = document.getElementById('shopButton');
 
-            // 1. Brillo del Escudo
             const shieldIsActive = now < universalShieldEndTime;
             lifeCounterContainer.classList.toggle('shield-glow', shieldIsActive);
 
-            // 2. Brillo de Ingresos
-            Object.keys(superValueBoosts).forEach(cat => {
-                if (now >= superValueBoosts[cat]) delete superValueBoosts[cat];
-            });
-            const incomeBoostIsActive = now < christopherBoostEndTime || Object.keys(superValueBoosts).length > 0;
-            playerMoneyCard.classList.toggle('income-glow', incomeBoostIsActive);
-
-            // 3. Brillo del Limbo Gramatical
             const limboIsActive = now < limboGramaticalEndTime;
             shopButton.classList.toggle('limbo-glow', limboIsActive);
-
-
+            
             const inventoryContainer = document.getElementById('inventoryContainer');
             inventoryContainer.innerHTML = '';
             Object.keys(WORD_DATABASE).forEach(category => {
@@ -1349,13 +1401,12 @@
             if (currentWord.isCorrupted) {
                 playerMoney -= currentWord.value;
                 corruptedWordsBought++;
-                const originalWhisper = activeWhisper;
-                activeWhisper = BOSS_MOCKING_LAUGHTER[Math.floor(Math.random() * BOSS_MOCKING_LAUGHTER.length)];
-                displayActiveWhisper();
-                setTimeout(() => {
-                    activeWhisper = originalWhisper;
-                    if(isWhispering) displayActiveWhisper();
-                }, 3000);
+                const isConfusionActive = Date.now() < confusionModeEndTime;
+                if (isConfusionActive) {
+                    showModal("¡Jajaja! Caíste en la trampa. Ese dinero es mío.");
+                } else {
+                    showWhisperModal(BOSS_MOCKING_LAUGHTER[Math.floor(Math.random() * BOSS_MOCKING_LAUGHTER.length)]);
+                }
                 savePlayerData();
                 updateUI();
                 generateNewWord(true);
@@ -1389,6 +1440,8 @@
             if (currentWord.category === "Sobreesdrújulas" && wordBought) {
                 document.getElementById('winMessage').textContent = `¡VICTORIA! Has conseguido una palabra sobreesdrújula. Multiplicador actual: ${gameMultiplier}x.`;
                 document.getElementById('nextMultiplier').textContent = gameMultiplier + 1;
+                document.getElementById('seguirJugandoButton').disabled = false;
+                document.getElementById('reiniciarButton').disabled = false;
                 stopGameLoops();
                 stopRulesRotator();
                 savePlayerData();
@@ -1410,17 +1463,11 @@
             }
         }
         
-        function startDictionaryChallenge() {
+        function startThiefMiniChallenge() {
             if (currentView !== 'game' || isChallengeActive || isBossActive) return;
-            stopGameLoops();
-            isChallengeActive = true;
-            savePlayerData();
-
+            
             if (Date.now() < universalShieldEndTime) {
                 showModal(`¡Protegido por el Escudo Universal! Reto evitado.`);
-                startGameLoops();
-                isChallengeActive = false;
-                generateNewWord(true);
                 return;
             }
             if (shields.universal > 0) {
@@ -1428,177 +1475,125 @@
                 universalShieldEndTime = Date.now() + 60000;
                 savePlayerData();
                 showModal("¡Escudo Universal activado por 60 segundos! Reto evitado.");
-                startGameLoops();
-                isChallengeActive = false;
-                generateNewWord(true);
                 return;
             }
-            
-            visibilityChangeHandler = () => { if (document.hidden && isChallengeActive) endDictionaryChallenge('cheat', document.getElementById('challengeCategory').textContent); };
-            document.addEventListener('visibilitychange', visibilityChangeHandler);
 
-            const categories = ["Agudas", "Llanas", "Esdrújulas"];
-            const challengeCategory = categories[Math.floor(Math.random() * categories.length)];
+            stopGameLoops();
+            isChallengeActive = true;
+            savePlayerData();
+
+            const challengeTypes = ['anagram', 'accent', 'trueFalse'];
+            const type = challengeTypes[Math.floor(Math.random() * challengeTypes.length)];
+            currentChallengeData = { type };
+
+            const modal = document.getElementById('thiefMiniChallengeModal');
+            const descriptionEl = document.getElementById('challengeDescription');
+            const questionEl = document.getElementById('challengeQuestion');
+            const inputContainer = document.getElementById('challengeInputContainer');
+            const buttonsContainer = document.getElementById('challengeButtonsContainer');
+            const inputEl = document.getElementById('challengeInput');
+            const timerEl = document.getElementById('challengeTimer');
+
+            document.getElementById('thiefMiniChallengeIcon').innerHTML = ICON_LIBRARY.bossIcon;
+            inputEl.value = '';
+
+            let timeLeft;
+
+            switch (type) {
+                case 'anagram':
+                    timeLeft = 30;
+                    descriptionEl.textContent = 'Descifra la palabra:';
+                    const wordToScramble = MINI_CHALLENGE_WORDS.anagram[Math.floor(Math.random() * MINI_CHALLENGE_WORDS.anagram.length)];
+                    currentChallengeData.answer = wordToScramble;
+                    questionEl.textContent = wordToScramble.split('').sort(() => 0.5 - Math.random()).join('');
+                    inputContainer.classList.remove('hidden');
+                    buttonsContainer.classList.add('hidden');
+                    inputEl.focus();
+                    break;
+                case 'accent':
+                    timeLeft = 20;
+                    descriptionEl.textContent = 'Escribe la palabra con la tilde correcta:';
+                    const accentChallenge = MINI_CHALLENGE_WORDS.accent[Math.floor(Math.random() * MINI_CHALLENGE_WORDS.accent.length)];
+                    currentChallengeData.answer = accentChallenge.right;
+                    questionEl.textContent = accentChallenge.wrong;
+                    inputContainer.classList.remove('hidden');
+                    buttonsContainer.classList.add('hidden');
+                    inputEl.focus();
+                    break;
+                case 'trueFalse':
+                    timeLeft = 20;
+                    descriptionEl.textContent = '¿La clasificación es correcta?';
+                    const tfChallenge = MINI_CHALLENGE_WORDS.trueFalse[Math.floor(Math.random() * MINI_CHALLENGE_WORDS.trueFalse.length)];
+                    currentChallengeData.answer = tfChallenge.isCorrect;
+                    questionEl.textContent = `"${tfChallenge.word}" - ${tfChallenge.category}`;
+                    inputContainer.classList.add('hidden');
+                    buttonsContainer.classList.remove('hidden');
+                    buttonsContainer.classList.add('flex');
+                    break;
+            }
             
-            const modal = document.getElementById('dictionaryModal');
-            document.getElementById('challengeCategory').textContent = challengeCategory;
-            document.getElementById('timer').textContent = 30;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             
-            const input = document.getElementById('challengeInput');
-            input.value = '';
-            input.focus();
-            
-            let timeLeft = 30;
+            timerEl.textContent = timeLeft;
             challengeTimerInterval = setInterval(() => {
                 timeLeft--;
-                document.getElementById('timer').textContent = timeLeft;
-                if (timeLeft <= 0) endDictionaryChallenge(null, challengeCategory);
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 0) endThiefMiniChallenge(null);
             }, 1000);
+        }
 
-            input.onkeyup = (event) => {
-                if (event.key === 'Enter') endDictionaryChallenge(input.value, challengeCategory);
-            };
+        function endThiefMiniChallenge(playerAnswer) {
+            clearInterval(challengeTimerInterval);
+            isChallengeActive = false;
+            gamePausedForFeedback = true;
+            
+            const modal = document.getElementById('thiefMiniChallengeModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            
+            let isCorrect = false;
+            let failureReason = "Respuesta incorrecta.";
+            
+            switch (currentChallengeData.type) {
+                case 'anagram':
+                case 'accent':
+                    if (playerAnswer && playerAnswer.trim().toLowerCase() === currentChallengeData.answer.toLowerCase()) {
+                        isCorrect = true;
+                    }
+                    if(!playerAnswer) failureReason = "No se introdujo ninguna palabra.";
+                    else failureReason = `Incorrecto. La respuesta era "${currentChallengeData.answer}".`;
+                    break;
+                case 'trueFalse':
+                    if (playerAnswer === currentChallengeData.answer) {
+                        isCorrect = true;
+                    }
+                    failureReason = `Incorrecto. La clasificación era ${currentChallengeData.answer ? 'Verdadera' : 'Falsa'}.`;
+                    break;
+            }
+
+            if(playerAnswer === null) failureReason = "Se acabó el tiempo.";
+
+            if (isCorrect) {
+                const rewardBonus = 1 + (prestigeUpgrades.recompensasDesafio * 0.02);
+                const reward = CHALLENGE_REWARDS.base * rewardBonus;
+                playerMoney += reward;
+                showModal(`¡Correcto! Ganas ${reward.toLocaleString('en-US')}.`);
+            } else {
+                handleChallengeFailure(failureReason);
+            }
         }
         
-        function getAccentCategoryFromWord(word) {
-            const originalWord = word;
-            word = word.toLowerCase().trim();
-
-            if (word.length === 0) {
-                return { category: "Desconocida", reason: "No se ingresó palabra." };
-            }
-
-            const normalizedWord = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            
-            // Regex to find vowel groups (including 'y' as a vowel at the end of word or syllable)
-            const vowelGroups = word.match(/[aeiouáéíóúü]+y?|y[aeiouáéíóúü]/gi);
-
-            if (!vowelGroups) {
-                return { category: "Desconocida", reason: `La palabra '${originalWord}' no contiene vocales válidas.` };
-            }
-
-            // Simple Monosyllable Check
-            if (vowelGroups.length === 1 && !/[áéíóú]/.test(word)) {
-                return { category: "Agudas", reason: `'${originalWord}' es un monosílabo.` };
-            }
-
-            let stressPositionFromEnd;
-
-            const accentMatch = word.match(/[áéíóú]/);
-            if (accentMatch) {
-                const accentIndex = word.indexOf(accentMatch[0]);
-                const suffix = word.substring(accentIndex);
-                const suffixVowelGroups = suffix.match(/[aeiouáéíóúü]+/g) || [];
-                stressPositionFromEnd = suffixVowelGroups.length - 1;
-            } else {
-                const lastChar = normalizedWord.slice(-1);
-                if ('ns'.includes(lastChar) || 'aeiou'.includes(lastChar)) {
-                    stressPositionFromEnd = 1; // Llana
-                } else {
-                    stressPositionFromEnd = 0; // Aguda
-                }
-            }
-
-            let detectedCategory = "Desconocida";
-            let reason = "";
-
-            switch (stressPositionFromEnd) {
-                case 0:
-                    detectedCategory = "Agudas";
-                    reason = `'${originalWord}' es una palabra aguda.`;
-                    break;
-                case 1:
-                    detectedCategory = "Llanas";
-                    reason = `'${originalWord}' es una palabra llana.`;
-                    break;
-                case 2:
-                    detectedCategory = "Esdrújulas";
-                    reason = `'${originalWord}' es una palabra esdrújula.`;
-                    break;
-                default:
-                    if (stressPositionFromEnd > 2) {
-                        detectedCategory = "Sobreesdrújulas"; // Not used in challenges, but good to have
-                        reason = `'${originalWord}' es una palabra sobreesdrújula.`;
-                    } else {
-                         reason = `No se pudo clasificar '${originalWord}'.`;
-                    }
-                    break;
-            }
-            return { category: detectedCategory, reason };
-        }
-
-
-        async function endDictionaryChallenge(word, category) {
-            if (visibilityChangeHandler) {
-                document.removeEventListener('visibilitychange', visibilityChangeHandler);
-                visibilityChangeHandler = null;
-            }
-            clearInterval(challengeTimerInterval);
-            document.getElementById('dictionaryModal').classList.add('hidden');
-            
-            const finishChallenge = (resultCallback) => {
-                isChallengeActive = false;
-                gamePausedForFeedback = true;
-                stopGameLoops();
-                resultCallback();
-            };
-
-            if (word === 'cheat') {
-                finishChallenge(() => handleChallengeFailure("Reto fallido por cambiar de pestaña."));
-                return;
-            }
-            if (!word || !word.trim()) {
-                finishChallenge(() => handleChallengeFailure("No se introdujo ninguna palabra."));
-                return;
-            }
-            
-            const normalizedWord = word.trim().toLowerCase();
-            if ((usedChallengeWords[category] || []).includes(normalizedWord)) {
-                finishChallenge(() => handleChallengeFailure(`Palabra repetida. '${word.trim()}' ya fue usada.`));
-                return;
-            }
-
-            const { category: detectedCategory, reason } = getAccentCategoryFromWord(word.trim());
-            
-            if(detectedCategory === "Desconocida") {
-                 finishChallenge(() => handleChallengeFailure(reason));
-                 return;
-            }
-
-            if (detectedCategory === category) {
-                finishChallenge(() => {
-                    if (!usedChallengeWords[category]) usedChallengeWords[category] = [];
-                    usedChallengeWords[category].push(normalizedWord);
-                    playerStats.challengesWon++;
-                    const rewardBonus = 1 + (prestigeUpgrades.recompensasDesafio * 0.02);
-                    const reward = CHALLENGE_REWARDS[category] * rewardBonus;
-                    playerMoney += reward;
-                    let successMessage = `¡Correcto! ${reason} Ganas ${reward.toLocaleString('es-ES')}.`;
-                    if (prestigeUpgrades.recompensasDesafio > 0) successMessage += ` (+${prestigeUpgrades.recompensasDesafio * 2}%)`;
-                    showModal(successMessage);
-                });
-            } else {
-                finishChallenge(() => handleChallengeFailure(`Incorrecto. '${word.trim()}' es ${detectedCategory.slice(0,-1).toLowerCase()}, no ${category.slice(0,-1).toLowerCase()}.`));
-            }
-        }
-
         function handleChallengeFailure(reason) {
             consecutiveFailures++;
-            if (Math.random() < 0.33) {
-                const modal = document.getElementById('thiefMockeryModal');
-                document.getElementById('thiefMockeryIcon').innerHTML = ICON_LIBRARY.bossIcon;
-                document.getElementById('thiefMockeryDialogue').textContent = THIEF_MOCKERY_ON_FAIL[Math.floor(Math.random() * THIEF_MOCKERY_ON_FAIL.length)];
-                modal.classList.remove('hidden', 'opacity-0');
-            } else {
-                showFailureMessage(reason);
-            }
+            checkForThiefDeal(() => {
+                showWhisperModal(THIEF_MOCKERY_ON_FAIL[Math.floor(Math.random() * THIEF_MOCKERY_ON_FAIL.length)], () => showFailureMessage(reason));
+            });
         }
         
         function showFailureMessage(reason) {
             if (consecutiveFailures >= 3) {
-                clearRankingOnGameOver(); // Llama a la API para borrar el récord.
+                clearRankingOnGameOver();
                 document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. Razón final: ${reason}`;
                 stopGameLoops();
                 stopRulesRotator();
@@ -1647,30 +1642,16 @@
             displayActiveWhisper();
             savePlayerData();
         }
-        
-        function corruptRulesDisplay() {
-            if (!isWhispering || Math.random() > 0.1) return;
-            stopRulesRotator();
-            const rulesDisplay = document.getElementById('rulesDisplay');
-            if (rulesDisplay.parentElement.classList.contains('hidden')) return;
-            const taunt = BOSS_MOCKING_LAUGHTER[Math.floor(Math.random() * BOSS_MOCKING_LAUGHTER.length)];
-            rulesDisplay.innerHTML = `<p class="whisper-text">${taunt}</p>`;
-            setTimeout(() => { if (isWhispering) displayActiveWhisper(); else startRulesRotator(); }, 3000);
-        }
 
         function displayActiveWhisper() {
             if (!isWhispering) return;
             stopRulesRotator();
-            const rulesDisplay = document.getElementById('rulesDisplay');
-            rulesDisplay.parentElement.classList.remove('hidden');
-            rulesDisplay.innerHTML = `<p class="whisper-text">${activeWhisper}</p>`;
-            rulesDisplay.style.opacity = 1;
+            showWhisperModal(activeWhisper);
         }
 
         function startBossChallenge(level) {
             isWhispering = false;
             activeWhisper = "";
-            document.getElementById('rulesContainer')?.classList.add('hidden');
             isBossActive = true;
             stopGameLoops();
             currentBossLevel = level;
@@ -1743,22 +1724,200 @@
                 }));
             } else {
                 consecutiveFailures++;
-                let moneyLost = playerMoney * ({ 1: 0.10, 2: 0.20, 3: 0.30 }[currentBossLevel] || 0);
-                playerMoney = Math.max(0, playerMoney - Math.floor(moneyLost));
-                const finalDialogue = BOSS_DEFEAT_DIALOGUES[Math.floor(Math.random() * BOSS_DEFEAT_DIALOGUES.length)];
-                const resultMessage = `¡DERROTA! El Ladrón te roba ${Math.floor(moneyLost).toLocaleString('es-ES')}. Pierdes 1 vida.`;
-                typeEffect(dialogueEl, finalDialogue, () => hideBossModal(() => {
-                    if (consecutiveFailures >= 3) {
-                        clearRankingOnGameOver(); // Llama a la API para borrar el récord.
-                        document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. El Ladrón de Tildes fue tu perdición.`;
-                        stopGameLoops();
-                        changeView('gameOver');
-                        gamePausedForFeedback = false;
-                    } else {
-                        showModal(resultMessage);
-                        if (consecutiveFailures < 3) changeView('game');
+                checkForThiefDeal(() => {
+                    let moneyLost = playerMoney * ({ 1: 0.10, 2: 0.20, 3: 0.30 }[currentBossLevel] || 0);
+                    playerMoney = Math.max(0, playerMoney - Math.floor(moneyLost));
+                    const finalDialogue = BOSS_DEFEAT_DIALOGUES[Math.floor(Math.random() * BOSS_DEFEAT_DIALOGUES.length)];
+                    const resultMessage = `¡DERROTA! El Ladrón te roba ${Math.floor(moneyLost).toLocaleString('en-US')}. Pierdes 1 vida.`;
+                    typeEffect(dialogueEl, finalDialogue, () => hideBossModal(() => {
+                        if (consecutiveFailures >= 3) {
+                            clearRankingOnGameOver(); 
+                            document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. El Ladrón de Tildes fue tu perdición.`;
+                            stopGameLoops();
+                            changeView('gameOver');
+                            gamePausedForFeedback = false;
+                        } else {
+                            showModal(resultMessage);
+                            if (consecutiveFailures < 3) changeView('game');
+                        }
+                    }));
+                });
+            }
+        }
+
+        function triggerRandomThiefAttack() {
+            if (!gameStarted || isBossActive || isChallengeActive || currentView !== 'game' || !hasBoughtFirstWord) return;
+            const isConfusionActive = Date.now() < confusionModeEndTime;
+
+            if (Math.random() < 0.15) { 
+                stopGameLoops(); 
+
+                let attackType;
+                if (!hasHadFirstRandomAttackThisPartida) {
+                    attackType = 'lifeTheft';
+                    hasHadFirstRandomAttackThisPartida = true;
+                } else {
+                    const attacks = ['incomeTheft', 'confusion', 'wordTheft'];
+                    let availableAttacks = attacks.filter(attack => {
+                        if (attack === 'confusion' && isConfusionActive) return false;
+                        return true;
+                    });
+                    if (availableAttacks.length === 0) {
+                        startGameLoops();
+                        return;
                     }
-                }));
+                    attackType = availableAttacks[Math.floor(Math.random() * availableAttacks.length)];
+                }
+                
+                const dialogues = {
+                    lifeTheft: "Qué descuidado... Dejas tus vidas tan expuestas. Permíteme aligerar tu carga.",
+                    incomeTheft: "Ese tintineo de monedas... es música para mis oídos. Pagarás un pequeño peaje.",
+                    confusion: "Veamos qué tan bien te manejas cuando la realidad se distorsiona un poco. No confíes en lo que ves.",
+                    wordTheft: "Una colección impresionante. Sería una lástima que... desaparecieran algunas palabras, ¿no?"
+                };
+
+                showRandomThiefAttackModal(
+                    dialogues[attackType],
+                    () => {
+                         switch (attackType) {
+                            case 'lifeTheft':
+                                return { title: 'Robo de Vidas', effectText: "¡Has perdido 1 vida!", onComplete: () => {
+                                    consecutiveFailures++;
+                                    checkForThiefDeal(() => {
+                                        updateUI();
+                                        if (consecutiveFailures >= 3) {
+                                            showFailureMessage("El Ladrón te ha dado el golpe de gracia.");
+                                        }
+                                    });
+                                }};
+                            case 'incomeTheft':
+                                const moneyStolen = Math.floor(playerMoney * 0.15);
+                                return { title: 'Robo de Ingresos', effectText: `¡Te ha robado el 15% de tu dinero! (-${moneyStolen.toLocaleString('en-US')})`, onComplete: () => {
+                                    playerMoney -= moneyStolen;
+                                    updateUI();
+                                }};
+                            case 'confusion':
+                                return { title: 'Confusión', effectText: "¡Modo Confusión activado por 90 segundos!", onComplete: () => {
+                                    confusionModeEndTime = Date.now() + 90000;
+                                }};
+                            case 'wordTheft':
+                                const ownableCategories = Object.keys(playerWords).filter(cat => cat !== "Sobreesdrújulas" && playerWords[cat].count > 0);
+                                if (ownableCategories.length > 0) {
+                                    const randomCategory = ownableCategories[Math.floor(Math.random() * ownableCategories.length)];
+                                    const wordsInCategory = playerWords[randomCategory].list;
+                                    const wordsToStealCount = Math.max(1, Math.floor(wordsInCategory.length * 0.10));
+                                    
+                                    return { title: 'Robo de Palabras', effectText: `¡Ha robado ${wordsToStealCount} palabra(s) de la categoría ${randomCategory}!`, onComplete: () => {
+                                        for(let i = 0; i < wordsToStealCount; i++) {
+                                            if(wordsInCategory.length > 0) {
+                                                const randomIndex = Math.floor(Math.random() * wordsInCategory.length);
+                                                wordsInCategory.splice(randomIndex, 1);
+                                            }
+                                        }
+                                        playerWords[randomCategory].count -= wordsToStealCount;
+                                        updateUI();
+                                    }};
+                                } else {
+                                     const moneyStolenFallback = Math.floor(playerMoney * 0.15);
+                                     return { title: 'Robo de Ingresos', effectText: `¡Te ha robado el 15% de tu dinero! (-${moneyStolenFallback.toLocaleString('en-US')})`, onComplete: () => {
+                                        playerMoney -= moneyStolenFallback;
+                                        updateUI();
+                                    }};
+                                }
+                        }
+                    }
+                );
+            }
+        }
+
+        function showRandomThiefAttackModal(dialogue, getAttackDetailsCallback) {
+            const modal = document.getElementById('randomThiefAttackModal');
+            const dialogueEl = document.getElementById('randomThiefDialogue');
+            const effectDiv = document.getElementById('randomThiefEffect');
+            const effectTextEl = document.getElementById('randomThiefEffectText');
+            const closeButton = document.getElementById('randomThiefCloseButton');
+
+            document.getElementById('randomThiefIcon').innerHTML = ICON_LIBRARY.bossIcon;
+            
+            dialogueEl.textContent = '';
+            effectDiv.classList.add('hidden');
+            closeButton.classList.add('hidden');
+
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 20);
+
+            typeEffect(dialogueEl, dialogue, () => {
+                const { title, effectText, onComplete } = getAttackDetailsCallback();
+                modal.querySelector('h4').textContent = `El Ladrón de Tildes ataca: ${title}`;
+                effectTextEl.textContent = effectText;
+                effectDiv.classList.remove('hidden');
+                onComplete(); 
+                setTimeout(() => {
+                    closeButton.classList.remove('hidden');
+                    gamePausedForFeedback = true; 
+                }, 1500);
+            });
+        }
+
+        function showWhisperModal(dialogue, onclose) {
+            const modal = document.getElementById('thiefWhisperModal');
+            const dialogueEl = document.getElementById('thiefWhisperDialogue');
+            
+            document.getElementById('thiefWhisperIcon').innerHTML = ICON_LIBRARY.bossIcon;
+            dialogueEl.textContent = dialogue;
+
+            modal.classList.remove('hidden', 'opacity-0');
+            
+            document.getElementById('thiefWhisperCloseButton').onclick = () => {
+                modal.classList.add('hidden', 'opacity-0');
+                if (onclose) onclose();
+            };
+        }
+
+        function checkForThiefDeal(callbackOnNoDeal) {
+            if ( (3 - consecutiveFailures) === 1 ) {
+                stopGameLoops();
+                gamePausedForFeedback = true;
+
+                let bestCategory = null;
+                let maxIncome = -1;
+
+                Object.keys(playerWords).forEach(category => {
+                    if (playerWords[category] && WORD_DATABASE[category] && category !== "Sobreesdrújulas" && playerWords[category].count > 0) {
+                        const count = playerWords[category].count;
+                        const baseValue = WORD_DATABASE[category].value;
+                        const categoryIncome = count * baseValue;
+                        if (categoryIncome > maxIncome) {
+                            maxIncome = categoryIncome;
+                            bestCategory = category;
+                        }
+                    }
+                });
+
+                if (bestCategory) {
+                    const modal = document.getElementById('thiefDealModal');
+                    document.getElementById('thiefDealIcon').innerHTML = ICON_LIBRARY.bossIcon;
+                    document.getElementById('thiefDealDialogue').textContent = `Veo que estás al límite... Te ofrezco un trato. Te devuelvo una vida, pero a cambio me quedaré con todas tus palabras de la categoría "${bestCategory}". ¿Aceptas?`;
+                    
+                    modal.classList.remove('hidden', 'opacity-0');
+                    
+                    document.getElementById('acceptDealButton').onclick = () => {
+                        consecutiveFailures--;
+                        playerWords[bestCategory] = { count: 0, list: [] };
+                        modal.classList.add('hidden', 'opacity-0');
+                        showModal("Trato aceptado. Has recuperado una vida, pero tus palabras han desaparecido.");
+                    };
+                    document.getElementById('rejectDealButton').onclick = () => {
+                        dealRejectedForLimboBoost = true;
+                        modal.classList.add('hidden', 'opacity-0');
+                        if (callbackOnNoDeal) callbackOnNoDeal();
+                    };
+                } else {
+                    if (callbackOnNoDeal) callbackOnNoDeal();
+                }
+
+            } else {
+                if (callbackOnNoDeal) callbackOnNoDeal();
             }
         }
         
@@ -1785,10 +1944,13 @@
                     money: playerMoney, words: playerWords, used: usedChallengeWords, failures: consecutiveFailures, 
                     multiplier: gameMultiplier, credits: initialCredits, shields: shields, shieldEnd: universalShieldEndTime,
                     chrisEnd: christopherBoostEndTime, svBoosts: superValueBoosts, limboTriggered: limboGramaticalTriggeredThisPartida,
-                    chrisBonusCount: christopherBonusCountDuringLimbo, prestigePoints: prestigePoints, prestigeUpgrades: prestigeUpgrades,
+                    dealRejected: dealRejectedForLimboBoost,
+                    prestigePoints: prestigePoints, prestigeUpgrades: prestigeUpgrades,
                     isChallengeActive: isChallengeActive, bossesDefeated: bossesDefeated, hasBoughtFirstWord: hasBoughtFirstWord,
                     isWhispering: isWhispering, activeWhisper: activeWhisper, corruptedWordsBought: corruptedWordsBought,
-                    playerStats: playerStats, wordDatabaseVersion: 2.1
+                    playerStats: playerStats, wordDatabaseVersion: 2.4, // Updated version
+                    hasHadFirstRandomAttack: hasHadFirstRandomAttackThisPartida,
+                    confusionEnd: confusionModeEndTime,
                 };
                 await apiRequest('POST', 'saveGame', { playerID: playerCredentials.playerID, saveDataJSON: JSON.stringify(data) });
             } catch (e) { console.error('Error saving data:', e); }
@@ -1797,7 +1959,7 @@
         function parseSaveData(saveDataJSON) {
             try {
                 const data = JSON.parse(saveDataJSON || "{}");
-                 if (!data.wordDatabaseVersion || data.wordDatabaseVersion < 2.1) { initializeGameState(); return; }
+                 if (!data.wordDatabaseVersion || data.wordDatabaseVersion < 2.4) { initializeGameState(); return; }
                 playerMoney = data.money || 100;
                 playerWords = data.words || {};
                 usedChallengeWords = data.used || {};
@@ -1808,7 +1970,7 @@
                 christopherBoostEndTime = data.chrisEnd || 0;
                 superValueBoosts = data.svBoosts || {};
                 limboGramaticalTriggeredThisPartida = data.limboTriggered || false;
-                christopherBonusCountDuringLimbo = data.chrisBonusCount || 0;
+                dealRejectedForLimboBoost = data.dealRejected || false;
                 prestigePoints = data.prestigePoints || 0;
                 prestigeUpgrades = data.prestigeUpgrades || { aumentoGeneracionRiqueza: 0, reduccionInflacion: 0, recompensasDesafio: 0, duracionPotenciadores: 0, suerteAumentada: 0, descuentoTienda: 0, presagioLadron: 0, enganoLadron: 0 };
                 bossesDefeated = data.bossesDefeated || [];
@@ -1817,6 +1979,8 @@
                 activeWhisper = data.activeWhisper || "";
                 corruptedWordsBought = data.corruptedWordsBought || 0;
                 playerStats = data.playerStats || { wordsBought: 0, challengesWon: 0, bossesDefeatedCount: 0, gameFormats: 0 };
+                hasHadFirstRandomAttackThisPartida = data.hasHadFirstRandomAttack || false;
+                confusionModeEndTime = data.confusionEnd || 0;
                 if (data.isChallengeActive) activeChallengeOnLoad = true;
                 let baseCredits = 100;
                 for(let i = 1; i < gameMultiplier; i++) baseCredits *= 2;
@@ -1875,10 +2039,10 @@
         function startRulesRotator() {
             stopRulesRotator(); 
             const rulesContainer = document.getElementById('rulesContainer');
-            const rulesDisplay = document.getElementById('rulesDisplay');
-            if (!rulesContainer || !rulesDisplay || isWhispering || Date.now() < limboGramaticalEndTime) return;
-            rulesContainer.classList.remove('hidden');
+            if (rulesContainer) rulesContainer.classList.remove('hidden');
             const updateRule = () => {
+                const rulesDisplay = document.getElementById('rulesDisplay');
+                if (!rulesDisplay) return;
                 rulesDisplay.style.opacity = 0;
                 setTimeout(() => {
                     const rule = accentuationRules[currentRuleIndex];
@@ -1894,40 +2058,35 @@
         function stopRulesRotator() {
             if (rulesInterval) clearInterval(rulesInterval);
             rulesInterval = null;
-            document.getElementById('rulesContainer')?.classList.add('hidden');
+            const rulesContainer = document.getElementById('rulesContainer');
+            if(rulesContainer) rulesContainer.classList.add('hidden');
         }
 
         function startGameLoops() {
             if (animationFrameId || isBossActive) return;
             stopGameLoops();
             
-            if (isWhispering) {
-                displayActiveWhisper();
-                whisperInterval = setInterval(corruptRulesDisplay, 5000);
-            } else {
+            if (!isWhispering) {
                 startRulesRotator();
             }
             animationFrameId = requestAnimationFrame(mainGameLoop);
             challengeInterval = setInterval(() => {
                 if (hasBoughtFirstWord && Math.random() < 0.15 && !isChallengeActive && gameStarted && !isBossActive && currentView === 'game') {
-                    startDictionaryChallenge();
+                    startThiefMiniChallenge();
                 }
             }, 5000);
+            randomThiefAttackInterval = setInterval(triggerRandomThiefAttack, 5000);
         }
         
-        function stopChristopherWhispers() {
-             // Esta función ahora está vacía ya que los diálogos de Christopher han sido eliminados.
-        }
-
         function stopGameLoops() {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
             clearInterval(challengeInterval);
             clearInterval(rankingUpdateInterval);
-            clearInterval(whisperInterval);
-            stopChristopherWhispers();
+            clearInterval(randomThiefAttackInterval);
             clearTimeout(wordDisplayTimeout);
-            challengeInterval = null; rankingUpdateInterval = null; whisperInterval = null; lastUpdateTime = 0;
+            challengeInterval = null; rankingUpdateInterval = null; lastUpdateTime = 0;
+            randomThiefAttackInterval = null;
         }
         
         async function startGameCommon(shouldLoad = true) {
@@ -1953,7 +2112,6 @@
             }
             
             try {
-                // All requests go through POST to simplify server logic and CORS handling.
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'cors',
@@ -2049,8 +2207,7 @@
                 document.getElementById('loginView').classList.add('hidden');
                 document.getElementById('loggedInView').classList.remove('hidden');
                 document.getElementById('messageModal').classList.add('hidden');
-                initializeGameState(); // User is new, so start fresh
-                 // Muestra el botón de administrador si el nombre de usuario es 'Didac'
+                initializeGameState(); 
                 if (playerCredentials.playerName === 'Didac') {
                     document.getElementById('adminDeleteButton').classList.remove('hidden');
                 }
@@ -2062,7 +2219,7 @@
         function handleLogout() {
             playerCredentials = null;
             localStorage.removeItem('dl_player_credentials');
-            window.location.reload(); // Recargar para limpiar todo el estado
+            window.location.reload();
         }
         
         async function handleNameChange() {
@@ -2094,7 +2251,7 @@
         function updatePrestigeUI() {
             document.getElementById('prestigePointsDisplay').textContent = prestigePoints;
             const container = document.getElementById('prestigeUpgradesContainer');
-            container.innerHTML = ''; // Clear previous content
+            container.innerHTML = ''; 
             
             const list = document.createElement('ul');
             list.className = 'space-y-2';
@@ -2141,31 +2298,14 @@
             }
         }
 
-        function typeEffectForInput(element, text, callback) {
-            let i = 0;
-            element.value = '';
-            function type() {
-                if (i < text.length) {
-                    element.value += text.charAt(i);
-                    i++;
-                    setTimeout(type, 40);
-                } else {
-                    if (callback) setTimeout(callback, 250);
-                }
-            }
-            type();
-        }
-
         function copyPlayerID() {
             const input = document.getElementById('playerIDCopyInput');
             input.select();
-            input.setSelectionRange(0, 99999); // For mobile devices
+            input.setSelectionRange(0, 99999); 
             try {
-                // A more robust copy method that doesn't rely on execCommand
                 navigator.clipboard.writeText(input.value).then(() => {
                     showModal("¡ID copiado al portapapeles!");
                 }).catch(() => {
-                    // Fallback for older browsers
                     document.execCommand('copy');
                     showModal("¡ID copiado al portapapeles!");
                 });
@@ -2187,7 +2327,6 @@
                 return;
             }
 
-            // Populate with local data first
             document.getElementById('profilePlayerName').textContent = playerCredentials.playerName;
             document.getElementById('profileMultiplier').textContent = `${gameMultiplier}x`;
             document.getElementById('playerIDCopyInput').value = playerCredentials.playerID;
@@ -2199,11 +2338,9 @@
             profileLeagueEl.textContent = leagueInfo.name;
             profileLeagueEl.style.color = leagueInfo.color;
             
-            // Remove all gradient classes
             profileCard.classList.remove('bg-gradient-bronze', 'bg-gradient-plata', 'bg-gradient-oro', 'bg-gradient-platino', 'bg-gradient-diamante', 'bg-gradient-maestro', 'bg-gradient-leyenda');
             profileCard.classList.add(leagueInfo.gradient);
 
-            // Fetch rank from server
             const result = await apiRequest('POST', 'getPlayerProfileData', { playerName: playerCredentials.playerName });
 
             if(result.success) {
@@ -2239,9 +2376,8 @@
                 parseSaveData(result.saveData);
                 gameStarted = true;
                 changeView('game');
-                await startGameCommon(false); // Do not load again from server
+                await startGameCommon(false); 
                 document.getElementById('messageModal').classList.add('hidden');
-                 // Muestra el botón de administrador si el nombre de usuario es 'Didac'
                 if (playerCredentials.playerName === 'Didac') {
                     document.getElementById('adminDeleteButton').classList.remove('hidden');
                 }
@@ -2264,16 +2400,13 @@
                 changeView('startup');
             });
 
-            // Listeners para botones de modales
             document.getElementById('backToGameFromTutorial').addEventListener('click', () => changeView('startup'));
             document.getElementById('backToGameFromShop').addEventListener('click', () => changeView('game'));
             document.getElementById('backToGameFromPrestige').addEventListener('click', () => changeView('game'));
             
-            // Listeners de la tienda
             document.getElementById('buyUniversalShield').addEventListener('click', buyShield);
             document.getElementById('buyLifeButton').addEventListener('click', buyLife);
             
-            // Listeners del perfil
             document.getElementById('profileButton').addEventListener('click', showProfile);
             document.getElementById('backToHomeFromProfile').addEventListener('click', () => changeView('startup'));
             document.getElementById('copyPlayerIDButton').addEventListener('click', copyPlayerID);
@@ -2281,7 +2414,6 @@
             document.getElementById('profileResetProgressButton').addEventListener('click', () => showConfirmationModal("¿Estás seguro? Perderás todo tu progreso permanentemente.", startNewGame));
             document.getElementById('profileLogoutButton').addEventListener('click', () => showConfirmationModal("¿Estás seguro de que quieres cerrar sesión?", handleLogout));
 
-            // Listeners de inicio de sesión
             document.getElementById('showLoginWithId').addEventListener('click', (e) => {
                 e.preventDefault();
                 document.getElementById('registerSection').classList.add('hidden');
@@ -2294,10 +2426,8 @@
             });
             document.getElementById('loginWithIdButton').addEventListener('click', handleLoginWithID);
             
-            // Admin
             document.getElementById('adminDeleteButton').addEventListener('click', deletePlayerFromRanking);
 
-            // Listeners de modales generales
             document.getElementById('modalCloseButton').addEventListener('click', () => {
                 document.getElementById('messageModal').classList.add('hidden');
                 if (gamePausedForFeedback) {
@@ -2316,13 +2446,26 @@
             });
             document.getElementById('confirmNoButton').addEventListener('click', hideConfirmationModal);
 
-            document.getElementById('thiefMockeryCloseButton').addEventListener('click', () => {
-                document.getElementById('thiefMockeryModal').classList.add('hidden', 'opacity-0');
-                showFailureMessage("Vigila tus tildes...");
+            document.getElementById('thiefWhisperCloseButton').addEventListener('click', (e) => {
+                e.target.parentElement.parentElement.classList.add('hidden', 'opacity-0');
+            });
+
+             document.getElementById('randomThiefCloseButton').addEventListener('click', () => {
+                const modal = document.getElementById('randomThiefAttackModal');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+
+                if (gamePausedForFeedback) {
+                    gamePausedForFeedback = false;
+                    if (consecutiveFailures < 3 && !isBossActive) {
+                       startGameLoops();
+                       generateNewWord(true);
+                       savePlayerData();
+                    }
+                }
             });
             document.getElementById('wordsModalCloseButton').addEventListener('click', () => document.getElementById('wordsModal').classList.add('hidden'));
             
-            // Listeners de fin/win de partida
             document.getElementById('backToGameFromGameOver').addEventListener('click', async () => {
                 await startNewGame();
             });
@@ -2331,17 +2474,29 @@
                 await startNewGame();
             });
 
-            // Otros
-            document.getElementById('startLimboGramatical').addEventListener('click', () => {
-                const modal = document.getElementById('limboGramaticalScreen');
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                limboGramaticalEndTime = Date.now() + 60000;
-                startGameLoops(); 
-                generateNewWord(true);
+            document.getElementById('christopherFissureCloseButton').addEventListener('click', () => {
+                const modal = document.getElementById('limboGramaticalModal');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+                
+                limboGramaticalEndTime = Date.now() + 120000;
+
+                if (gamePausedForFeedback) {
+                    gamePausedForFeedback = false;
+                    startGameLoops();
+                    generateNewWord(true);
+                }
             });
+
             document.getElementById('rankingButton').addEventListener('click', showRanking);
             document.getElementById('backToHomeFromRanking').addEventListener('click', () => changeView('startup'));
+
+            document.getElementById('challengeInput').addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') endThiefMiniChallenge(e.target.value);
+            });
+            document.getElementById('trueButton').addEventListener('click', () => endThiefMiniChallenge(true));
+            document.getElementById('falseButton').addEventListener('click', () => endThiefMiniChallenge(false));
+
             window.addEventListener('beforeunload', () => {
                 if(gameStarted) savePlayerData();
             });
@@ -2356,7 +2511,6 @@
                     document.getElementById('loginView').classList.add('hidden');
                     document.getElementById('loggedInView').classList.remove('hidden');
 
-                    // Muestra el botón de administrador si el nombre de usuario es 'Didac'
                     if (playerCredentials.playerName === 'Didac') {
                         document.getElementById('adminDeleteButton').classList.remove('hidden');
                     }
