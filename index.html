@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Reto del Diccionario</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -412,6 +413,9 @@
         <button id="homeButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-150 transform hover:scale-105 w-24 text-center">
             Inicio
         </button>
+        <button id="muteButton" class="bg-white hover:bg-gray-100 p-2 rounded-full shadow-lg border-2 border-gray-200 w-12 h-12 flex items-center justify-center">
+            <!-- SVG icon here -->
+        </button>
     </div>
 
     <!-- Modal for Shop -->
@@ -691,6 +695,13 @@
         let visibilityChangeHandler = null;
         let confirmCallback = null;
         let currentChallengeData = {};
+        
+        // --- Audio State ---
+        let audioInitialized = false;
+        let mainMusicLoop, thiefMusicLoop, limboMusicLoop;
+        let mainSynth, thiefSynth, limboSynth;
+        let isMuted = false;
+        let isLimboMusicPlaying = false;
 
         // --- Boss Variables ---
         let bossesDefeated = [], whisperInterval = null;
@@ -813,7 +824,9 @@
 
         const ICON_LIBRARY = {
             'bossIcon': `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle><path d="M10.5 14.5c.5.3 1.2.3 1.7 0 M8 9.5s1-1 4-1 4 1 4 1"/></svg>`,
-            'christopherIcon': `<svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>`
+            'christopherIcon': `<svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>`,
+            'speakerOn': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>`,
+            'speakerOff': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" /><path stroke-linecap="round" stroke-linejoin="round" d="M17 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2" /></svg>`
         };
         
         const HUGE_WORD_DATABASE = {
@@ -987,10 +1000,30 @@
              Object.keys(WORD_DATABASE).forEach(category => playerWords[category] = { count: 0, list: [] });
         }
 
-        function showModal(message) {
+        function showModal(message, duration = 2500) {
+            const modal = document.getElementById('messageModal');
+            const closeButton = document.getElementById('modalCloseButton');
             document.getElementById('modalMessage').textContent = message;
-            document.getElementById('messageModal').classList.remove('hidden');
-            document.getElementById('messageModal').classList.add('flex');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            if (duration !== null) {
+                closeButton.classList.add('hidden');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    if (gamePausedForFeedback) {
+                        gamePausedForFeedback = false;
+                        if (consecutiveFailures < 3 && !isBossActive) {
+                           startGameLoops();
+                           generateNewWord(true);
+                           savePlayerData();
+                        }
+                    }
+                }, duration);
+            } else {
+                closeButton.classList.remove('hidden');
+            }
         }
 
         function showConfirmationModal(message, onConfirm) {
@@ -1021,10 +1054,10 @@
         
         async function startNewGame() {
             if(!playerCredentials) {
-                showModal("Debes iniciar sesión para reiniciar tu progreso.");
+                showModal("Debes iniciar sesión para reiniciar tu progreso.", null);
                 return;
             }
-            showModal("Reiniciando tu cuenta...");
+            showModal("Reiniciando tu cuenta...", null);
             const result = await apiRequest('POST', 'resetProgress', { playerID: playerCredentials.playerID });
             if (result.success) {
                 initializeGameState(); 
@@ -1033,23 +1066,23 @@
                 await startGameCommon(false); 
                 showModal("Tu progreso ha sido reiniciado.");
             } else {
-                showModal(`Error al reiniciar: ${result.error}`);
+                showModal(`Error al reiniciar: ${result.error}`, null);
             }
         }
         
         async function continueGame() {
             if (!playerCredentials) {
-                showModal("Por favor, inicia sesión para continuar.");
+                showModal("Por favor, inicia sesión para continuar.", null);
                 return;
             }
-            showModal("Cargando partida...");
+            showModal("Cargando partida...", null);
             const result = await apiRequest('POST', 'loadGame', { playerID: playerCredentials.playerID });
             
             if (result.success) {
                 parseSaveData(result.saveData);
                 
                 if (result.seasonReward) {
-                    showModal(`¡Fin de temporada! Alcanzaste la liga ${result.seasonReward.league} y ganaste ${result.seasonReward.points} Puntos de Prestigio. Tu multiplicador se ha reajustado.`);
+                    showModal(`¡Fin de temporada! Alcanzaste la liga ${result.seasonReward.league} y ganaste ${result.seasonReward.points} Puntos de Prestigio. Tu multiplicador se ha reajustado.`, null);
                     gamePausedForFeedback = true; 
                 }
 
@@ -1060,9 +1093,11 @@
                     await startGameCommon(false);
                     document.getElementById('messageModal').classList.add('hidden');
                 }
+                await initializeAudio();
+                playMainMusic();
 
             } else {
-                showModal(`Error al cargar: ${result.error}`);
+                showModal(`Error al cargar: ${result.error}`, null);
             }
         }
 
@@ -1151,7 +1186,10 @@
 
             typeEffect(dialogueEl, "Soy el Guardián del Limbo. Tu valor al rechazar la oscuridad del Ladrón ha abierto un camino hasta mí.", () => {
                 setTimeout(() => {
-                    typeEffect(dialogueEl, "Como recompensa por tu entereza, te ofrezco restaurar tus fuerzas y otorgarte protección. ¿Aceptas mi regalo?", null);
+                    typeEffect(dialogueEl, "Como recompensa por tu entereza, te ofrezco restaurar tus fuerzas y otorgarte protección. ¿Aceptas mi regalo?", () => {
+                        buttons.classList.remove('hidden');
+                        buttons.classList.add('flex');
+                    });
                 }, 500);
             });
         }
@@ -1637,6 +1675,7 @@
             activeWhisper = "";
             isBossActive = true;
             stopGameLoops();
+            playThiefMusic();
             currentBossLevel = level;
             currentBossSentence = BOSS_SENTENCES[level][Math.floor(Math.random() * BOSS_SENTENCES[level].length)];
             const dialogueEl = document.getElementById('bossDialogue');
@@ -1676,11 +1715,9 @@
             const modalContent = element.closest('.bg-gray-800, .bg-white');
             const dealButtons = modalContent?.querySelector('#thiefDealButtons');
             const giftButtons = modalContent?.querySelector('#guardianButtons');
-            const closeButton = modalContent?.querySelector('#thiefWhisperCloseButton, #randomThiefCloseButton, #christopherFissureCloseButton');
-
+            
             if (dealButtons) dealButtons.classList.add('hidden');
             if (giftButtons) giftButtons.classList.add('hidden');
-            if (closeButton) closeButton.classList.add('hidden');
 
             function type() {
                 if (i < text.length) {
@@ -1696,8 +1733,6 @@
                         giftButtons.classList.remove('hidden');
                         giftButtons.classList.add('flex');
                     }
-                    if (closeButton) closeButton.classList.remove('hidden');
-                    
                     if (callback) setTimeout(callback, 500); 
                 }
             }
@@ -1711,6 +1746,7 @@
             document.getElementById('bossChallengeContent').classList.add('hidden');
             const dialogueEl = document.getElementById('bossDialogue');
             dialogueEl.textContent = '';
+            playMainMusic();
 
             if (isCorrect) {
                 bossesDefeated.push(currentBossLevel);
@@ -1761,13 +1797,11 @@
             const dialogueEl = document.getElementById('randomThiefDialogue');
             const effectDiv = document.getElementById('randomThiefEffect');
             const effectTextEl = document.getElementById('randomThiefEffectText');
-            const closeButton = document.getElementById('randomThiefCloseButton');
-
+            
             document.getElementById('randomThiefIcon').innerHTML = ICON_LIBRARY.bossIcon;
             
             dialogueEl.textContent = '';
             effectDiv.classList.add('hidden');
-            closeButton.classList.add('hidden');
 
             modal.classList.remove('hidden');
             setTimeout(() => modal.classList.remove('opacity-0'), 20);
@@ -1779,13 +1813,22 @@
                 effectDiv.classList.remove('hidden');
                 onComplete(); 
                 setTimeout(() => {
-                    closeButton.classList.remove('hidden');
-                    gamePausedForFeedback = true; 
-                }, 1500);
+                    modal.classList.add('opacity-0');
+                    setTimeout(() => modal.classList.add('hidden'), 300);
+
+                    if (gamePausedForFeedback) {
+                        gamePausedForFeedback = false;
+                        if (consecutiveFailures < 3 && !isBossActive) {
+                           startGameLoops();
+                           generateNewWord(true);
+                           savePlayerData();
+                        }
+                    }
+                }, 4000);
             });
         }
 
-        function showWhisperModal(dialogue, onclose) {
+        function showWhisperModal(dialogue) {
             const modal = document.getElementById('thiefWhisperModal');
             const dialogueEl = document.getElementById('thiefWhisperDialogue');
             
@@ -1794,10 +1837,9 @@
             modal.classList.remove('hidden', 'opacity-0');
             
             typeEffect(dialogueEl, dialogue, () => {
-                 document.getElementById('thiefWhisperCloseButton').onclick = () => {
+                setTimeout(() => {
                     modal.classList.add('hidden', 'opacity-0');
-                    if (onclose) onclose();
-                };
+                }, 4000);
             });
         }
 
@@ -1830,10 +1872,7 @@
                     
                     modal.classList.remove('hidden', 'opacity-0');
                     
-                    typeEffect(dialogueEl, `Veo que estás al límite... Te ofrezco un trato. Te devuelvo una vida, pero a cambio me quedaré con todas tus palabras de la categoría "${bestCategory}". ¿Aceptas?`, () => {
-                        buttons.classList.remove('hidden');
-                        buttons.classList.add('flex');
-                    });
+                    typeEffect(dialogueEl, `Veo que estás al límite... Te ofrezco un trato. Te devuelvo una vida, pero a cambio me quedaré con todas tus palabras de la categoría "${bestCategory}". ¿Aceptas?`, null);
                     
                     document.getElementById('acceptDealButton').onclick = () => {
                         consecutiveFailures--;
@@ -1858,7 +1897,7 @@
         async function deletePlayerFromRanking() {
             const nameToDelete = prompt("Introduce el nombre exacto del jugador que deseas eliminar del ranking:");
             if (nameToDelete) {
-                showModal(`Eliminando a ${nameToDelete}...`);
+                showModal(`Eliminando a ${nameToDelete}...`, null);
                 const result = await apiRequest('POST', 'deletePlayer', { playerName: nameToDelete });
                 if (result.success) {
                     showModal(`${nameToDelete} ha sido eliminado del ranking.`);
@@ -1866,7 +1905,7 @@
                         fetchRanking();
                     }
                 } else {
-                    showModal(`Error al eliminar: ${result.error}`);
+                    showModal(`Error al eliminar: ${result.error}`, null);
                 }
             }
         }
@@ -1939,6 +1978,12 @@
                 if(Date.now() < limboGramaticalEndTime) incomeThisSecond *= 1.21;
                 playerMoney += incomeThisSecond;
                 timeSinceLastIncomeUpdate = 0;
+                
+                if (isLimboMusicPlaying && Date.now() > limboGramaticalEndTime) {
+                    isLimboMusicPlaying = false;
+                    playMainMusic();
+                }
+
                 updateUI();
             }
             updateTimerBarUI();
@@ -1996,6 +2041,71 @@
             if(rulesContainer) rulesContainer.classList.add('hidden');
         }
 
+        // --- Audio Functions ---
+        async function initializeAudio() {
+            if (audioInitialized) return;
+            await Tone.start();
+            setupMusic();
+            Tone.Transport.start();
+            audioInitialized = true;
+        }
+
+        function setupMusic() {
+            const mainReverb = new Tone.Reverb(1.5).toDestination();
+            const chorus = new Tone.Chorus(4, 2.5, 0.7).connect(mainReverb);
+            const thiefReverb = new Tone.Reverb(5).toDestination();
+            const limboDelay = new Tone.FeedbackDelay("8n", 0.5).toDestination();
+
+            mainSynth = new Tone.PolySynth(Tone.FMSynth, { harmonicity: 1, modulationIndex: 7, envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 1.4 }, modulation: { type: "triangle" } }).connect(chorus);
+            mainSynth.volume.value = 0;
+
+            thiefSynth = new Tone.PolySynth(Tone.DuoSynth, { vibratoAmount: 0.5, vibratoRate: 5, harmonicity: 1, voice0: { volume: -2, portamento: 0, oscillator: { type: 'sawtooth' }, filterEnvelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 }, envelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 } }, voice1: { volume: -10, portamento: 0, oscillator: { type: 'sine' }, filterEnvelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 }, envelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 } } }).connect(thiefReverb);
+            thiefSynth.volume.value = 0;
+
+            limboSynth = new Tone.PolySynth(Tone.FMSynth, { harmonicity: 3, modulationIndex: 15, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 1.5 }, modulation: { type: "sine" } }).connect(limboDelay);
+            limboSynth.volume.value = 0;
+
+            const mainNotes = [ { time: '0:0', notes: ['C4', 'E4', 'G4'] }, { time: '0:2', notes: ['A4'] }, { time: '1:0', notes: ['G3', 'B3', 'D4'] }, { time: '2:0', notes: ['F3', 'A3', 'C4'] }, { time: '2:2', notes: ['G3'] }, { time: '3:0', notes: ['E3', 'G3', 'B3'] }, { time: '4:0', notes: ['A3', 'C4', 'E4'] }, { time: '4:2', notes: ['B4'] }, { time: '5:0', notes: ['G3', 'B3', 'D4'] }, { time: '6:0', notes: ['C4', 'E4', 'A4'] }, { time: '6:2', notes: ['G4'] }, { time: '7:0', notes: ['F3', 'A3', 'C4'] } ];
+            mainMusicLoop = new Tone.Part((time, value) => { mainSynth.triggerAttackRelease(value.notes, "2n", time); }, mainNotes);
+            mainMusicLoop.loop = true; mainMusicLoop.loopEnd = '8m';
+            
+            const thiefNotes = [ { time: '0:0', notes: ['C2', 'D#2'], duration: '2n' }, { time: '1:0', notes: ['C#2', 'E2'], duration: '2n' }, { time: '2:0', notes: ['D2', 'F2'], duration: '1m' }, { time: '3:2', notes: ['B1', 'C2'], duration: '2n' } ];
+            thiefMusicLoop = new Tone.Part((time, value) => { thiefSynth.triggerAttackRelease(value.notes, value.duration, time); }, thiefNotes);
+            thiefMusicLoop.loop = true; thiefMusicLoop.loopEnd = '4m';
+            
+            const limboNotes = [ 'C5', 'E5', 'G5', 'B5', 'D6', 'G5', 'E6', 'C6', 'A5', 'F#5', 'D5', 'B4' ];
+            limboMusicLoop = new Tone.Sequence((time, note) => { limboSynth.triggerAttackRelease(note, '16n', time); }, limboNotes, '16n');
+            limboMusicLoop.loop = true;
+        }
+
+        function stopAllMusic() {
+            if (!audioInitialized) return;
+            if (mainMusicLoop && mainMusicLoop.state === "started") mainMusicLoop.stop(0);
+            if (thiefMusicLoop && thiefMusicLoop.state === "started") thiefMusicLoop.stop(0);
+            if (limboMusicLoop && limboMusicLoop.state === "started") limboMusicLoop.stop(0);
+            Tone.Transport.cancel();
+        }
+
+        function playMainMusic() {
+            if (!audioInitialized) return;
+            stopAllMusic();
+            mainMusicLoop.start(0);
+        }
+
+        function playThiefMusic() {
+            if (!audioInitialized) return;
+            stopAllMusic();
+            thiefMusicLoop.start(0);
+        }
+
+        function playLimboMusic() {
+            if (!audioInitialized) return;
+            stopAllMusic();
+            isLimboMusicPlaying = true;
+            limboMusicLoop.start(0);
+        }
+
+
         function startGameLoops() {
             if (animationFrameId || isBossActive) return;
             stopGameLoops();
@@ -2016,7 +2126,7 @@
 
             randomThiefAttackInterval = setInterval(() => {
                 if (hasBoughtFirstWord && !isChallengeActive && gameStarted && !isBossActive && currentView === 'game' && Math.random() < 0.15) {
-                    // triggerRandomThiefAttack is now integrated into a cinematic sequence
+                    // This is now handled inside startThiefMiniChallenge
                 }
             }, 5000);
         }
@@ -2155,10 +2265,10 @@
         async function handleLogin() {
             const nameInput = document.getElementById('playerNameInput');
             const playerName = nameInput.value.trim();
-            if (playerName.length < 3 || playerName.length > 15) { showModal("Tu nombre debe tener entre 3 y 15 caracteres."); return; }
-            if (!/^[a-zA-Z0-9_]+$/.test(playerName)) { showModal("El nombre solo puede contener letras, números y guiones bajos."); return; }
+            if (playerName.length < 3 || playerName.length > 15) { showModal("Tu nombre debe tener entre 3 y 15 caracteres.", null); return; }
+            if (!/^[a-zA-Z0-9_]+$/.test(playerName)) { showModal("El nombre solo puede contener letras, números y guiones bajos.", null); return; }
 
-            showModal("Registrando y creando partida...");
+            showModal("Registrando y creando partida...", null);
             const result = await apiRequest('POST', 'registerUser', { playerName });
 
             if(result.success) {
@@ -2172,8 +2282,10 @@
                 if (playerCredentials.playerName === 'Didac') {
                     document.getElementById('adminDeleteButton').classList.remove('hidden');
                 }
+                await initializeAudio();
+                playMainMusic();
             } else {
-                showModal(result.error);
+                showModal(result.error, null);
             }
         }
 
@@ -2189,10 +2301,10 @@
             if (!newName || newName.trim() === playerCredentials.playerName) return;
 
             const trimmedName = newName.trim();
-            if (trimmedName.length < 3 || trimmedName.length > 15) { showModal("Tu nombre debe tener entre 3 y 15 caracteres."); return; }
-            if (!/^[a-zA-Z0-9_]+$/.test(trimmedName)) { showModal("El nombre solo puede contener letras, números y guiones bajos."); return; }
+            if (trimmedName.length < 3 || trimmedName.length > 15) { showModal("Tu nombre debe tener entre 3 y 15 caracteres.", null); return; }
+            if (!/^[a-zA-Z0-9_]+$/.test(trimmedName)) { showModal("El nombre solo puede contener letras, números y guiones bajos.", null); return; }
 
-            showModal("Actualizando nombre...");
+            showModal("Actualizando nombre...", null);
             const result = await apiRequest('POST', 'updatePlayerName', {
                 playerID: playerCredentials.playerID,
                 newName: trimmedName
@@ -2205,7 +2317,7 @@
                 document.getElementById('profilePlayerName').textContent = trimmedName;
                 showModal("¡Nombre actualizado con éxito!");
             } else {
-                showModal(`Error: ${result.error}`);
+                showModal(`Error: ${result.error}`, null);
             }
         }
 
@@ -2271,7 +2383,7 @@
                     showModal("¡ID copiado al portapapeles!");
                 });
             } catch (err) {
-                 showModal("No se pudo copiar el ID. Por favor, cópialo manualmente.");
+                 showModal("No se pudo copiar el ID. Por favor, cópialo manualmente.", null);
             }
         }
 
@@ -2283,7 +2395,7 @@
             profileDataEl.classList.add('hidden');
 
             if (!playerCredentials) {
-                showModal("Debes iniciar sesión para ver tu perfil.");
+                showModal("Debes iniciar sesión para ver tu perfil.", null);
                 changeView('startup');
                 return;
             }
@@ -2319,10 +2431,10 @@
             const idInput = document.getElementById('playerIDInput');
             const playerID = idInput.value.trim();
             if (!playerID) {
-                showModal("Por favor, introduce un ID de jugador.");
+                showModal("Por favor, introduce un ID de jugador.", null);
                 return;
             }
-            showModal("Cargando partida con ID...");
+            showModal("Cargando partida con ID...", null);
             
             const result = await apiRequest('POST', 'loadGame', { playerID });
             
@@ -2343,7 +2455,7 @@
                     document.getElementById('adminDeleteButton').classList.remove('hidden');
                 }
             } else {
-                showModal(result.error || "No se pudo encontrar la partida. Verifica el ID.");
+                showModal(result.error || "No se pudo encontrar la partida. Verifica el ID.", null);
                 idInput.value = '';
             }
         }
@@ -2406,25 +2518,7 @@
                 hideConfirmationModal(); 
             });
             document.getElementById('confirmNoButton').addEventListener('click', hideConfirmationModal);
-
-            document.getElementById('thiefWhisperCloseButton').addEventListener('click', (e) => {
-                e.target.closest('.boss-modal-bg').classList.add('hidden', 'opacity-0');
-            });
-
-             document.getElementById('randomThiefCloseButton').addEventListener('click', () => {
-                const modal = document.getElementById('randomThiefAttackModal');
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-
-                if (gamePausedForFeedback) {
-                    gamePausedForFeedback = false;
-                    if (consecutiveFailures < 3 && !isBossActive) {
-                       startGameLoops();
-                       generateNewWord(true);
-                       savePlayerData();
-                    }
-                }
-            });
+            
             document.getElementById('wordsModalCloseButton').addEventListener('click', () => document.getElementById('wordsModal').classList.add('hidden'));
             
             document.getElementById('backToGameFromGameOver').addEventListener('click', async () => {
@@ -2443,6 +2537,7 @@
                 consecutiveFailures = 0;
                 shields.universal += 3;
                 limboGramaticalEndTime = Date.now() + 120000;
+                playLimboMusic();
                 
                 showModal("¡Don aceptado! Tus vidas han sido restauradas, has recibido 3 escudos y el LIMBO GRAMATICAL ha comenzado.");
 
@@ -2481,6 +2576,14 @@
             });
             document.getElementById('trueButton').addEventListener('click', () => endThiefMiniChallenge(true));
             document.getElementById('falseButton').addEventListener('click', () => endThiefMiniChallenge(false));
+
+            const muteButton = document.getElementById('muteButton');
+            muteButton.innerHTML = ICON_LIBRARY.speakerOn;
+            muteButton.addEventListener('click', () => {
+                isMuted = !isMuted;
+                Tone.Destination.mute = isMuted;
+                muteButton.innerHTML = isMuted ? ICON_LIBRARY.speakerOff : ICON_LIBRARY.speakerOn;
+            });
 
             window.addEventListener('beforeunload', () => {
                 if(gameStarted) savePlayerData();
