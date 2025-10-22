@@ -122,6 +122,38 @@
             100% { box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.6); }
         }
 
+        .shield-glow {
+            box-shadow: 0 0 12px 4px rgba(79, 70, 229, 0.7); /* Indigo */
+            animation: pulse-indigo 2s infinite;
+        }
+        @keyframes pulse-indigo {
+            50% { box-shadow: 0 0 16px 6px rgba(79, 70, 229, 0.9); }
+        }
+
+        .income-glow {
+            box-shadow: 0 0 12px 4px rgba(251, 191, 36, 0.8); /* Gold */
+            animation: pulse-gold 2s infinite;
+        }
+        @keyframes pulse-gold {
+            50% { box-shadow: 0 0 16px 6px rgba(251, 191, 36, 1); }
+        }
+
+        .limbo-glow {
+            box-shadow: 0 0 12px 4px rgba(139, 92, 246, 0.7); /* Purple */
+            animation: pulse-purple 2s infinite;
+        }
+        @keyframes pulse-purple {
+            50% { box-shadow: 0 0 16px 6px rgba(139, 92, 246, 0.9); }
+        }
+        
+        .confusion-glow {
+            box-shadow: 0 0 12px 4px rgba(220, 38, 38, 0.7); /* Red */
+            animation: pulse-red 1s infinite;
+        }
+        @keyframes pulse-red {
+            50% { box-shadow: 0 0 16px 6px rgba(220, 38, 38, 0.9); }
+        }
+
         .boss-modal-bg {
             background-color: rgba(17, 24, 39, 0.9);
             backdrop-filter: blur(8px);
@@ -184,6 +216,14 @@
             100% { transform: rotate(360deg); }
         }
 
+        .bg-gradient-bronze { background-image: linear-gradient(to top right, #f3e9d2, #c6a49a); }
+        .bg-gradient-plata { background-image: linear-gradient(to top right, #e0e0e0, #bdbdbd); }
+        .bg-gradient-oro { background-image: linear-gradient(to top right, #fff176, #ffd54f); }
+        .bg-gradient-platino { background-image: linear-gradient(to top right, #e0f7fa, #b2ebf2); }
+        .bg-gradient-diamante { background-image: linear-gradient(to top right, #e1f5fe, #81d4fa); }
+        .bg-gradient-maestro { background-image: linear-gradient(to top right, #f3e5f5, #e1bee7); }
+        .bg-gradient-leyenda { background-image: linear-gradient(to top right, #ffebee, #ffcdd2); }
+
     </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen">
@@ -197,7 +237,7 @@
                 <div id="registerSection">
                     <div class="w-full max-w-sm">
                         <input type="text" id="playerNameInput" placeholder="Escribe tu nombre para empezar" class="w-full text-center p-3 text-lg font-semibold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-gray-800 mb-2">
-                        <button id="loginButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                        <button id="loginButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-150 transform hover:scale-105 text-lg sm:text-xl">
                             Empezar Aventura
                         </button>
                     </div>
@@ -209,7 +249,7 @@
                 <div id="loginWithIdSection" class="hidden">
                     <div class="w-full max-w-sm">
                         <input type="text" id="playerIDInput" placeholder="Pega tu ID de Jugador" class="w-full text-center p-3 text-lg font-semibold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-gray-800 mb-2">
-                        <button id="loginWithIdButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                        <button id="loginWithIdButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-150 transform hover:scale-105 text-lg sm:text-xl">
                             Cargar Partida
                         </button>
                     </div>
@@ -223,10 +263,10 @@
             <div id="loggedInView" class="hidden flex flex-col items-center gap-4">
                  <p class="text-2xl font-bold text-gray-700 mb-2">Bienvenido, <span id="playerNameDisplay" class="text-blue-700"></span></p>
                 <div class="flex flex-col sm:flex-row justify-center items-stretch gap-4 w-full max-w-2xl">
-                    <button id="playGameButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                    <button id="playGameButton" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-150 transform hover:scale-105 text-lg sm:text-xl">
                         JUGAR
                     </button>
-                    <button id="tutorialButton" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 text-lg sm:text-xl">
+                    <button id="tutorialButton" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg transition duration-150 transform hover:scale-105 text-lg sm:text-xl">
                         Tutorial
                     </button>
                 </div>
@@ -236,9 +276,7 @@
                     <!-- Inserta este botón aquí -->
                     <button id="rankingButton" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-lg transition">Ranking</button>
                 </div>
-                <div class="flex gap-4 mt-4">
-                    <button id="resetProgressButton" class="text-sm text-gray-500 hover:text-red-500 hover:underline">Reiniciar progreso</button>
-                    <button id="logoutButton" class="text-sm text-gray-500 hover:text-blue-500 hover:underline">Cambiar de nombre</button>
+                 <div class="flex gap-4 mt-4">
                     <!-- Botón de Administrador para eliminar jugadores -->
                     <button id="adminDeleteButton" class="hidden text-sm text-red-600 hover:text-red-800 hover:underline font-bold">Eliminar Jugador del Ranking</button>
                 </div>
@@ -254,32 +292,26 @@
             <div id="integratedTutorial" class="text-left text-gray-800">
                 <h2 class="text-2xl font-extrabold text-blue-800 mb-3 text-center">¿Cómo se juega?</h2>
                 <p class="text-md text-gray-700 mb-4 leading-relaxed text-center">
-                    El objetivo es acumular <span class="font-bold text-blue-700">palabras</span> y <span class="font-bold text-green-700">dinero</span> para dominar la acentuación.<br>
-                    <span class="text-sky-600 font-semibold">Ganas al conseguir la palabra <span class="underline decoration-sky-400">Sobreesdrújula</span>.</span>
+                    Acumula <span class="font-bold text-blue-700">palabras</span> y <span class="font-bold text-green-700">dinero</span> para ganar.<br>
+                    <span class="text-sky-600 font-semibold">El objetivo es comprar la palabra <span class="underline decoration-sky-400">Sobreesdrújula</span>.</span>
                 </p>
                 <ol class="list-decimal pl-5 space-y-3 text-sm text-gray-600">
                     <li>
-                        <span class="font-bold">Objetivo:</span> Compra palabras para ganar dinero pasivo. Reúne 30 de cada categoría para desbloquear y comprar la palabra <span class="font-bold text-purple-700">Sobreesdrújula</span> y ganar.
+                        <span class="font-bold">El Juego:</span> Compra palabras para ganar dinero pasivo. Reúne 30 de cada tipo para poder comprar la Sobreesdrújula y ganar la partida.
                     </li>
                     <li>
-                        <span class="font-bold">El Desafío:</span> Ocasionalmente, se te pedirá escribir una palabra de una categoría en 30s. El juego verificará tu palabra en línea para asegurar total precisión. ¡Cuidado! 3 fallos reinician tu progreso.
+                        <span class="font-bold">Desafíos y Vidas:</span> Ocasionalmente, tendrás 30s para escribir una palabra de una categoría. Si fallas 3 veces, tu partida se reinicia (pierdes palabras y dinero) pero conservas tu progreso de prestigio.
                     </li>
                      <li>
-                        <span class="font-bold">Bonus:</span> Busca palabras <strong class="super-value-text">Super Value</strong> (rojas) para potenciar una categoría, o el <strong>Bonus <span class="rainbow-text">CHRISTOPHER</span></strong> para potenciar todo.
+                        <span class="font-bold">Bonus y Peligros:</span> Busca palabras <strong class="super-value-text">rojas</strong> o el bonus <strong class="rainbow-text">CHRISTOPHER</strong> para ganar más. Ten cuidado con el <strong class="corrupted-text-effect">Ladrón de Tildes</strong> y sus palabras corruptas.
                     </li>
                     <li>
-                        <span class="font-bold">Limbo Gramatical:</span> ¡Mantente alerta a eventos raros! El <span class="glitch-wrapper"><strong class="rainbow-text glitch-text flicker-anim" data-text="Limbo Gramatical: ???">Limbo Gramatical: ???</strong></span> es una fisura en la realidad que te ofrece grandes recompensas. Durante el evento, Christopher podría intentar comunicarse contigo...
-                    </li>
-                    <li>
-                        <span class="font-bold">El Ladrón de Tildes:</span> ¡Ten cuidado! Cuando el Ladrón se acerca, susurra. Podría intentar engañarte con <strong class="corrupted-text-effect">palabras corruptas: ???</strong>, e incluso se burlará de tus fallos en los retos.
-                    </li>
-                    <li>
-                        <span class="font-bold">Tienda y Prestigio:</span> Usa la <span class="font-bold">Tienda</span> para comprar Vidas y Escudos. Al ganar y <span class="font-bold text-purple-700">Formatear</span>, obtienes un multiplicador permanente y <span class="font-bold text-yellow-700">Puntos de Prestigio</span>, que puedes usar para mejoras permanentes, ¡incluyendo algunas para contrarrestar al Ladrón!
+                        <span class="font-bold">Prestigio:</span> Al ganar, puedes <span class="font-bold text-purple-700">Formatear</span> para aumentar tu multiplicador y ganar <span class="font-bold text-yellow-700">Puntos de Prestigio</span> para comprar mejoras permanentes.
                     </li>
                 </ol>
             </div>
              <div class="text-center w-full">
-                <button id="backToGameFromTutorial" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 mt-6">
+                <button id="backToGameFromTutorial" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-150 transform hover:scale-105 mt-6">
                     Cerrar
                 </button>
             </div>
@@ -288,47 +320,24 @@
 
     <!-- Ranking Modal -->
     <div id="rankingScreen" class="fixed inset-0 modal-bg hidden flex items-center justify-center p-4 z-[100]">
-        <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-yellow-400">
-            <h2 class="text-3xl font-extrabold text-yellow-800 mb-4 text-center">Clasificación Global Top 50</h2>
-    
-            <!-- Mensaje para usuarios no logueados -->
-            <div id="nameInputContainer" class="text-center mb-4">
-                 <p class="text-gray-700 mb-2">Debes iniciar sesión para ver el ranking y registrar tu progreso.</p>
+        <div class="w-full max-w-md bg-white p-6 rounded-xl shadow-2xl max-h-[90vh] border-4 border-yellow-400 flex flex-col">
+            <h2 class="text-3xl font-extrabold text-yellow-800 mb-4 text-center flex-shrink-0">Clasificación Global</h2>
+            <div id="rankingList" class="flex-grow overflow-y-auto hide-scrollbar space-y-2">
+                <!-- El contenido se generará con JavaScript -->
             </div>
-    
-            <!-- Tabla para mostrar la clasificación -->
-            <div id="rankingTableContainer" class="hidden">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-yellow-100 border-b-2 border-yellow-300">
-                            <th class="p-2 font-bold text-yellow-900">#</th>
-                            <th class="p-2 font-bold text-yellow-900">Nombre</th>
-                            <th class="p-2 font-bold text-yellow-900 text-right">Multiplicador</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rankingTableBody">
-                        <!-- El contenido se generará con JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-    
-            <div class="text-center w-full mt-6">
-                <button id="backToHomeFromRanking" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
+            <div class="text-center w-full mt-6 flex-shrink-0">
+                <button id="backToHomeFromRanking" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-150 transform hover:scale-105">
                     Cerrar
                 </button>
             </div>
         </div>
     </div>
 
+
     <!-- Modal for Player Profile -->
     <div id="profileScreen" class="fixed inset-0 modal-bg hidden items-center justify-center p-4 z-[100]">
-        <div class="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-indigo-400">
-            <div class="flex items-center justify-center mb-4">
-                <svg class="w-8 h-8 text-indigo-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                <h2 class="text-3xl font-black text-indigo-800">Perfil del Jugador</h2>
-            </div>
-            
-            <div id="profileContent" class="text-center">
+        <div class="w-full max-w-md bg-white p-6 rounded-2xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-indigo-400">
+            <div id="profileContent">
                 <!-- Loading state -->
                 <div id="profileLoading" class="flex justify-center items-center p-8">
                     <div class="loading-spinner"></div>
@@ -336,23 +345,34 @@
 
                 <!-- Loaded state -->
                 <div id="profileData" class="hidden">
-                     <div class="bg-indigo-100 rounded-lg p-4 mb-4">
-                        <h3 id="profilePlayerName" class="text-2xl font-bold text-indigo-900"></h3>
-                        <p class="text-sm text-indigo-700">Multiplicador: <span id="profileMultiplier" class="font-bold"></span> | Ranking Global: <span id="profileRank" class="font-bold">#---</span></p>
-                    </div>
-
-                    <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-                        <p class="text-sm font-bold text-gray-600">Tu ID de Jugador (para iniciar sesión en otros dispositivos):</p>
-                        <div class="flex items-center justify-center gap-2 mt-1">
-                            <input id="playerIDCopyInput" type="text" class="text-center bg-gray-200 text-gray-700 font-mono text-sm p-1 rounded w-full" readonly>
+                     <div id="profileCard" class="rounded-lg p-4 mb-6 transition-colors duration-200 shadow-lg">
+                        <div class="flex items-center justify-center gap-2">
+                             <h3 id="profilePlayerName" class="text-2xl font-bold text-gray-800"></h3>
+                             <button id="editPlayerNameButton" class="p-1 rounded-full hover:bg-black/10 transition">
+                                 <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z"></path></svg>
+                             </button>
+                         </div>
+                         <p id="profileLeague" class="text-lg font-bold"></p>
+                         <p class="text-sm text-gray-700 mt-1">Multiplicador: <span id="profileMultiplier" class="font-bold"></span> | Ranking: <span id="profileRank" class="font-bold">#---</span></p>
+                     </div>
+                     
+                     <div class="mb-6 p-3 bg-gray-100 rounded-lg">
+                        <p class="text-xs font-bold text-gray-500 mb-1">Tu ID de Jugador:</p>
+                        <div class="flex items-center justify-center gap-2">
+                            <input id="playerIDCopyInput" type="text" class="text-center bg-gray-200 text-gray-700 font-mono text-xs p-1 rounded w-full" readonly>
                             <button id="copyPlayerIDButton" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full">Copiar</button>
                         </div>
+                    </div>
+
+                     <div class="border-t border-gray-200 pt-4 space-y-3 flex flex-col items-center">
+                         <button id="profileResetProgressButton" class="bg-red-100 text-red-700 font-semibold py-2 px-5 rounded-lg hover:bg-red-200 transition text-sm w-full max-w-xs">Reiniciar Progreso</button>
+                         <button id="profileLogoutButton" class="bg-gray-100 text-gray-700 font-semibold py-2 px-5 rounded-lg hover:bg-gray-200 transition text-sm w-full max-w-xs">Cerrar Sesión</button>
                     </div>
                 </div>
             </div>
             
             <div class="text-center mt-6">
-                <button id="backToHomeFromProfile" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                <button id="backToHomeFromProfile" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-150 transform hover:scale-105">
                     Cerrar
                 </button>
             </div>
@@ -365,7 +385,7 @@
         <div id="gameScreen" class="flex flex-col items-center w-full">
             <div class="flex flex-col lg:flex-row justify-center items-stretch w-full gap-4">
                 
-                <div class="flex flex-col items-center justify-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
+                <div id="playerMoneyCard" class="flex flex-col items-center justify-center flex-1 text-center border p-4 rounded-xl shadow-lg card transition-shadow duration-200">
                     <h2 class="text-xl font-bold text-green-700">Tu Riqueza</h2>
                     <p id="playerMoney" class="text-2xl sm:text-3xl font-extrabold text-green-800 mt-2">0</p>
                     <p class="text-sm text-gray-500 mt-1">
@@ -374,13 +394,13 @@
                     </p>
                 </div>
 
-                <div id="currentWordCard" class="flex flex-col items-center flex-1 text-center border p-4 rounded-xl shadow-lg card">
+                <div id="currentWordCard" class="flex flex-col items-center flex-1 text-center border p-4 rounded-xl shadow-lg card transition-shadow duration-200">
                     <h3 class="text-xl font-bold mb-2">Palabra Actual</h3>
                     <p id="currentWord" class="text-3xl sm:text-5xl font-black mb-1">Cargando...</p>
                     <p id="wordCategory" class="text-md font-semibold text-gray-500 mb-1"></p>
                     <p id="wordValue" class="text-md font-extrabold text-blue-700"></p>
                     <div class="flex justify-center space-x-2 mt-2">
-                        <button id="buyButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 text-sm">
+                        <button id="buyButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-150 transform hover:scale-105 text-sm">
                             Comprar
                         </button>
                     </div>
@@ -399,7 +419,7 @@
             </div>
             
             <div id="rulesContainer" class="w-full mt-4 text-center border p-4 rounded-xl shadow-lg hidden flex flex-col justify-center min-h-[110px] card">
-                <div id="rulesDisplay" class="transition-opacity duration-500 ease-in-out">
+                <div id="rulesDisplay" class="transition-opacity duration-200 ease-in-out">
                     <!-- Rules will be injected here -->
                 </div>
             </div>
@@ -408,26 +428,16 @@
 
     <!-- Barra de estado y botones del juego -->
     <div id="gameControls" class="fixed bottom-0 left-0 right-0 w-full flex flex-wrap justify-center items-center gap-2 p-3 bg-white border-t-2 border-gray-200 z-10">
-        <div class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center">
+        <div id="lifeCounterContainer" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg flex-shrink-0 w-24 text-center transition-shadow duration-200">
             <span id="lifeCounter">3/3</span>
         </div>
-        <button id="prestigeButton" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
+        <button id="prestigeButton" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-150 transform hover:scale-105 w-24 text-center">
             <span id="currentMultiplier">1x</span>
         </button>
-        <div id="limboGramaticalTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center glitch-wrapper">
-            <span class="rainbow-text glitch-text" data-text="0s">0s</span>
-        </div>
-        <!-- Eliminado: christopherTimerDisplay -->
-        <div id="superValueTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
-            <span class="super-value-text">0s</span>
-        </div>
-        <div id="shieldTimerDisplay" class="bg-white p-2 px-4 rounded-full shadow-lg border-2 border-indigo-300 font-extrabold text-lg flex-shrink-0 hidden w-24 text-center">
-            <span class="text-indigo-600">0s</span>
-        </div>
-        <button id="shopButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
+        <button id="shopButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition-shadow duration-200 transform hover:scale-105 w-24 text-center">
             Tienda
         </button>
-        <button id="homeButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-300 transform hover:scale-105 w-24 text-center">
+        <button id="homeButton" class="bg-white hover:bg-gray-100 p-2 px-4 rounded-full shadow-lg border-2 border-gray-200 text-black font-extrabold text-lg transition duration-150 transform hover:scale-105 w-24 text-center">
             Inicio
         </button>
     </div>
@@ -441,54 +451,34 @@
                 </svg>
                 <h2 class="text-3xl font-black text-indigo-800">Tienda</h2>
             </div>
-            <div class="grid grid-cols-1 gap-4">
+            <ul class="space-y-3">
                 <!-- Item: Comprar Vida -->
-                <div class="bg-rose-50 border-2 border-rose-200 rounded-xl p-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="bg-rose-200 p-2 rounded-full">
-                                <svg class="w-6 h-6 text-rose-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-rose-800">Comprar Vida</h3>
-                                <p class="text-xs text-rose-700">Recupera una vida perdida.</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="block text-md font-bold text-rose-900 mb-1" id="lifePrice"></span>
-                            <button id="buyLifeButton" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
-                                Comprar
-                            </button>
-                        </div>
+                <li class="bg-gray-50 p-3 rounded-lg flex items-center justify-between transition duration-200 hover:bg-gray-100">
+                    <div>
+                        <h3 class="font-bold text-gray-800">Comprar Vida</h3>
+                        <p class="text-xs text-gray-600">Recupera una vida perdida.</p>
                     </div>
-                </div>
+                    <div class="flex-shrink-0 ml-4">
+                        <button id="buyLifeButton" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 px-4 text-sm rounded-full transition duration-150 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                            {precio}
+                        </button>
+                    </div>
+                </li>
                 <!-- Item: Escudo Universal -->
-                <div class="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-4">
-                     <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                             <div class="bg-indigo-200 p-2 rounded-full">
-                                 <svg class="w-6 h-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.417l5.69-5.69a.5.5 0 01.707 0l3.792 3.792a.5.5 0 00.707 0l5.69-5.69A12.02 12.02 0 0021 8.984a11.955 11.955 0 01-2.382-3.028z" />
-                                 </svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-indigo-800">Escudo Universal</h3>
-                                <p class="text-xs text-indigo-700">Protege de retos por 60s. (<span id="universalCount">0</span>)</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="block text-md font-bold text-indigo-900 mb-1" id="universalPrice"></span>
-                            <button id="buyUniversalShield" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
-                                Comprar
-                            </button>
-                        </div>
+                <li class="bg-gray-50 p-3 rounded-lg flex items-center justify-between transition duration-200 hover:bg-gray-100">
+                    <div>
+                        <h3 class="font-bold text-gray-800">Escudo Universal</h3>
+                        <p class="text-xs text-gray-600">Protege de retos por 60s. (Tienes: <span id="universalCount">0</span>)</p>
                     </div>
-                </div>
-            </div>
+                    <div class="flex-shrink-0 ml-4">
+                        <button id="buyUniversalShield" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-4 text-sm rounded-full transition duration-150 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                            {precio}
+                        </button>
+                    </div>
+                </li>
+            </ul>
             <div class="text-center mt-6">
-                <button id="backToGameFromShop" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                <button id="backToGameFromShop" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-150 transform hover:scale-105">
                     Cerrar Tienda
                 </button>
             </div>
@@ -503,6 +493,17 @@
         </div>
     </div>
     
+    <!-- Modal for Confirmation -->
+    <div id="confirmationModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4 z-[260]">
+        <div class="bg-white p-6 max-w-sm w-full text-center rounded-xl shadow-lg border border-yellow-400">
+            <p id="confirmationMessage" class="text-lg font-semibold text-gray-800 mb-4"></p>
+            <div class="flex justify-center gap-4">
+                <button id="confirmYesButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full">Sí</button>
+                <button id="confirmNoButton" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full">No</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for Word List -->
     <div id="wordsModal" class="fixed inset-0 modal-bg hidden justify-center items-center p-4 z-[200]">
         <div class="bg-white p-6 max-w-sm w-full text-center rounded-xl shadow-lg border border-gray-300">
@@ -536,8 +537,8 @@
     </div>
     
     <!-- Modal for Boss Challenge -->
-    <div id="bossModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[200] hidden opacity-0 transition-opacity duration-500">
-        <div id="bossModalContent" class="bg-gray-800 text-white p-8 max-w-2xl w-full text-center rounded-xl shadow-2xl border-4 border-red-700 transform transition-all duration-300 scale-95 opacity-0">
+    <div id="bossModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[200] hidden opacity-0 transition-opacity duration-200">
+        <div id="bossModalContent" class="bg-gray-800 text-white p-8 max-w-2xl w-full text-center rounded-xl shadow-2xl border-4 border-red-700 transform transition-all duration-150 scale-95 opacity-0">
             <div id="bossIconContainer" class="w-16 h-16 mx-auto mb-4 text-red-500">
                 <!-- SVG Icon will be inserted here by JS -->
             </div>
@@ -553,7 +554,7 @@
     </div>
     
     <!-- Modal de Burla del Ladrón -->
-    <div id="thiefMockeryModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-500">
+    <div id="thiefMockeryModal" class="fixed inset-0 boss-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-200">
         <div class="bg-gray-800 text-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-2 border-red-700">
              <div id="thiefMockeryIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
             <h4 class="text-xl font-bold text-red-400 mb-2">El Ladrón de Tildes se ríe...</h4>
@@ -567,7 +568,7 @@
         <div class="bg-red-800 text-white p-8 w-full h-full text-center flex flex-col justify-center items-center">
             <h2 class="text-5xl font-extrabold mb-4">GAME OVER</h2>
             <p id="gameOverMessage" class="text-lg mb-6"></p>
-            <button id="backToGameFromGameOver" class="bg-white text-red-800 font-bold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+            <button id="backToGameFromGameOver" class="bg-white text-red-800 font-bold py-3 px-6 rounded-full transition duration-150 transform hover:scale-105">
                 Volver a intentarlo
             </button>
         </div>
@@ -579,10 +580,10 @@
             <h2 class="text-5xl font-extrabold mb-4">¡HAS GANADO!</h2>
             <p id="winMessage" class="text-lg mb-6"></p>
             <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                <button id="seguirJugandoButton" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                <button id="seguirJugandoButton" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full transition duration-150 transform hover:scale-105">
                     Seguir jugando (x<span id="nextMultiplier">2</span>)
                 </button>
-                <button id="reiniciarButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                <button id="reiniciarButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition duration-150 transform hover:scale-105">
                     Reiniciar
                 </button>
             </div>
@@ -598,7 +599,7 @@
             <p class="text-md text-gray-600 mb-6">
                  Una fisura en el tiempo-espacio se ha abierto. Aprovéchala.
             </p>
-            <button id="startLimboGramatical" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
+            <button id="startLimboGramatical" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition duration-150 transform hover:scale-105">
                 Entendido
             </button>
         </div>
@@ -606,19 +607,16 @@
     
     <!-- Modal for Prestige Upgrades -->
     <div id="prestigeScreen" class="fixed inset-0 modal-bg hidden items-center justify-center p-4 z-[100]">
-        <div class="w-full max-w-4xl bg-white p-6 rounded-2xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-yellow-400">
+        <div class="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-2xl max-h-[90vh] hide-scrollbar overflow-y-auto border-4 border-yellow-400">
             <div class="flex items-center justify-center mb-4">
-                 <svg class="w-8 h-8 text-yellow-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" />
-                 </svg>
                 <h2 class="text-3xl font-black text-yellow-800">Mejoras de Prestigio</h2>
             </div>
-            <p class="text-center text-gray-600 mb-4">Puntos de Prestigio disponibles: <span id="prestigePointsDisplay" class="font-bold text-yellow-600">0</span></p>
-            <div id="prestigeUpgradesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <p class="text-center text-gray-600 mb-6">Puntos de Prestigio disponibles: <span id="prestigePointsDisplay" class="font-bold text-yellow-600">0</span></p>
+            <div id="prestigeUpgradesContainer">
                 <!-- Upgrades will be injected here by JS -->
             </div>
             <div class="text-center mt-6">
-                <button id="backToGameFromPrestige" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                <button id="backToGameFromPrestige" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-full transition duration-150 transform hover:scale-105">
                     Cerrar
                 </button>
             </div>
@@ -685,6 +683,7 @@
         let gamePausedForFeedback = false;
         let activeChallengeOnLoad = false;
         let visibilityChangeHandler = null;
+        let confirmCallback = null;
 
         // --- Boss Variables ---
         let bossesDefeated = [], whisperInterval = null;
@@ -726,7 +725,7 @@
             "Veo que has reunido un pequeño tesoro... Demuéstrame que mereces conservarlo.", "Tus palabras acumuladas cantan una melodía que me atrae. ¿Defenderás tu colección?",
             "Huelo el poder de la sintaxis en ti. Pero, ¿conoces la verdadera ortografía?", "Has sido descuidado. Dejaste un rastro de tildes olvidadas, y yo lo he seguido hasta aquí.",
             "Otro coleccionista... Creen que acumular es saber. Te enseñaré la diferencia.", "Las reglas son mis cadenas y tu conocimiento, la llave. No te la dejaré usar.",
-            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas.", "Tus avances no han pasado desapercibidos. Es hora de una pequeña corrección.",
+            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas.", "Tus avances no han pasado desapercebidos. Es hora de una pequeña corrección.",
             "Me llaman ladrón, pero yo me considero un purista. Vengo a limpiar tu colección de errores.", "El conocimiento sin precisión es ruido. Y tú estás haciendo mucho ruido."
         ];
         const BOSS_VICTORY_DIALOGUES = [
@@ -779,7 +778,7 @@
                 { wrong: "Quien te dijo que y como lo supiste es un misterio.", right: "Quién te dijo qué y cómo lo supiste es un misterio." },
                 { wrong: "No entiendo por que ries, ni cual es el motivo.", right: "No entiendo por qué ríes, ni cuál es el motivo." },
                 { wrong: "Donde esta el libro del que te hable cuando te vi.", right: "Dónde está el libro del que te hablé cuando te vi." },
-                { wrong: "Cuanto tiempo ha pasado desde que el se fue.", right: "Cuánto tiempo ha pasado desde que él se fue." },
+                { wrong: "Cuanto tempo ha pasado desde que el se fue.", right: "Cuánto tiempo ha pasado desde que él se fue." },
                 { wrong: "El pregunto que cual era mi opinion sobre el.", right: "Él preguntó que cuál era mi opinión sobre él." },
                 { wrong: "Solo se que no se nada, mas tu pareces saberlo todo.", right: "Solo sé que no sé nada, mas tú pareces saberlo todo." },
                 { wrong: "El enfasis de su discurso fue sobre etica y moral.", right: "El énfasis de su discurso fue sobre ética y moral." },
@@ -830,7 +829,7 @@
         let WORD_DATABASE = {}; 
 
         const categoryColors = { "Monosílabos": "text-gray-800", "Agudas": "text-green-800", "Llanas": "text-yellow-800", "Esdrújulas": "text-blue-800", "Sobreesdrújulas": "text-purple-800" };
-        const categoryBackgrounds = { "Monosílabos": "bg-gray-200 hover:bg-gray-300", "Agudas": "bg-green-200 hover:bg-green-300", "Llanas": "bg-yellow-200 hover:bg-yellow-300", "Esdrújulas": "bg-blue-200 hover:bg-blue-300", "Sobreesdrújulas": "bg-purple-200 hover:bg-purple-300" };
+        const categoryBackgrounds = { "Monosílabos": "bg-gray-200", "Agudas": "bg-green-200", "Llanas": "bg-yellow-200", "Esdrújulas": "bg-blue-200", "Sobreesdrújulas": "bg-purple-200" };
         
         const prestigeUpgradeInfo = {
             aumentoGeneracionRiqueza: { title: "Aumento de Riqueza", desc: "Aumenta la generación de riqueza pasiva.", effect: level => `+${level}%`, icon: `<svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 14v4m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 14c1.657 0 3-.895 3-2s-1.343-2-3-2-3-.895-3-2 1.343-2 3-2m0 8c-1.11 0-2.08-.402-2.599 1M12 14v-1m0 1v.01M12 16v-1m0 1V18" /></svg>`, colors: "bg-green-50 border-green-200 text-green-800" },
@@ -842,6 +841,16 @@
             presagioLadron: { title: "Presagio del Ladrón", desc: "El ladrón susurra antes, dándote más tiempo para prepararte.", effect: level => `+${level} palabras`, icon: `<svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>`, colors: "bg-gray-50 border-gray-200 text-gray-800" },
             enganoLadron: { title: "Engaño al Ladrón", desc: "Reduce la penalización de tiempo en el reto del Ladrón por cada palabra corrupta comprada.", effect: level => `-${level * 0.5}%/palabra`, icon: `<svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`, colors: "bg-red-50 border-red-200 text-red-800" }
         };
+
+        function getLeagueInfo(multiplier) {
+            if (multiplier >= 250) return { name: "Leyenda Ortográfica", color: "#b71c1c", gradient: "bg-gradient-leyenda", reward: 50, base: 125 };
+            if (multiplier >= 150) return { name: "Maestro", color: "#6a1b9a", gradient: "bg-gradient-maestro", reward: 35, base: 100 };
+            if (multiplier >= 100) return { name: "Diamante", color: "#0277bd", gradient: "bg-gradient-diamante", reward: 20, base: 75 };
+            if (multiplier >= 50) return { name: "Platino", color: "#00838f", gradient: "bg-gradient-platino", reward: 10, base: 50 };
+            if (multiplier >= 25) return { name: "Oro", color: "#f9a825", gradient: "bg-gradient-oro", reward: 5, base: 25 };
+            if (multiplier >= 10) return { name: "Plata", color: "#616161", gradient: "bg-gradient-plata", reward: 2, base: 10 };
+            return { name: "Bronce", color: "#8d6e63", gradient: "bg-gradient-bronze", reward: 0, base: 1 };
+        }
         
         function generatePlaythroughWordDatabase() {
             WORD_DATABASE = {};
@@ -887,7 +896,7 @@
             initialCredits = baseCredits;
             playerMoney = initialCredits;
             passiveIncome = 0;
-            consecutiveFailures = 0;
+            // consecutiveFailures = 0; // No se resetea al formatear
             usedChallengeWords = {};
             shields = { universal: 0 };
             christopherBoostEndTime = 0;
@@ -915,10 +924,12 @@
         }
 
         async function formatearJuego() {
+            const failuresToKeep = consecutiveFailures;
             gameMultiplier++;
             prestigePoints += gameMultiplier;
             playerStats.gameFormats = gameMultiplier - 1;
             resetGameData(); 
+            consecutiveFailures = failuresToKeep;
             applyScalingToWordDatabase(gameMultiplier);
             await updatePlayerScore();
             savePlayerData(); 
@@ -960,6 +971,19 @@
             document.getElementById('messageModal').classList.add('flex');
         }
 
+        function showConfirmationModal(message, onConfirm) {
+            document.getElementById('confirmationMessage').textContent = message;
+            document.getElementById('confirmationModal').classList.add('flex');
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            confirmCallback = onConfirm;
+        }
+
+        function hideConfirmationModal() {
+            document.getElementById('confirmationModal').classList.remove('flex');
+            document.getElementById('confirmationModal').classList.add('hidden');
+            confirmCallback = null;
+        }
+
         function changeView(view) {
             currentView = view;
             ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'limboGramaticalScreen', 'prestigeScreen', 'rankingScreen', 'profileScreen'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
@@ -992,7 +1016,7 @@
         }
         
         async function continueGame() {
-            if(!playerCredentials) {
+            if (!playerCredentials) {
                 showModal("Por favor, inicia sesión para continuar.");
                 return;
             }
@@ -1001,10 +1025,23 @@
             
             if (result.success) {
                 parseSaveData(result.saveData);
+                
+                // Si hay una recompensa de temporada, mostrarla antes de iniciar el juego.
+                if (result.seasonReward) {
+                    showModal(`¡Fin de temporada! Alcanzaste la liga ${result.seasonReward.league} y ganaste ${result.seasonReward.points} Puntos de Prestigio. Tu multiplicador se ha reajustado.`);
+                    // La partida ya se actualizó en el servidor, así que parseSaveData ya tiene los datos correctos.
+                    // El modal de mensaje pausará el inicio del juego hasta que se cierre.
+                    gamePausedForFeedback = true; // Usamos la pausa para esperar al jugador
+                }
+
                 gameStarted = true;
                 changeView('game');
-                await startGameCommon(false); // No recargar, acabamos de parsear
-                document.getElementById('messageModal').classList.add('hidden'); // Ocultar "cargando..."
+                
+                if (!result.seasonReward) {
+                    await startGameCommon(false);
+                    document.getElementById('messageModal').classList.add('hidden'); // Ocultar "cargando..."
+                }
+
             } else {
                 showModal(`Error al cargar: ${result.error}`);
             }
@@ -1014,32 +1051,31 @@
             const isLimboActive = Date.now() < limboGramaticalEndTime;
             const limboDiscount = isLimboActive ? 0.79 : 1;
             const prestigeDiscount = 1 - (prestigeUpgrades.descuentoTienda * 0.0025);
-            const shieldPrice = SHIELD_PRICE_UNIVERSAL * limboDiscount * prestigeDiscount;
-            const lifePrice = LIFE_PRICE * limboDiscount * prestigeDiscount;
-            
-            document.getElementById('universalPrice').textContent = `${shieldPrice.toLocaleString('es-ES')}`;
+            const shieldPrice = Math.floor(SHIELD_PRICE_UNIVERSAL * limboDiscount * prestigeDiscount);
+            const lifePrice = Math.floor(LIFE_PRICE * limboDiscount * prestigeDiscount);
+
+            // Escudo Universal
             const buyUniversalShieldBtn = document.getElementById('buyUniversalShield');
+            buyUniversalShieldBtn.innerHTML = `Comprar (${shieldPrice.toLocaleString('es-ES')})`;
+            if (prestigeUpgrades.descuentoTienda > 0) {
+                const discountValue = (prestigeUpgrades.descuentoTienda * 0.25).toFixed(2);
+                buyUniversalShieldBtn.innerHTML += ` <span class="text-xs opacity-80">-${discountValue}%</span>`;
+            }
             buyUniversalShieldBtn.disabled = playerMoney < shieldPrice;
             buyUniversalShieldBtn.classList.toggle('opacity-50', buyUniversalShieldBtn.disabled);
             buyUniversalShieldBtn.classList.toggle('cursor-not-allowed', buyUniversalShieldBtn.disabled);
             document.getElementById('universalCount').textContent = shields.universal;
 
-            document.getElementById('lifePrice').textContent = `${lifePrice.toLocaleString('es-ES')}`;
+            // Comprar Vida
             const buyLifeBtn = document.getElementById('buyLifeButton');
+            buyLifeBtn.innerHTML = `Comprar (${lifePrice.toLocaleString('es-ES')})`;
+            if (prestigeUpgrades.descuentoTienda > 0) {
+                const discountValue = (prestigeUpgrades.descuentoTienda * 0.25).toFixed(2);
+                buyLifeBtn.innerHTML += ` <span class="text-xs opacity-80">-${discountValue}%</span>`;
+            }
             buyLifeBtn.disabled = !(playerMoney >= lifePrice && consecutiveFailures > 0);
             buyLifeBtn.classList.toggle('opacity-50', buyLifeBtn.disabled);
             buyLifeBtn.classList.toggle('cursor-not-allowed', buyLifeBtn.disabled);
-            
-            const universalPriceEl = document.getElementById('universalPrice');
-            const lifePriceEl = document.getElementById('lifePrice');
-            universalPriceEl.innerHTML = `${shieldPrice.toLocaleString('es-ES')}`;
-            lifePriceEl.innerHTML = `${lifePrice.toLocaleString('es-ES')}`;
-
-            if (prestigeUpgrades.descuentoTienda > 0) {
-                const discountValue = (prestigeUpgrades.descuentoTienda * 0.25).toFixed(2);
-                universalPriceEl.innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
-                lifePriceEl.innerHTML += ` <span class="text-xs text-green-600">(-${discountValue}%)</span>`;
-            }
         }
 
         function buyShield() {
@@ -1207,7 +1243,7 @@
                     wordCategoryEl.textContent = currentWord.category;
                     
                     const buyButton = document.getElementById('buyButton');
-                    const canAfford = playerMoney >= currentWord.value;
+                    let canAfford = playerMoney >= currentWord.value;
                     let isOwned = false;
                     let isCategoryComplete = false;
 
@@ -1218,6 +1254,12 @@
                         isOwned = (categoryData.list || []).includes(currentWord.word);
                     }
                     
+                     if (currentWord.category === "Sobreesdrújulas") {
+                        const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
+                        currentWord.value = Math.floor(HUGE_WORD_DATABASE["Sobreesdrújulas"].value * inflationReduction);
+                        canAfford = playerMoney >= currentWord.value;
+                    }
+                    
                     buyButton.disabled = !canAfford || isOwned || isCategoryComplete;
                     buyButton.classList.toggle('opacity-50', buyButton.disabled);
                     buyButton.classList.toggle('cursor-not-allowed', buyButton.disabled);
@@ -1226,7 +1268,7 @@
                         wordValueEl.textContent = 'Categoría Completa';
                     } else {
                         let valueHTML = `${currentWord.value.toLocaleString('es-ES')}`;
-                        if (prestigeUpgrades.reduccionInflacion > 0) {
+                        if (prestigeUpgrades.reduccionInflacion > 0 && currentWord.category !== "Sobreesdrújulas") {
                             const reductionValue = (prestigeUpgrades.reduccionInflacion * 0.5).toFixed(2);
                             valueHTML += ` <span class="text-xs text-green-600">(-${reductionValue}%)</span>`;
                         }
@@ -1239,10 +1281,11 @@
             const remainingLives = Math.max(0, 3 - consecutiveFailures);
             const lifeCounter = document.getElementById('lifeCounter');
             lifeCounter.textContent = `${remainingLives}/3`;
-            lifeCounter.parentElement.classList.remove('border-green-300', 'border-yellow-400', 'border-red-500');
-            if (remainingLives === 3) lifeCounter.parentElement.classList.add('border-green-300');
-            else if (remainingLives === 2) lifeCounter.parentElement.classList.add('border-yellow-400');
-            else lifeCounter.parentElement.classList.add('border-red-500');
+            const lifeCounterContainer = document.getElementById('lifeCounterContainer');
+            lifeCounterContainer.classList.remove('border-green-300', 'border-yellow-400', 'border-red-500');
+            if (remainingLives === 3) lifeCounterContainer.classList.add('border-green-300');
+            else if (remainingLives === 2) lifeCounterContainer.classList.add('border-yellow-400');
+            else lifeCounterContainer.classList.add('border-red-500');
             
             const prestigeButton = document.getElementById('prestigeButton');
             prestigeButton.disabled = false;
@@ -1253,38 +1296,27 @@
             prestigeButton.classList.toggle('luck-glow', prestigeUpgrades.suerteAumentada > 0);
             document.getElementById('currentMultiplier').textContent = `${gameMultiplier}x`;
             
-            const limboTimer = document.getElementById('limboGramaticalTimerDisplay');
-            const svTimer = document.getElementById('superValueTimerDisplay');
-            const shieldTimer = document.getElementById('shieldTimerDisplay');
             const now = Date.now();
 
+            // Lógica de brillos para los bonus
+            const playerMoneyCard = document.getElementById('playerMoneyCard');
+            const shopButton = document.getElementById('shopButton');
+
+            // 1. Brillo del Escudo
+            const shieldIsActive = now < universalShieldEndTime;
+            lifeCounterContainer.classList.toggle('shield-glow', shieldIsActive);
+
+            // 2. Brillo de Ingresos
             Object.keys(superValueBoosts).forEach(cat => {
                 if (now >= superValueBoosts[cat]) delete superValueBoosts[cat];
             });
-            
-            // Lógica unificada de temporizador de bonus (Super Value/Christopher)
-            const boostEndTimes = Object.values(superValueBoosts);
-            if (christopherBoostEndTime > now) boostEndTimes.push(christopherBoostEndTime);
-            const maxBoostEndTime = boostEndTimes.length > 0 ? Math.max(...boostEndTimes) : 0;
-            const boostTimeLeft = Math.ceil(Math.max(0, maxBoostEndTime - now) / 1000);
+            const incomeBoostIsActive = now < christopherBoostEndTime || Object.keys(superValueBoosts).length > 0;
+            playerMoneyCard.classList.toggle('income-glow', incomeBoostIsActive);
 
-            svTimer.style.display = boostTimeLeft > 0 ? 'block' : 'none';
-            if(boostTimeLeft > 0) {
-                svTimer.querySelector('span').textContent = `${boostTimeLeft}s`;
-                svTimer.classList.toggle('prestige-glow', prestigeUpgrades.duracionPotenciadores > 0);
-            }
+            // 3. Brillo del Limbo Gramatical
+            const limboIsActive = now < limboGramaticalEndTime;
+            shopButton.classList.toggle('limbo-glow', limboIsActive);
 
-            const limboTimeLeft = Math.ceil(Math.max(0, limboGramaticalEndTime - now) / 1000);
-            limboTimer.style.display = limboTimeLeft > 0 ? 'block' : 'none';
-            if(limboTimeLeft > 0) {
-                limboTimer.querySelector('span').textContent = `${limboTimeLeft}s`;
-                limboTimer.querySelector('span').dataset.text = `${limboTimeLeft}s`;
-            }
-
-            
-            const shieldTimeLeft = Math.ceil(Math.max(0, universalShieldEndTime - now) / 1000);
-            shieldTimer.style.display = shieldTimeLeft > 0 ? 'block' : 'none';
-            if (shieldTimeLeft > 0) shieldTimer.querySelector('span').textContent = `${shieldTimeLeft}s`;
 
             const inventoryContainer = document.getElementById('inventoryContainer');
             inventoryContainer.innerHTML = '';
@@ -1294,26 +1326,8 @@
                 const isCompleted = data.count >= limit;
 
                 const categoryDiv = document.createElement('div');
-                categoryDiv.className = `relative flex-1 flex-shrink-0 text-center flex flex-col items-center justify-between p-2 cursor-pointer transition duration-300 rounded-lg shadow-md ${isCompleted ? "bg-gray-300 text-gray-500" : categoryBackgrounds[category]}`;
-                categoryDiv.onclick = () => {
-                    const wordsModal = document.getElementById('wordsModal');
-                    document.getElementById('wordsModalTitle').textContent = `Palabras ${category}`;
-                    const wordsList = document.getElementById('wordsList');
-                    wordsList.innerHTML = '';
-                    if (data.list.length > 0) {
-                        data.list.sort().forEach((word, index) => {
-                            const li = document.createElement('li');
-                            li.textContent = `${index + 1}. ${word}`;
-                            li.className = "p-1 border-b border-gray-200";
-                            wordsList.appendChild(li);
-                        });
-                    } else {
-                        wordsList.innerHTML = `<li class="p-1 italic text-gray-500">Aún no tienes palabras aquí.</li>`;
-                    }
-                    wordsModal.classList.remove('hidden');
-                    wordsModal.classList.add('flex');
-                };
-
+                categoryDiv.className = `relative flex-1 flex-shrink-0 text-center flex flex-col items-center justify-between p-2 rounded-lg shadow-md ${isCompleted ? "bg-gray-300 text-gray-500" : categoryBackgrounds[category]}`;
+                
                 const isChrisActive = Date.now() < christopherBoostEndTime;
                 const isSuperValueActiveForThisCategory = superValueBoosts[category] && Date.now() < superValueBoosts[category];
                 let boostIconsHTML = '<div class="absolute top-0 right-1 flex flex-col items-end">';
@@ -1613,7 +1627,7 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 if (callback) callback();
-            }, 500);
+            }, 300);
         }
 
         function checkBossEncounter() {
@@ -1871,7 +1885,7 @@
                     rulesDisplay.innerHTML = `<h3 class="text-lg font-bold ${rule.color}">${rule.title}</h3><p class="text-gray-700">${rule.text}</p>`;
                     rulesDisplay.style.opacity = 1;
                     currentRuleIndex = (currentRuleIndex + 1) % accentuationRules.length;
-                }, 500); 
+                }, 200); 
             };
             updateRule(); 
             rulesInterval = setInterval(updateRule, 15000);
@@ -1960,49 +1974,59 @@
         }
         
         async function fetchRanking() {
-            const tableBody = document.getElementById('rankingTableBody');
-            tableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4"><div class="loading-spinner mx-auto"></div><p class="mt-2">Cargando ranking...</p></td></tr>`;
+            const rankingList = document.getElementById('rankingList');
+            rankingList.innerHTML = `<div class="flex justify-center items-center p-4"><div class="loading-spinner"></div><p class="ml-4">Cargando ranking...</p></div>`;
             
             const result = await apiRequest('POST', 'getRanking');
 
             if (result.success) {
                 renderRanking(result.data);
             } else {
-                tableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-red-500">Error de conexión con el ranking: ${result.error}</td></tr>`;
+                rankingList.innerHTML = `<p class="text-center text-red-500 p-4">Error de conexión con el ranking: ${result.error}</p>`;
             }
         }
         
         function showRanking() {
             changeView('ranking');
             if (playerCredentials?.playerName) {
-                document.getElementById('nameInputContainer').classList.add('hidden');
-                document.getElementById('rankingTableContainer').classList.remove('hidden');
                 fetchRanking();
             } else {
-                document.getElementById('nameInputContainer').classList.remove('hidden');
-                document.getElementById('rankingTableContainer').classList.add('hidden');
+                 document.getElementById('rankingList').innerHTML = `<p class="text-center text-gray-500 p-4">Debes iniciar sesión para ver el ranking.</p>`;
             }
         }
 
         function renderRanking(rankingData) {
-            const tableBody = document.getElementById('rankingTableBody');
-            tableBody.innerHTML = '';
+            const rankingList = document.getElementById('rankingList');
+            rankingList.innerHTML = '';
             if (!rankingData || rankingData.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-gray-500">El ranking está vacío. ¡Sé el primero!</td></tr>`;
+                rankingList.innerHTML = `<p class="text-center text-gray-500 p-4">El ranking está vacío. ¡Sé el primero!</p>`;
                 return;
             }
             rankingData.forEach((player, index) => {
                 const isCurrentUser = playerCredentials && player.name === playerCredentials.playerName;
-                const row = document.createElement('tr');
-                row.className = `border-b border-gray-200 ${isCurrentUser ? 'bg-yellow-100 font-bold' : ''}`;
-                row.innerHTML = `<td class="p-2 font-bold text-center">${index + 1}</td><td class="p-2">${player.name}</td><td class="p-2 text-right">${player.multiplier}x</td>`;
-                tableBody.appendChild(row);
+                const leagueInfo = getLeagueInfo(player.multiplier);
+                
+                const playerElement = document.createElement('div');
+                playerElement.className = `p-3 rounded-lg flex items-center justify-between transition duration-200 ${isCurrentUser ? 'bg-yellow-100 border-2 border-yellow-300' : 'bg-gray-50 hover:bg-gray-100'}`;
+
+                playerElement.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="font-bold text-lg text-gray-400 w-8 text-center">${index + 1}</span>
+                        <div class="ml-3">
+                            <p class="font-bold text-gray-800">${player.name}</p>
+                            <p class="text-xs font-semibold" style="color: ${leagueInfo.color};">${leagueInfo.name}</p>
+                        </div>
+                    </div>
+                    <span class="font-bold text-lg text-gray-700">${player.multiplier}x</span>
+                `;
+                rankingList.appendChild(playerElement);
             });
         }
 
         async function updatePlayerScore() {
             if (!playerCredentials || !gameStarted) return;
             await apiRequest('POST', 'updateRanking', {
+                playerID: playerCredentials.playerID,
                 name: playerCredentials.playerName,
                 multiplier: gameMultiplier,
                 stats: playerStats
@@ -2038,29 +2062,72 @@
         function handleLogout() {
             playerCredentials = null;
             localStorage.removeItem('dl_player_credentials');
-            document.getElementById('loginView').classList.remove('hidden');
-            document.getElementById('loggedInView').classList.add('hidden');
-            document.getElementById('playerNameInput').value = '';
-            document.getElementById('adminDeleteButton').classList.add('hidden');
-            // No need to call server, just clear local state
+            window.location.reload(); // Recargar para limpiar todo el estado
+        }
+        
+        async function handleNameChange() {
+            if (!playerCredentials) return;
+            const newName = prompt("Introduce tu nuevo nombre:", playerCredentials.playerName);
+            if (!newName || newName.trim() === playerCredentials.playerName) return;
+
+            const trimmedName = newName.trim();
+            if (trimmedName.length < 3 || trimmedName.length > 15) { showModal("Tu nombre debe tener entre 3 y 15 caracteres."); return; }
+            if (!/^[a-zA-Z0-9_]+$/.test(trimmedName)) { showModal("El nombre solo puede contener letras, números y guiones bajos."); return; }
+
+            showModal("Actualizando nombre...");
+            const result = await apiRequest('POST', 'updatePlayerName', {
+                playerID: playerCredentials.playerID,
+                newName: trimmedName
+            });
+
+            if (result.success) {
+                playerCredentials.playerName = trimmedName;
+                localStorage.setItem('dl_player_credentials', JSON.stringify(playerCredentials));
+                document.getElementById('playerNameDisplay').textContent = trimmedName;
+                document.getElementById('profilePlayerName').textContent = trimmedName;
+                showModal("¡Nombre actualizado con éxito!");
+            } else {
+                showModal(`Error: ${result.error}`);
+            }
         }
 
         function updatePrestigeUI() {
             document.getElementById('prestigePointsDisplay').textContent = prestigePoints;
             const container = document.getElementById('prestigeUpgradesContainer');
-            container.innerHTML = '';
+            container.innerHTML = ''; // Clear previous content
+            
+            const list = document.createElement('ul');
+            list.className = 'space-y-2';
+
             Object.keys(prestigeUpgrades).forEach(key => {
                 const info = prestigeUpgradeInfo[key];
                 const level = prestigeUpgrades[key] || 0;
-                const upgradeCard = document.createElement('div');
-                upgradeCard.className = `border-2 rounded-xl p-3 flex items-center justify-between space-x-2 ${info.colors}`;
-                upgradeCard.innerHTML = `<div class="flex items-center space-x-3"><div class="p-2 rounded-full ${info.colors.split(' ')[0].replace('-50', '-200')}">${info.icon}</div><div><h3 class="font-bold text-gray-800" title="${info.desc}">${info.title}</h3><p class="text-sm font-semibold text-blue-600">Nivel ${level} | ${info.effect(level)}</p></div></div><div class="flex-shrink-0"><button id="upgrade-${key}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 text-sm rounded-full transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">Mejorar</button></div>`;
-                container.appendChild(upgradeCard);
+                
+                const listItem = document.createElement('li');
+                listItem.className = `bg-gray-50 p-3 rounded-lg flex items-center justify-between transition duration-200 hover:bg-gray-100`;
+
+                listItem.innerHTML = `
+                    <div class="flex-grow">
+                        <h3 class="font-bold text-gray-800" title="${info.desc}">${info.title}</h3>
+                        <p class="text-xs text-gray-600">Nivel <span class="font-semibold text-blue-600">${level}</span> | Efecto: <span class="font-semibold text-green-600">${info.effect(level)}</span></p>
+                    </div>
+                    <div class="flex-shrink-0 ml-4">
+                        <button id="upgrade-${key}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-4 text-sm rounded-full transition duration-150 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Mejorar
+                        </button>
+                    </div>
+                `;
+                list.appendChild(listItem);
             });
+            
+            container.appendChild(list);
+
             Object.keys(prestigeUpgrades).forEach(key => {
                 const button = document.getElementById(`upgrade-${key}`);
-                button.disabled = prestigePoints < 1;
-                button.onclick = () => upgradePrestige(key);
+                if(button) {
+                    button.disabled = prestigePoints < 1;
+                    button.onclick = () => upgradePrestige(key);
+                }
             });
         }
         
@@ -2111,7 +2178,6 @@
             changeView('profile');
             const profileDataEl = document.getElementById('profileData');
             const profileLoadingEl = document.getElementById('profileLoading');
-
             profileLoadingEl.classList.remove('hidden');
             profileDataEl.classList.add('hidden');
 
@@ -2120,12 +2186,23 @@
                 changeView('startup');
                 return;
             }
-            
+
             // Populate with local data first
             document.getElementById('profilePlayerName').textContent = playerCredentials.playerName;
             document.getElementById('profileMultiplier').textContent = `${gameMultiplier}x`;
             document.getElementById('playerIDCopyInput').value = playerCredentials.playerID;
             
+            const leagueInfo = getLeagueInfo(gameMultiplier);
+            const profileCard = document.getElementById('profileCard');
+            const profileLeagueEl = document.getElementById('profileLeague');
+            
+            profileLeagueEl.textContent = leagueInfo.name;
+            profileLeagueEl.style.color = leagueInfo.color;
+            
+            // Remove all gradient classes
+            profileCard.classList.remove('bg-gradient-bronze', 'bg-gradient-plata', 'bg-gradient-oro', 'bg-gradient-platino', 'bg-gradient-diamante', 'bg-gradient-maestro', 'bg-gradient-leyenda');
+            profileCard.classList.add(leagueInfo.gradient);
+
             // Fetch rank from server
             const result = await apiRequest('POST', 'getPlayerProfileData', { playerName: playerCredentials.playerName });
 
@@ -2138,6 +2215,7 @@
             profileLoadingEl.classList.add('hidden');
             profileDataEl.classList.remove('hidden');
         }
+
 
         async function handleLoginWithID() {
             const idInput = document.getElementById('playerIDInput');
@@ -2175,9 +2253,7 @@
 
         function setupEventListeners() {
             document.getElementById('loginButton').addEventListener('click', handleLogin);
-            document.getElementById('logoutButton').addEventListener('click', handleLogout);
             document.getElementById('playGameButton').addEventListener('click', continueGame);
-            document.getElementById('resetProgressButton').addEventListener('click', startNewGame);
             document.getElementById('tutorialButton').addEventListener('click', () => changeView('tutorial'));
             document.getElementById('buyButton').addEventListener('click', buyWord);
             document.getElementById('shopButton').addEventListener('click', () => changeView('shop'));
@@ -2187,15 +2263,25 @@
                 if(gameStarted) savePlayerData();
                 changeView('startup');
             });
+
+            // Listeners para botones de modales
             document.getElementById('backToGameFromTutorial').addEventListener('click', () => changeView('startup'));
             document.getElementById('backToGameFromShop').addEventListener('click', () => changeView('game'));
             document.getElementById('backToGameFromPrestige').addEventListener('click', () => changeView('game'));
+            
+            // Listeners de la tienda
             document.getElementById('buyUniversalShield').addEventListener('click', buyShield);
             document.getElementById('buyLifeButton').addEventListener('click', buyLife);
             
+            // Listeners del perfil
             document.getElementById('profileButton').addEventListener('click', showProfile);
             document.getElementById('backToHomeFromProfile').addEventListener('click', () => changeView('startup'));
             document.getElementById('copyPlayerIDButton').addEventListener('click', copyPlayerID);
+            document.getElementById('editPlayerNameButton').addEventListener('click', handleNameChange);
+            document.getElementById('profileResetProgressButton').addEventListener('click', () => showConfirmationModal("¿Estás seguro? Perderás todo tu progreso permanentemente.", startNewGame));
+            document.getElementById('profileLogoutButton').addEventListener('click', () => showConfirmationModal("¿Estás seguro de que quieres cerrar sesión?", handleLogout));
+
+            // Listeners de inicio de sesión
             document.getElementById('showLoginWithId').addEventListener('click', (e) => {
                 e.preventDefault();
                 document.getElementById('registerSection').classList.add('hidden');
@@ -2207,9 +2293,11 @@
                 document.getElementById('registerSection').classList.remove('hidden');
             });
             document.getElementById('loginWithIdButton').addEventListener('click', handleLoginWithID);
+            
+            // Admin
             document.getElementById('adminDeleteButton').addEventListener('click', deletePlayerFromRanking);
 
-
+            // Listeners de modales generales
             document.getElementById('modalCloseButton').addEventListener('click', () => {
                 document.getElementById('messageModal').classList.add('hidden');
                 if (gamePausedForFeedback) {
@@ -2221,11 +2309,20 @@
                     }
                 }
             });
+            
+             document.getElementById('confirmYesButton').addEventListener('click', () => { 
+                if (confirmCallback) confirmCallback(); 
+                hideConfirmationModal(); 
+            });
+            document.getElementById('confirmNoButton').addEventListener('click', hideConfirmationModal);
+
             document.getElementById('thiefMockeryCloseButton').addEventListener('click', () => {
                 document.getElementById('thiefMockeryModal').classList.add('hidden', 'opacity-0');
                 showFailureMessage("Vigila tus tildes...");
             });
             document.getElementById('wordsModalCloseButton').addEventListener('click', () => document.getElementById('wordsModal').classList.add('hidden'));
+            
+            // Listeners de fin/win de partida
             document.getElementById('backToGameFromGameOver').addEventListener('click', async () => {
                 await startNewGame();
             });
@@ -2233,6 +2330,8 @@
             document.getElementById('reiniciarButton').addEventListener('click', async () => {
                 await startNewGame();
             });
+
+            // Otros
             document.getElementById('startLimboGramatical').addEventListener('click', () => {
                 const modal = document.getElementById('limboGramaticalScreen');
                 modal.classList.add('hidden');
