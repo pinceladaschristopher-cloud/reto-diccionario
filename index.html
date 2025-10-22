@@ -553,6 +553,7 @@
         <div class="bg-gray-800 text-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-2 border-red-700">
              <div id="thiefWhisperIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
             <p id="thiefWhisperDialogue" class="text-gray-300 text-lg mb-4 italic h-10"></p>
+            <!-- No close button needed, closes automatically -->
         </div>
     </div>
 
@@ -565,6 +566,7 @@
             <div id="randomThiefEffect" class="hidden bg-gray-900 p-4 rounded-lg">
                 <p id="randomThiefEffectText" class="text-lg font-bold text-gray-200"></p>
             </div>
+             <!-- No close button needed, closes automatically -->
         </div>
     </div>
 
@@ -573,7 +575,7 @@
         <div class="bg-gray-800 text-white p-8 max-w-md w-full text-center rounded-xl shadow-2xl border-2 border-red-700">
              <div id="thiefDealIcon" class="w-12 h-12 mx-auto mb-3 text-red-500"></div>
             <h4 class="text-xl font-bold text-red-400 mb-2">Un Trato Inesperado</h4>
-            <p id="thiefDealDialogue" class="text-gray-300 mb-4 h-16"></p>
+            <p id="thiefDealDialogue" class="text-gray-300 mb-4 min-h-[4rem]"></p> <!-- Removed fixed height -->
             <div id="thiefDealButtons" class="hidden justify-center gap-4 mt-6">
                 <button id="acceptDealButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">Aceptar Trato</button>
                 <button id="rejectDealButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Rechazar</button>
@@ -585,7 +587,7 @@
     <div id="guardianModal" class="fixed inset-0 christopher-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white text-gray-800 p-8 max-w-2xl w-full text-center rounded-2xl shadow-2xl rainbow-border">
             <div id="guardianIcon" class="w-16 h-16 mx-auto mb-4 text-indigo-500">
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
             </div>
@@ -595,6 +597,23 @@
                 <button id="acceptGiftButton" class="rainbow-bg-button font-bold py-2 px-6 rounded-lg">Aceptar Don</button>
                 <button id="rejectGiftButton" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">Rechazar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal for Guardian Gift -->
+    <div id="guardianGiftModal" class="fixed inset-0 christopher-modal-bg flex justify-center items-center p-4 z-[250] hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white text-gray-800 p-8 max-w-md w-full text-center rounded-2xl shadow-2xl rainbow-border">
+            <div id="guardianGiftIcon" class="w-12 h-12 mx-auto mb-3 text-indigo-500">
+                 <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            </div>
+            <h4 class="text-xl font-bold text-indigo-700 mb-2">Un Regalo del Guardián</h4>
+            <p id="guardianGiftDialogue" class="text-gray-600 mb-4 h-10"></p>
+            <div id="guardianGiftEffect" class="hidden bg-indigo-50 p-4 rounded-lg">
+                <p id="guardianGiftEffectText" class="text-lg font-bold text-indigo-800"></p>
+            </div>
+            <!-- No close button needed, closes automatically -->
         </div>
     </div>
 
@@ -685,10 +704,9 @@
         let lastUpdateTime = 0;
         let timeSinceLastIncomeUpdate = 0;
         let wordDisplayTimeout;
-        let challengeInterval = null;
         let challengeTimerInterval;
         let isChallengeActive = false;
-        let randomThiefAttackInterval = null;
+        let randomEventInterval = null; // Unified random event timer
         
         // --- Bonus State ---
         let universalShieldEndTime = 0;
@@ -698,7 +716,7 @@
         let limboGramaticalTriggeredThisPartida = false;
         let dealRejectedForLimboBoost = false;
         let hasHadFirstRandomAttackThisPartida = false;
-        let confusionModeEndTime = 0;
+        let confusionModeEndTime = 0; // Confusión mode removed, but variable kept for save compatibility
 
         // --- UI & Game Flow ---
         let currentView = 'startup';
@@ -709,7 +727,7 @@
         let visibilityChangeHandler = null;
         let confirmCallback = null;
         let currentChallengeData = {};
-        let isCinematicActive = false;
+        let isCinematicActive = false; // Prevents overlapping events
         
         // --- Audio State ---
         let audioInitialized = false;
@@ -773,7 +791,7 @@
             "Veo que has reunido un pequeño tesoro... Demuéstrame que mereces conservarlo.", "Tus palabras acumuladas cantan una melodía que me atrae. ¿Defenderás tu colección?",
             "Huelo el poder de la sintaxis en ti. Pero, ¿conoces la verdadera ortografía?", "Has sido descuidado. Dejaste un rastro de tildes olvidadas, y yo lo he seguido hasta aquí.",
             "Otro coleccionista... Creen que acumular es saber. Te enseñaré la diferencia.", "Las reglas son mis cadenas y tu conocimiento, la llave. No te la dejaré usar.",
-            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas.", "Tus avances no han pasado desapercibidos. Es hora de una pequeña corrección.",
+            "¿Sientes ese peso en el aire? Son las tildes que has ignorado. Vengo a reclamarlas.", "Tus avances no han pasado desapercebidos. Es hora de una pequeña corrección.",
             "Me llaman ladrón, pero yo me considero un purista. Vengo a limpiar tu colección de errores.", "El conocimiento sin precisión es ruido. Y tú estás haciendo mucho ruido."
         ];
         const BOSS_VICTORY_DIALOGUES = [
@@ -1015,10 +1033,15 @@
              Object.keys(WORD_DATABASE).forEach(category => playerWords[category] = { count: 0, list: [] });
         }
 
-        function showModal(message, duration = 2500) {
+        function showModal(message, duration = 2500, isSuccess = true) {
             const modal = document.getElementById('messageModal');
             const closeButton = document.getElementById('modalCloseButton');
+            const messageModalContent = messageModal.querySelector('div');
             document.getElementById('modalMessage').textContent = message;
+
+            messageModalContent.classList.remove('border-blue-300', 'border-red-400');
+            messageModalContent.classList.add(isSuccess ? 'border-blue-300' : 'border-red-400');
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
 
@@ -1027,6 +1050,7 @@
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
+                    isCinematicActive = false; // BUGFIX: Ensure cinematic is marked false
                     if (gamePausedForFeedback) {
                         gamePausedForFeedback = false;
                         if (consecutiveFailures < 3 && !isBossActive) {
@@ -1056,7 +1080,7 @@
 
         function changeView(view) {
             currentView = view;
-            isCinematicActive = ['shop', 'prestige', 'profile', 'ranking', 'tutorial'].includes(view);
+            isCinematicActive = ['shop', 'prestige', 'profile', 'ranking', 'tutorial'].includes(view); // Mark system views as cinematic
             ['gameScreen', 'startupScreen', 'shopScreen', 'gameOverScreen', 'winScreen', 'gameControls', 'tutorialScreen', 'prestigeScreen', 'rankingScreen', 'profileScreen'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
             const screen = document.getElementById(`${view}Screen`);
             if (screen) screen.classList.remove('hidden');
@@ -1181,7 +1205,7 @@
         function startWordDisplayTimer(duration) {
             clearTimeout(wordDisplayTimeout);
             wordDisplayTimeout = setTimeout(() => {
-                if (!isChallengeActive) generateNewWord(true);
+                if (!isChallengeActive && !isCinematicActive) generateNewWord(true);
             }, duration);
         }
 
@@ -1189,6 +1213,7 @@
             stopGameLoops();
             gamePausedForFeedback = true;
             isCinematicActive = true;
+            playLimboMusic(); // Start Limbo music immediately
 
             const modal = document.getElementById('guardianModal');
             const dialogueEl = document.getElementById('guardianDialogue');
@@ -1210,6 +1235,7 @@
 
 
         async function generateNewWord(forceNew = false) {
+             // Added check for cinematic activity
             if (isChallengeActive || isCinematicActive) return;
             
             if (hasBoughtFirstWord && !limboGramaticalTriggeredThisPartida && dealRejectedForLimboBoost) {
@@ -1221,20 +1247,6 @@
 
             if (forceNew) clearTimeout(wordDisplayTimeout);
             
-            const isConfusionActive = Date.now() < confusionModeEndTime;
-            if (isConfusionActive && Math.random() < 0.70) { 
-                const randomCorrupted = CORRUPTED_WORDS[Math.floor(Math.random() * CORRUPTED_WORDS.length)];
-                const category = randomCorrupted.category;
-                const inflationReduction = 1 - (prestigeUpgrades.reduccionInflacion * 0.005);
-                const inflationMultiplier = 1 + (passiveIncome / INFLATION_FACTOR) * inflationReduction;
-                const dynamicValue = Math.floor((HUGE_WORD_DATABASE[category].value * gameMultiplier + (randomCorrupted.wrong.length * PRICE_PER_LETTER)) * inflationMultiplier);
-                currentWord = { word: randomCorrupted.wrong, category: category, value: dynamicValue, isCorrupted: true, rightVersion: randomCorrupted.right, startTime: Date.now() };
-                updateUI();
-                startWordDisplayTimer(3000);
-                return;
-            }
-
-
             if (isWhispering && Math.random() < 0.15) { // Reducido de 0.35 a 0.15
                 const randomCorrupted = CORRUPTED_WORDS[Math.floor(Math.random() * CORRUPTED_WORDS.length)];
                 const category = randomCorrupted.category;
@@ -1285,11 +1297,14 @@
             let ownedWords = playerWords[randomCategory]?.list || [];
             let availableWords = (WORD_DATABASE[randomCategory]?.words || []).filter(word => !ownedWords.includes(word));
             
-            if (availableWords.length === 0 && randomCategory !== "Sobreesdrújulas") { 
+            if (availableWords.length === 0 && randomCategory !== "Sobreesdrújulas" && !allCategoriesCompleted) { 
                 setTimeout(() => generateNewWord(true), 50); 
                 return;
             }
-            if(availableWords.length === 0 && randomCategory === "Sobreesdrújulas") { }
+            if(availableWords.length === 0 && randomCategory === "Sobreesdrújulas" && allCategoriesCompleted) { 
+                 // If all words including Sobreesdrújulas are bought, keep cycling Sobreesdrújulas
+                 availableWords = (WORD_DATABASE[randomCategory]?.words || []);
+            }
             
             let randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
             let isSuperValue = (WORD_DATABASE[randomCategory].superValueWords || []).includes(randomWord);
@@ -1365,7 +1380,7 @@
                     buyButton.classList.toggle('opacity-50', buyButton.disabled);
                     buyButton.classList.toggle('cursor-not-allowed', buyButton.disabled);
 
-                    if (isCategoryComplete) {
+                    if (isCategoryComplete && currentWord.category !== "Sobreesdrújulas") {
                         wordValueEl.textContent = 'Categoría Completa';
                     } else {
                         let valueHTML = `${Math.floor(currentWord.value).toLocaleString('es-ES').replace(/\./g, ',')}`;
@@ -1437,12 +1452,7 @@
             if (currentWord.isCorrupted) {
                 playerMoney -= currentWord.value;
                 corruptedWordsBought++;
-                const isConfusionActive = Date.now() < confusionModeEndTime;
-                if (isConfusionActive) {
-                    showModal("¡Jajaja! Caíste en la trampa. Ese dinero es mío.");
-                } else {
-                    showWhisperModal(BOSS_MOCKING_LAUGHTER[Math.floor(Math.random() * BOSS_MOCKING_LAUGHTER.length)]);
-                }
+                showWhisperModal(BOSS_MOCKING_LAUGHTER[Math.floor(Math.random() * BOSS_MOCKING_LAUGHTER.length)]);
                 savePlayerData();
                 updateUI();
                 generateNewWord(true);
@@ -1471,9 +1481,15 @@
                         const remainingTime = (superValueBoosts[category] > now) ? (superValueBoosts[category] - now) : 0;
                         superValueBoosts[category] = now + remainingTime + baseDuration + bonusDuration;
                     }
+                } else if (currentWord.category === "Sobreesdrújulas" && (categoryData.list || []).includes(currentWord.word)) {
+                    // Allow re-buying Sobreesdrújulas
+                    playerMoney -= currentWord.value;
+                    wordBought = true; 
                 }
             }
-            if (currentWord.category === "Sobreesdrújulas" && wordBought) {
+            if (currentWord.category === "Sobreesdrújulas" && wordBought && !playerWords["Sobreesdrújulas"].list.includes(currentWord.word)) {
+                 // This logic only runs the FIRST time a Sobreesdrújula is bought
+                playerWords["Sobreesdrújulas"].list.push(currentWord.word); // Mark as bought to trigger win
                 document.getElementById('winMessage').textContent = `¡VICTORIA! Has conseguido una palabra sobreesdrújula. Multiplicador actual: ${gameMultiplier}x.`;
                 document.getElementById('nextMultiplier').textContent = gameMultiplier + 1;
                 document.getElementById('seguirJugandoButton').disabled = false;
@@ -1518,6 +1534,7 @@
             stopGameLoops();
             isChallengeActive = true;
             savePlayerData();
+            playThiefMusic(); // Start thief music for mini-challenge
 
             const type = forcedType;
             currentChallengeData = { type };
@@ -1583,6 +1600,7 @@
             clearInterval(challengeTimerInterval);
             isChallengeActive = false;
             gamePausedForFeedback = true;
+            playMainMusic(); // Return to main music after mini-challenge
             
             const modal = document.getElementById('thiefMiniChallengeModal');
             modal.classList.add('hidden');
@@ -1623,7 +1641,12 @@
         function handleChallengeFailure(reason) {
             consecutiveFailures++;
             checkForThiefDeal(() => {
-                showWhisperModal(THIEF_MOCKERY_ON_FAIL[Math.floor(Math.random() * THIEF_MOCKERY_ON_FAIL.length)], () => showFailureMessage(reason));
+                // This callback runs if the deal is NOT offered, or if it is REJECTED
+                // We need to show the mock AND THEN the failure message
+                showWhisperModal(THIEF_MOCKERY_ON_FAIL[Math.floor(Math.random() * THIEF_MOCKERY_ON_FAIL.length)], () => {
+                    // This callback runs after the whisper modal autoclose AND resets cinematic flag
+                    showFailureMessage(reason);
+                });
             });
         }
         
@@ -1636,7 +1659,7 @@
                 changeView('gameOver');
             } else {
                 resetProgressButKeepLives();
-                showModal(`¡Fallo! ${reason}. Has perdido tus palabras. Te quedan ${3 - consecutiveFailures} intentos.`);
+                showModal(`¡Fallo! ${reason}. Has perdido tus palabras. Te quedan ${3 - consecutiveFailures} intentos.`, 4000, false);
             }
         }
        
@@ -1724,7 +1747,7 @@
             };
         }
 
-        function typeEffect(element, text, callback) {
+        function typeEffect(element, text, onCompleteCallback, autoCloseDelay = null) {
             let i = 0;
             element.textContent = '';
             const modalContent = element.closest('.bg-gray-800, .bg-white');
@@ -1740,9 +1763,8 @@
                     i++;
                     setTimeout(type, 50); // Slower typing speed
                 } else {
-                    if (callback) {
-                        callback();
-                    } else {
+                    // Show buttons only if it's a decision modal
+                    if (!autoCloseDelay) {
                          if (dealButtons) {
                             dealButtons.classList.remove('hidden');
                             dealButtons.classList.add('flex');
@@ -1752,6 +1774,35 @@
                             giftButtons.classList.add('flex');
                         }
                     }
+                    if (onCompleteCallback) setTimeout(onCompleteCallback, 500); 
+
+                    // Handle autoclose
+                    if(autoCloseDelay) {
+                        setTimeout(() => {
+                            const modal = element.closest('.boss-modal-bg, .christopher-modal-bg');
+                            modal.classList.add('opacity-0');
+                            setTimeout(() => {
+                                modal.classList.add('hidden');
+                                isCinematicActive = false; // <-- CRITICAL FIX #1
+                                
+                                // Don't play main music if another event is starting or game over
+                                if (consecutiveFailures >= 3) return; // Game over, stop
+                                if (!isBossActive && !isChallengeActive && !isLimboMusicPlaying) { 
+                                    playMainMusic();
+                                }
+
+                                // Resume game loops if nothing else is blocking
+                                if (gamePausedForFeedback) { 
+                                    gamePausedForFeedback = false;
+                                    startGameLoops();
+                                    generateNewWord(true);
+                                } else if (!isBossActive && !isChallengeActive) { 
+                                    startGameLoops();
+                                    generateNewWord(true);
+                                }
+                            }, 300);
+                        }, autoCloseDelay);
+                    }
                 }
             }
             type();
@@ -1759,7 +1810,8 @@
 
         async function endBossChallenge(isCorrect) {
             clearInterval(bossTimerInterval);
-            isBossActive = false;
+            isBossActive = false; // We are no longer *in* the challenge
+            isCinematicActive = true; // But we are still in a cinematic
             gamePausedForFeedback = true;
             document.getElementById('bossChallengeContent').classList.add('hidden');
             const dialogueEl = document.getElementById('bossDialogue');
@@ -1774,6 +1826,7 @@
                 const resultMessage = `¡VICTORIA! Ganas ${prestigeReward} Puntos de Prestigio.`;
                 typeEffect(dialogueEl, finalDialogue, () => hideBossModal(() => {
                     playMainMusic();
+                    isCinematicActive = false;
                     showModal(resultMessage);
                     updatePlayerScore();
                     if (consecutiveFailures < 3) changeView('game');
@@ -1781,12 +1834,14 @@
             } else {
                 consecutiveFailures++;
                 checkForThiefDeal(() => {
+                    // This is the callback if the deal is NOT offered or REJECTED
                     let moneyLost = playerMoney * ({ 1: 0.10, 2: 0.20, 3: 0.30 }[currentBossLevel] || 0);
                     playerMoney = Math.max(0, playerMoney - Math.floor(moneyLost));
                     const finalDialogue = BOSS_DEFEAT_DIALOGUES[Math.floor(Math.random() * BOSS_DEFEAT_DIALOGUES.length)];
                     const resultMessage = `¡DERROTA! El Ladrón te roba ${Math.floor(moneyLost).toLocaleString('es-ES', { useGrouping: true }).replace(/\./g, ',')}. Pierdes 1 vida.`;
                     typeEffect(dialogueEl, finalDialogue, () => hideBossModal(() => {
                         playMainMusic();
+                        isCinematicActive = false;
                         if (consecutiveFailures >= 3) {
                             clearRankingOnGameOver(); 
                             document.getElementById('gameOverMessage').textContent = `Fallaste 3 veces. El Ladrón de Tildes fue tu perdición.`;
@@ -1794,7 +1849,7 @@
                             changeView('gameOver');
                             gamePausedForFeedback = false;
                         } else {
-                            showModal(resultMessage);
+                            showModal(resultMessage, 4000, false);
                             if (consecutiveFailures < 3) changeView('game');
                         }
                     }));
@@ -1802,14 +1857,139 @@
             }
         }
 
-        function triggerRandomThiefAttack() {
-            if (!gameStarted || isBossActive || isChallengeActive || currentView !== 'game' || isCinematicActive) return;
-            
+        function triggerRandomEvent() {
+            // This is the master event checker
+            const allCategoriesCompleted = Object.keys(WORD_DATABASE).filter(c => c !== "Sobreesdrújulas").every(cat => playerWords[cat] && playerWords[cat].count >= WORD_DATABASE[cat].limit);
+            if (!gameStarted || isBossActive || isChallengeActive || currentView !== 'game' || !hasBoughtFirstWord || isCinematicActive || allCategoriesCompleted) return;
+
             const rand = Math.random();
-            if (rand < 0.01) { startThiefMiniChallenge('anagram'); }
-            else if (rand < 0.11) { startThiefMiniChallenge('accent'); }
-            else if (rand < 0.26) { startThiefMiniChallenge('trueFalse'); }
+
+            // 1. Mini-Challenges (Total 26%)
+            if (rand < 0.01) { startThiefMiniChallenge('anagram'); } // 1%
+            else if (rand < 0.11) { startThiefMiniChallenge('accent'); } // 10%
+            else if (rand < 0.26) { startThiefMiniChallenge('trueFalse'); } // 15%
+            
+            // 2. Thief Attacks (Total 15% -> 0.26 to 0.41)
+            else if (rand < 0.41) {
+                let attackType;
+                const attackDialogues = {
+                    lifeTheft: "Qué descuidado... Dejas tus vidas tan expuestas. Permíteme aligerar tu carga.",
+                    incomeTheft: "Ese tintineo de monedas... es música para mis oídos. Pagarás un pequeño peaje.",
+                    wordTheft: "Una colección impresionante. Sería una lástima que... desaparecieran algunas palabras, ¿no?"
+                };
+
+                if (!hasHadFirstRandomAttackThisPartida) {
+                    attackType = 'lifeTheft';
+                    hasHadFirstRandomAttackThisPartida = true;
+                } else {
+                    const attacks = ['incomeTheft', 'wordTheft'];
+                    attackType = attacks[Math.floor(Math.random() * attacks.length)];
+                }
+
+                showRandomThiefAttackModal(
+                    attackDialogues[attackType],
+                    () => { // This callback creates the details *after* the dialogue starts
+                        switch (attackType) {
+                            case 'lifeTheft':
+                                return { title: 'Robo de Vidas', effectText: "¡Has perdido 1 vida!", onComplete: () => {
+                                    consecutiveFailures++;
+                                    gamePausedForFeedback = true; // Pause game until deal is resolved
+                                    checkForThiefDeal(() => {
+                                        // This runs if deal is rejected or not offered
+                                        gamePausedForFeedback = false; // Unpause
+                                        isCinematicActive = false; // Manually reset cinematic flag here
+                                        playMainMusic();
+                                        updateUI();
+                                        if (consecutiveFailures >= 3) {
+                                            showFailureMessage("El Ladrón te ha dado el golpe de gracia.");
+                                        }
+                                    });
+                                }};
+                            case 'incomeTheft':
+                                const moneyStolen = Math.floor(playerMoney * 0.15);
+                                return { title: 'Robo de Ingresos', effectText: `¡Te ha robado el 15% de tu dinero! (-${moneyStolen.toLocaleString('es-ES', { useGrouping: true }).replace(/\./g, ',')})`, onComplete: () => {
+                                    playerMoney -= moneyStolen;
+                                    updateUI();
+                                }};
+                            case 'wordTheft':
+                                const ownableCategories = Object.keys(playerWords).filter(cat => cat !== "Sobreesdrújulas" && playerWords[cat].count > 0);
+                                if (ownableCategories.length > 0) {
+                                    const randomCategory = ownableCategories[Math.floor(Math.random() * ownableCategories.length)];
+                                    const wordsInCategory = playerWords[randomCategory].list;
+                                    const wordsToStealCount = Math.max(1, Math.floor(wordsInCategory.length * 0.10));
+                                    
+                                    return { title: 'Robo de Palabras', effectText: `¡Ha robado ${wordsToStealCount} palabra(s) de la categoría ${randomCategory}!`, onComplete: () => {
+                                        for(let i = 0; i < wordsToStealCount; i++) {
+                                            if(wordsInCategory.length > 0) {
+                                                const randomIndex = Math.floor(Math.random() * wordsInCategory.length);
+                                                wordsInCategory.splice(randomIndex, 1);
+                                            }
+                                        }
+                                        playerWords[randomCategory].count -= wordsToStealCount;
+                                        updateUI();
+                                    }};
+                                } else { // Fallback if no words to steal
+                                     const moneyStolenFallback = Math.floor(playerMoney * 0.15);
+                                     return { title: 'Robo de Ingresos', effectText: `Iba a robar palabras, pero no tienes. Me conformo con ${moneyStolenFallback.toLocaleString('es-ES', { useGrouping: true }).replace(/\./g, ',')}`, onComplete: () => {
+                                        playerMoney -= moneyStolenFallback;
+                                        updateUI();
+                                    }};
+                                }
+                        }
+                    }
+                );
+            }
+            // 3. Guardian Gifts (Total 5% -> 0.41 to 0.46)
+            else if (rand < 0.46) {
+                 triggerGuardianGift();
+            }
         }
+        
+        function triggerGuardianGift() {
+            const giftRand = Math.random();
+            let dialogue, effectText;
+
+            if (giftRand < 0.52) { // 52% Riqueza
+                dialogue = "Veo tu esfuerzo, acepta esta ayuda.";
+                const moneyGained = Math.floor(playerMoney * 0.10);
+                effectText = `¡Don de Riqueza! (+${moneyGained.toLocaleString('es-ES', { useGrouping: true }).replace(/\./g, ',')})`;
+                playerMoney += moneyGained;
+            } else if (giftRand < 0.97) { // 45% Prestigio (0.52 + 0.45 = 0.97)
+                dialogue = "¡Usa esta bendición sabiamente!";
+                effectText = "¡Don de Prestigio! (+2 Puntos)";
+                prestigePoints += 2;
+            } else { // 3% Protección
+                dialogue = "¡Protégete de la oscuridad!";
+                effectText = "¡Don de Protección! (+1 Escudo)";
+                shields.universal++;
+            }
+            
+            showGuardianGiftModal(dialogue, effectText);
+            updateUI(); // Update UI immediately after applying the gift
+        }
+
+        function showGuardianGiftModal(dialogue, effectText) {
+            const modal = document.getElementById('guardianGiftModal');
+            const dialogueEl = document.getElementById('guardianGiftDialogue');
+            const effectDiv = document.getElementById('guardianGiftEffect');
+            const effectTextEl = document.getElementById('guardianGiftEffectText');
+            
+            document.getElementById('guardianGiftIcon').innerHTML = ICON_LIBRARY.christopherIcon;
+            
+            dialogueEl.textContent = '';
+            effectDiv.classList.add('hidden');
+            isCinematicActive = true; // Mark cinematic active
+            playLimboMusic(); // Play celestial music
+
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 20);
+
+            typeEffect(dialogueEl, dialogue, () => {
+                effectTextEl.textContent = effectText;
+                effectDiv.classList.remove('hidden');
+            }, 4000); // Autoclose after 4 seconds
+        }
+
 
         function showRandomThiefAttackModal(dialogue, getAttackDetailsCallback) {
             const modal = document.getElementById('randomThiefAttackModal');
@@ -1821,7 +2001,8 @@
             
             dialogueEl.textContent = '';
             effectDiv.classList.add('hidden');
-            isCinematicActive = true;
+            isCinematicActive = true; // Mark cinematic active
+            playThiefMusic(); // Start thief music
 
             modal.classList.remove('hidden');
             setTimeout(() => modal.classList.remove('opacity-0'), 20);
@@ -1831,39 +2012,22 @@
                 modal.querySelector('h4').textContent = `El Ladrón de Tildes ataca: ${title}`;
                 effectTextEl.textContent = effectText;
                 effectDiv.classList.remove('hidden');
-                onComplete(); 
-                setTimeout(() => {
-                    modal.classList.add('opacity-0');
-                    setTimeout(() => {
-                        modal.classList.add('hidden');
-                        isCinematicActive = false;
-                        if (gamePausedForFeedback) {
-                            gamePausedForFeedback = false;
-                            if (consecutiveFailures < 3 && !isBossActive) {
-                               startGameLoops();
-                               generateNewWord(true);
-                               savePlayerData();
-                            }
-                        }
-                    }, 300);
-                }, 4000);
-            });
+                onComplete();
+                // Autoclose logic is now handled in typeEffect
+            }, 4000); // Autoclose after 4 seconds
         }
 
-        function showWhisperModal(dialogue) {
+        function showWhisperModal(dialogue, onCompleteCallback = null) {
             const modal = document.getElementById('thiefWhisperModal');
             const dialogueEl = document.getElementById('thiefWhisperDialogue');
             
             document.getElementById('thiefWhisperIcon').innerHTML = ICON_LIBRARY.bossIcon;
-            isCinematicActive = true;
+            isCinematicActive = true; // Mark cinematic active
+            playThiefMusic(); // Play thief music for whispers/mocks
+
             modal.classList.remove('hidden', 'opacity-0');
             
-            typeEffect(dialogueEl, dialogue, () => {
-                setTimeout(() => {
-                    modal.classList.add('hidden', 'opacity-0');
-                    isCinematicActive = false;
-                }, 4000);
-            });
+            typeEffect(dialogueEl, dialogue, onCompleteCallback, 4000); // Autoclose after 4 seconds
         }
 
         function checkForThiefDeal(callbackOnNoDeal) {
@@ -1871,6 +2035,7 @@
                 stopGameLoops();
                 gamePausedForFeedback = true;
                 isCinematicActive = true;
+                playThiefMusic(); // Play thief music during the deal
 
                 let bestCategory = null;
                 let maxIncome = -1;
@@ -1903,15 +2068,19 @@
                         playerWords[bestCategory] = { count: 0, list: [] };
                         modal.classList.add('hidden', 'opacity-0');
                         isCinematicActive = false;
+                        playMainMusic();
                         showModal("Trato aceptado. Has recuperado una vida, pero tus palabras han desaparecido.");
                     };
                     document.getElementById('rejectDealButton').onclick = () => {
                         dealRejectedForLimboBoost = true;
                         modal.classList.add('hidden', 'opacity-0');
                         isCinematicActive = false;
+                        playMainMusic();
                         if (callbackOnNoDeal) callbackOnNoDeal();
                     };
                 } else {
+                     isCinematicActive = false; // Ensure cinematic flag is reset
+                     playMainMusic();
                     if (callbackOnNoDeal) callbackOnNoDeal();
                 }
 
@@ -1947,9 +2116,9 @@
                     prestigePoints: prestigePoints, prestigeUpgrades: prestigeUpgrades,
                     isChallengeActive: isChallengeActive, bossesDefeated: bossesDefeated, hasBoughtFirstWord: hasBoughtFirstWord,
                     isWhispering: isWhispering, activeWhisper: activeWhisper, corruptedWordsBought: corruptedWordsBought,
-                    playerStats: playerStats, wordDatabaseVersion: 2.6, // Updated version
+                    playerStats: playerStats, wordDatabaseVersion: 2.7, // Updated version
                     hasHadFirstRandomAttack: hasHadFirstRandomAttackThisPartida,
-                    confusionEnd: confusionModeEndTime,
+                    confusionEnd: confusionModeEndTime, // Keep for backward compatibility if needed
                 };
                 await apiRequest('POST', 'saveGame', { playerID: playerCredentials.playerID, saveDataJSON: JSON.stringify(data) });
             } catch (e) { console.error('Error saving data:', e); }
@@ -1958,7 +2127,7 @@
         function parseSaveData(saveDataJSON) {
             try {
                 const data = JSON.parse(saveDataJSON || "{}");
-                 if (!data.wordDatabaseVersion || data.wordDatabaseVersion < 2.6) { initializeGameState(); return; }
+                 if (!data.wordDatabaseVersion || data.wordDatabaseVersion < 2.7) { initializeGameState(); return; }
                 playerMoney = data.money || 100;
                 playerWords = data.words || {};
                 usedChallengeWords = data.used || {};
@@ -2080,27 +2249,55 @@
             const mainReverb = new Tone.Reverb(1.5).toDestination();
             const chorus = new Tone.Chorus(4, 2.5, 0.7).connect(mainReverb);
             const thiefReverb = new Tone.Reverb(5).toDestination();
-            const limboDelay = new Tone.FeedbackDelay("8n", 0.5).toDestination();
+            
+            // Efectos para Limbo (Arpa Etérea)
+            const limboDelayH = new Tone.FeedbackDelay("8n", 0.6).toDestination();
+            const limboReverbH = new Tone.Reverb(3).connect(limboDelayH);
 
-            mainSynth = new Tone.PolySynth(Tone.FMSynth, { harmonicity: 1, modulationIndex: 7, envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 1.4 }, modulation: { type: "triangle" } }).connect(chorus);
+            // --- Sintetizadores ---
+            
+            // 1. Principal
+            mainSynth = new Tone.PolySynth(Tone.FMSynth, {
+                harmonicity: 1, modulationIndex: 7,
+                envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 1.4 },
+                modulation: { type: "triangle" }
+            }).connect(chorus);
             mainSynth.volume.value = 0;
 
-            thiefSynth = new Tone.PolySynth(Tone.DuoSynth, { vibratoAmount: 0.5, vibratoRate: 5, harmonicity: 1, voice0: { volume: -2, portamento: 0, oscillator: { type: 'sawtooth' }, filterEnvelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 }, envelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 } }, voice1: { volume: -10, portamento: 0, oscillator: { type: 'sine' }, filterEnvelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 }, envelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 } } }).connect(thiefReverb);
+            // 2. Ladrón
+            thiefSynth = new Tone.PolySynth(Tone.DuoSynth, {
+                vibratoAmount: 0.5, vibratoRate: 5, harmonicity: 1,
+                voice0: { volume: -2, portamento: 0, oscillator: { type: 'sawtooth' }, filterEnvelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 }, envelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 } },
+                voice1: { volume: -10, portamento: 0, oscillator: { type: 'sine' }, filterEnvelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 }, envelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 1 } }
+            }).connect(thiefReverb);
             thiefSynth.volume.value = 0;
 
-            limboSynth = new Tone.PolySynth(Tone.FMSynth, { harmonicity: 3, modulationIndex: 15, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 1.5 }, modulation: { type: "sine" } }).connect(limboDelay);
+            // 3. Limbo (Opción 8: Arpa Etérea)
+            limboSynth = new Tone.FMSynth({
+                harmonicity: 3.01, modulationIndex: 14,
+                envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 1.0 },
+                modulation: { type: "sine" },
+                modulationEnvelope: { attack: 0.002, decay: 0.2, sustain: 0, release: 0.2 }
+            }).connect(limboReverbH);
             limboSynth.volume.value = 0;
 
+            // --- Composición de las Melodías ---
+
+            // 1. Música Principal
             const mainNotes = [ { time: '0:0', notes: ['C4', 'E4', 'G4'] }, { time: '0:2', notes: ['A4'] }, { time: '1:0', notes: ['G3', 'B3', 'D4'] }, { time: '2:0', notes: ['F3', 'A3', 'C4'] }, { time: '2:2', notes: ['G3'] }, { time: '3:0', notes: ['E3', 'G3', 'B3'] }, { time: '4:0', notes: ['A3', 'C4', 'E4'] }, { time: '4:2', notes: ['B4'] }, { time: '5:0', notes: ['G3', 'B3', 'D4'] }, { time: '6:0', notes: ['C4', 'E4', 'A4'] }, { time: '6:2', notes: ['G4'] }, { time: '7:0', notes: ['F3', 'A3', 'C4'] } ];
             mainMusicLoop = new Tone.Part((time, value) => { mainSynth.triggerAttackRelease(value.notes, "2n", time); }, mainNotes);
             mainMusicLoop.loop = true; mainMusicLoop.loopEnd = '8m';
             
+            // 2. Música del Ladrón
             const thiefNotes = [ { time: '0:0', notes: ['C2', 'D#2'], duration: '2n' }, { time: '1:0', notes: ['C#2', 'E2'], duration: '2n' }, { time: '2:0', notes: ['D2', 'F2'], duration: '1m' }, { time: '3:2', notes: ['B1', 'C2'], duration: '2n' } ];
             thiefMusicLoop = new Tone.Part((time, value) => { thiefSynth.triggerAttackRelease(value.notes, value.duration, time); }, thiefNotes);
             thiefMusicLoop.loop = true; thiefMusicLoop.loopEnd = '4m';
             
-            const limboNotes = [ 'C5', 'E5', 'G5', 'B5', 'D6', 'G5', 'E6', 'C6', 'A5', 'F#5', 'D5', 'B4' ];
-            limboMusicLoop = new Tone.Sequence((time, note) => { limboSynth.triggerAttackRelease(note, '16n', time); }, limboNotes, '16n');
+            // 3. Limbo (Opción 8: Arpa)
+            const limboNotes = ['C5', 'E5', 'G5', 'B5', 'D6', null, 'B5', 'G5', 'A5', 'C6', 'E6', 'G6', 'F6', null, 'E6', 'C6'];
+            limboMusicLoop = new Tone.Sequence((time, note) => {
+                if (note) limboSynth.triggerAttackRelease(note, '8n', time);
+            }, limboNotes, '8n');
             limboMusicLoop.loop = true;
         }
 
@@ -2113,9 +2310,10 @@
         }
 
         function playMainMusic() {
-            if (!audioInitialized || isMuted) return;
+            if (!audioInitialized || isMuted || isLimboMusicPlaying || isBossActive || isChallengeActive || isCinematicActive) return;
             stopAllMusic();
             mainMusicLoop.start(0);
+            startRulesRotator(); // Reinicia las reglas con la música principal
         }
 
         function playThiefMusic() {
@@ -2133,7 +2331,10 @@
 
 
         function startGameLoops() {
-            if (animationFrameId || isBossActive) return;
+            if (animationFrameId || isBossActive || isChallengeActive || isCinematicActive) return;
+            // BUGFIX: Ensure game doesn't restart if game over
+            if (consecutiveFailures >= 3) return;
+            
             stopGameLoops();
             
             if (!isWhispering) {
@@ -2141,28 +2342,17 @@
             }
             animationFrameId = requestAnimationFrame(mainGameLoop);
             
-            challengeInterval = setInterval(() => {
-                if (hasBoughtFirstWord && !isChallengeActive && gameStarted && !isBossActive && currentView === 'game' && !isCinematicActive) {
-                    const allCategoriesCompleted = Object.keys(WORD_DATABASE).filter(c => c !== "Sobreesdrújulas").every(cat => playerWords[cat] && playerWords[cat].count >= WORD_DATABASE[cat].limit);
-                    if (allCategoriesCompleted) return;
-
-                    const rand = Math.random();
-                    if (rand < 0.01) { startThiefMiniChallenge('anagram'); }
-                    else if (rand < 0.11) { startThiefMiniChallenge('accent'); }
-                    else if (rand < 0.26) { startThiefMiniChallenge('trueFalse'); }
-                }
-            }, 5000);
+            // Unified Random Event Timer
+            randomEventInterval = setInterval(triggerRandomEvent, 5000); 
         }
         
         function stopGameLoops() {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
-            clearInterval(challengeInterval);
+            clearInterval(randomEventInterval); // Clear the unified timer
             clearInterval(rankingUpdateInterval);
-            clearInterval(randomThiefAttackInterval);
             clearTimeout(wordDisplayTimeout);
-            challengeInterval = null; rankingUpdateInterval = null; lastUpdateTime = 0;
-            randomThiefAttackInterval = null;
+            randomEventInterval = null; rankingUpdateInterval = null; lastUpdateTime = 0;
         }
         
         async function startGameCommon(shouldLoad = true) {
@@ -2525,7 +2715,10 @@
             document.getElementById('adminDeleteButton').addEventListener('click', deletePlayerFromRanking);
 
             document.getElementById('modalCloseButton').addEventListener('click', () => {
-                document.getElementById('messageModal').classList.add('hidden');
+                 const modal = document.getElementById('messageModal');
+                 modal.classList.add('hidden');
+                 modal.classList.remove('flex');
+                 isCinematicActive = false; // BUGFIX: Ensure cinematic flag is reset
                 if (gamePausedForFeedback) {
                     gamePausedForFeedback = false;
                     if (consecutiveFailures < 3 && !isBossActive) {
@@ -2557,13 +2750,13 @@
                 modal.classList.add('opacity-0');
                 setTimeout(() => {
                     modal.classList.add('hidden');
-                    isCinematicActive = false;
+                    isCinematicActive = false; // Mark cinematic inactive
                 }, 300);
 
                 consecutiveFailures = 0;
                 shields.universal += 3;
                 limboGramaticalEndTime = Date.now() + 120000;
-                playLimboMusic();
+                // Music is already playing limbo music
                 
                 showModal("¡Don aceptado! Tus vidas han sido restauradas, has recibido 3 escudos y el LIMBO GRAMATICAL ha comenzado.");
 
@@ -2585,7 +2778,8 @@
                         modal.classList.add('opacity-0');
                         setTimeout(() => {
                             modal.classList.add('hidden');
-                            isCinematicActive = false;
+                            isCinematicActive = false; // Mark cinematic inactive
+                            playMainMusic(); // Return to main music
                             if (gamePausedForFeedback) {
                                 gamePausedForFeedback = false;
                                 startGameLoops();
@@ -2611,6 +2805,25 @@
                 isMuted = !isMuted;
                 Tone.Destination.mute = isMuted;
                 muteButton.innerHTML = isMuted ? ICON_LIBRARY.speakerOff : ICON_LIBRARY.speakerOn;
+                if (!isMuted && audioInitialized) {
+                     // If unmuting, resume the correct music
+                    if (isBossActive || isChallengeActive || isCinematicActive && (currentView === 'game')) {
+                        // Check which cinematic is active if any
+                        if (document.getElementById('thiefDealModal').classList.contains('flex') || document.getElementById('thiefWhisperModal').classList.contains('flex') || document.getElementById('randomThiefAttackModal').classList.contains('flex')) {
+                            playThiefMusic();
+                        } else if (document.getElementById('guardianModal').classList.contains('flex') || document.getElementById('guardianGiftModal').classList.contains('flex')) {
+                            playLimboMusic();
+                        } else {
+                            playMainMusic();
+                        }
+                    } else if (isLimboMusicPlaying) {
+                        playLimboMusic();
+                    } else {
+                        playMainMusic();
+                    }
+                } else if (isMuted) {
+                    stopAllMusic(); // Stop music when muted
+                }
             });
 
             window.addEventListener('beforeunload', () => {
